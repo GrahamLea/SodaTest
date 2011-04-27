@@ -69,8 +69,8 @@ class BlockFactorySpec extends SpecificationWithJUnit {
 
       val blocks = blockFactory.create(List(
            fixtureBlockSource,
-           noteBlockSource,
-           junkBlockSource,
+//           noteBlockSource,
+//           junkBlockSource,
            basicEventBlockSource,
            basicReportBlockSource,
            parameterisedEventsBlockSource,
@@ -78,28 +78,33 @@ class BlockFactorySpec extends SpecificationWithJUnit {
            parameterisedReportsBlockSource
       ))
 
+      var blockIndex = 0;
       {
-        val fixtureBlock = blocks(0).asInstanceOf[FixtureBlock]
+        val fixtureBlock = blocks(blockIndex).asInstanceOf[FixtureBlock]
         fixtureBlock.source must_== fixtureBlockSource
         fixtureBlock.fixtureName must_== "TestFixtureName"
       }
+      blockIndex += 1
 
 //      {
-//        val recordNote = blocks(1).asInstanceOf[RecordNote]
+//        val recordNote = blocks(blockIndex++).asInstanceOf[RecordNote]
 //        recordNote.lineNumber must_== 3
 //        recordNote.source must_== noteBlock
 //      }
+//      blockIndex += 1
 //
 //      {
-//        val recordParseError = blocks(2).asInstanceOf[RecordParseError]
+//        val recordParseError = blocks(blockIndex++).asInstanceOf[RecordParseError]
 //        recordParseError.lineNumber must_== 6
 //        recordParseError.source must_== junkBlock
 //        recordParseError.message must_== "The instruction 'Junk' in td A6 is not valid."
 //        recordParseError.cause must_== None
 //      }
+//      blockIndex += 1
 //
+      
       {
-        val basicEventBlock = blocks(3).asInstanceOf[EventBlock]
+        val basicEventBlock = blocks(blockIndex).asInstanceOf[EventBlock]
         basicEventBlock.source must_== basicEventBlockSource
         basicEventBlock.eventName must_== "Basic Event"
         basicEventBlock.inline must_== true
@@ -108,9 +113,10 @@ class BlockFactorySpec extends SpecificationWithJUnit {
           case List(e) => e.parameterValues == None
         }
       }
+      blockIndex += 1
 
       {
-        val basicReportBlock = blocks(4).asInstanceOf[ReportBlock]
+        val basicReportBlock = blocks(blockIndex).asInstanceOf[ReportBlock]
         basicReportBlock.source must_== basicReportBlockSource
         basicReportBlock.reportName must_== "Basic Report"
         basicReportBlock.inline must_== true
@@ -118,9 +124,10 @@ class BlockFactorySpec extends SpecificationWithJUnit {
           case List(r) => r.parameterValues == None && r.expectedResult == List(Line(12, List("", "Text")))
         }
       }
+      blockIndex += 1
 
       {
-        val parameterisedEventsBlock = blocks(5).asInstanceOf[EventBlock]
+        val parameterisedEventsBlock = blocks(blockIndex).asInstanceOf[EventBlock]
         parameterisedEventsBlock.source must_== parameterisedEventsBlockSource
         parameterisedEventsBlock.eventName must_== "Parameterised Events"
         parameterisedEventsBlock.inline must_== false
@@ -132,9 +139,10 @@ class BlockFactorySpec extends SpecificationWithJUnit {
           }
         }
       }
+      blockIndex += 1
 
       {
-        val parameterisedReportsBlock = blocks(6).asInstanceOf[ReportBlock]
+        val parameterisedReportsBlock = blocks(blockIndex).asInstanceOf[ReportBlock]
 //        val parameterisedReportsBlock = blocks(7).asInstanceOf[ReportBlock]
         parameterisedReportsBlock.source must_== parameterisedReportsBlockSource
         parameterisedReportsBlock.reportName must_== "Parameterised Report"
@@ -149,6 +157,7 @@ class BlockFactorySpec extends SpecificationWithJUnit {
           }
         }
       }
+      blockIndex += 1
 
     }
 
