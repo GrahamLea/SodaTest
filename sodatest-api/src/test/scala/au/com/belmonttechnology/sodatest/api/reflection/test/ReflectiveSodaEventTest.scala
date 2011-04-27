@@ -13,7 +13,7 @@ import org.junit.Assert._
 import org.junit.Test
 ;
 
-class ReflectiveEventTest {
+class ReflectiveSodaEventTest {
 
   @Test
   def apply_String() {
