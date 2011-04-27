@@ -1,0 +1,7 @@
+*.iml
+target
+OLD-CODEBASE
+.idea/*.xml
+.idea/copyright
+.idea/inspectionProfiles
+.idea/libraries
