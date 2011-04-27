@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+        <title>Basic Example (src\main\resources\sodatests\basicExample.csv)</title>
+        <style type="text/css">
+          * {     font-size: 12px;     line-height: 200%;     font-family: 'Helvetica', 'Arial', sans-serif; }  body {     margin: 3em;     padding-bottom: 3em;     white-space: nowrap; }  div, table, p {     border: 0;     margin: 0;     padding: 0; }  h1 {     font-size: 300%;     margin: 0;     padding: 0;     line-height: 1.2em;     vertical-align: bottom; }  h2 {     font-size: 120%;     color: #666;     margin: 0;     padding: 0; }  div.testResult {     border-bottom: 3px solid #666;     margin-bottom: 3em; }  div.testResult p {     font-weight: bold;     font-size: 200%; }  body.passed div.testResult {     color: #095; }  body.failed div.testResult {     color: #C00; }  table {     border-collapse: collapse; }  div.blockResult {     clear: both;     display: inline-block;     float: left;     padding: 0.5em;     border-width: 3px;     border-radius: 0.5em;     -moz-border-radius: 0.5em;     -webkit-border-radius: 0.5em;     border-style: solid;     border-color: #FFF;     margin-bottom: 2em; }  body div.failure {     border-color: #C00; }  div.success.fixture td.name, div.success.event.inline td.name, div.event tr.parameterValues.success {     background-color: #E8F4FF; }  tr.result.match, tr.result td.match {     background-color: #DFD; }  th + td {     background-color: #FFF; }  td.name {     font-weight: bold;     color: #444;     font-size: 140%; }   td.instruction, tr.parameterNames td, .reportInvoker {     font-weight: bold;     font-style: italic;     color: #444;     background-color: #F6F6F6; }  .reportInvoker {     text-align: center; }  th {     background-color: #EEE;     border: 1px solid #CCC;     color: #888;     font-weight: normal; }  col.lineNumbers {     min-width: 3em; }  tr:first-child td:first-child {     background-color: #CCC;     border: 1px solid #CCC; }  td {     font-size: 120%;     padding: 0.2em 0.7em;     border: 1px solid #DDD; }  td.failureSource, tr.failureSource, td.mismatch, td.missing, td.extra, tr.missing {     background-color: #FF9999; }  td.failureAccomodator {     width: 100%;     border: 0; }  tr.failureDetails td {     border: 0; }  tr.failureDetails ul {     margin: 0;     padding: 0;     list-style: none; }  tr.failureDetails p.errorMessage { }  tr.failureDetails p.errorCause {     padding-left: 2em; }  p.stackTrace {     white-space: pre;     font-family: monospace;     font-size: 80%;     line-height: 1.2em;     margin-left: 10em;     color: #888; }  span.valueLabel {     display: inline-block;     width: 5em; }  td.mismatch hr {     border-color: #000;     border-style: solid;     border-width: 1px;     opacity: 0.6; }  td.lineNote {     border: 0;     background-color: #FFF; }  td.lineNote, tr.missing th, tr.extra th, tr.extra td {     color: #C00;     font-weight: bold; }
+        </style>
+      </head><body class="passed"><div class="header">
+        <div class="title">
+          <h1>Basic Example</h1>
+          <h2>(src\main\resources\sodatests\basicExample.csv)</h2>
+        </div>
+        <div class="testResult">
+          <p>PASSED</p>
+        </div>
+      </div>
+<div class="blockResult fixture success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>1</th>
+      <td class="instruction">Fixture</td>
+      <td class="name">BankAccountFixture</td>
+      
+      
+      
+    </tr>
+          
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult report success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>3</th>
+      <td class="instruction">Report</td>
+      <td class="name">Balance</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>4</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues">
+          <th>5</th>
+          <td class="reportInvoker success">!!</td>
+<td>Graham Lea</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>6</th>
+      <td></td>
+<td>Unknown Account</td>
+  
+    </tr>
+<tr class="parameterValues">
+          <th>7</th>
+          <td class="reportInvoker success">!!</td>
+<td>Spike Spiegel</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>8</th>
+      <td></td>
+<td>Unknown Account</td>
+  
+    </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult event success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>10</th>
+      <td class="instruction">Event</td>
+      <td class="name">Open Account</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>11</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues success">
+          <th>12</th>
+          <td></td>
+<td>Graham Lea</td>
+ 
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult report success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>14</th>
+      <td class="instruction">Report</td>
+      <td class="name">Balance</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>15</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues">
+          <th>16</th>
+          <td class="reportInvoker success">!!</td>
+<td>Graham Lea</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>17</th>
+      <td></td>
+<td>$0.00</td>
+  
+    </tr>
+<tr class="parameterValues">
+          <th>18</th>
+          <td class="reportInvoker success">!!</td>
+<td>Spike Spiegel</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>19</th>
+      <td></td>
+<td>Unknown Account</td>
+  
+    </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult event success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>21</th>
+      <td class="instruction">Event</td>
+      <td class="name">Open Account</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>22</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues success">
+          <th>23</th>
+          <td></td>
+<td>Spike Spiegel</td>
+ 
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult report success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>25</th>
+      <td class="instruction">Report</td>
+      <td class="name">Balance</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>26</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues">
+          <th>27</th>
+          <td class="reportInvoker success">!!</td>
+<td>Graham Lea</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>28</th>
+      <td></td>
+<td>$0.00</td>
+  
+    </tr>
+<tr class="parameterValues">
+          <th>29</th>
+          <td class="reportInvoker success">!!</td>
+<td>Spike Spiegel</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>30</th>
+      <td></td>
+<td>$0.00</td>
+  
+    </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult event success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+<th>C</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>32</th>
+      <td class="instruction">Event</td>
+      <td class="name">Deposit</td>
+      
+      <td></td>
+
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>33</th>
+      <td></td>
+<td>Account Name</td>
+<td>Amount</td>
+  
+    </tr>
+
+          <tr class="parameterValues success">
+          <th>34</th>
+          <td></td>
+<td>Graham Lea</td>
+<td>$6.00</td>
+ 
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult report success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>36</th>
+      <td class="instruction">Report</td>
+      <td class="name">Balance</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>37</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues">
+          <th>38</th>
+          <td class="reportInvoker success">!!</td>
+<td>Graham Lea</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>39</th>
+      <td></td>
+<td>$6.00</td>
+  
+    </tr>
+<tr class="parameterValues">
+          <th>40</th>
+          <td class="reportInvoker success">!!</td>
+<td>Spike Spiegel</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>41</th>
+      <td></td>
+<td>$0.00</td>
+  
+    </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult event success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+<th>C</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>43</th>
+      <td class="instruction">Event</td>
+      <td class="name">Deposit</td>
+      
+      <td></td>
+
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>44</th>
+      <td></td>
+<td>Account Name</td>
+<td>Amount</td>
+  
+    </tr>
+
+          <tr class="parameterValues success">
+          <th>45</th>
+          <td></td>
+<td>Spike Spiegel</td>
+<td>$2.00</td>
+ 
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult event success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+<th>C</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>47</th>
+      <td class="instruction">Event</td>
+      <td class="name">Withdraw</td>
+      
+      <td></td>
+
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>48</th>
+      <td></td>
+<td>Account Name</td>
+<td>Amount</td>
+  
+    </tr>
+
+          <tr class="parameterValues success">
+          <th>49</th>
+          <td></td>
+<td>Graham Lea</td>
+<td>$3.00</td>
+ 
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult report success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>51</th>
+      <td class="instruction">Report</td>
+      <td class="name">Balance</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>52</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues">
+          <th>53</th>
+          <td class="reportInvoker success">!!</td>
+<td>Graham Lea</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>54</th>
+      <td></td>
+<td>$3.00</td>
+  
+    </tr>
+<tr class="parameterValues">
+          <th>55</th>
+          <td class="reportInvoker success">!!</td>
+<td>Spike Spiegel</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>56</th>
+      <td></td>
+<td>$2.00</td>
+  
+    </tr>
+
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult event inline success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>58</th>
+      <td class="instruction">Event</td>
+      <td class="name">End of month</td>
+      
+      
+      
+    </tr>
+          
+          
+          
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult report success">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+      <td></td>
+      <th>A</th>
+<th>B</th>
+
+    </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <th>60</th>
+      <td class="instruction">Report</td>
+      <td class="name">Balance</td>
+      
+      
+      
+    </tr>
+          
+          <tr class="parameterNames">
+      <th>61</th>
+      <td></td>
+<td>Account Name</td>
+  
+    </tr>
+
+          <tr class="parameterValues">
+          <th>62</th>
+          <td class="reportInvoker success">!!</td>
+<td>Graham Lea</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>63</th>
+      <td></td>
+<td>$3.30</td>
+  
+    </tr>
+<tr class="parameterValues">
+          <th>64</th>
+          <td class="reportInvoker success">!!</td>
+<td>Spike Spiegel</td>
+ 
+        </tr>
+<tr class="result match">
+      <th>65</th>
+      <td></td>
+<td>$2.20</td>
+  
+    </tr>
+
+        </tbody>
+      </table>
+    </div>
+</body>
+</html>

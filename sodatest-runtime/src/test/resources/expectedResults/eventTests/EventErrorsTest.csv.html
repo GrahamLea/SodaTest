@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Event Errors Test (src/test/resources/testSources/eventTests/EventErrorsTest.csv)</title>
+    <link rel="stylesheet" type="text/css" href="../../../../main/resources/defaultStylesheet.css"/>
+</head><body class="failed"><div class="header">
+    <div class="title">
+        <h1>Event Errors Test</h1>
+        <h2>(src/test/resources/testSources/eventTests/EventErrorsTest.csv)</h2>
+    </div>
+    <div class="testResult">
+        <p>FAILED</p>
+    </div>
+</div>
+<div class="blockResult fixture success">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>1</th>
+            <td class="instruction">Fixture</td>
+            <td class="name">EventTestFixture</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult event inline failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>3</th>
+            <td class="instruction">Event</td>
+            <td class="name failureSource">Non-existent event</td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Fixture 'EventTestFixture' doesn't know how to create an event for 'Non-existent event'</p>
+
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="blockResult event inline failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>5</th>
+            <td class="instruction">Event</td>
+            <td class="name failureSource">Event with no parameters throwing exception</td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">An exception occurred while executing the event</p>
+                        <p class="errorCause">java.lang.RuntimeException: Event exception from EventTestFixture</p>
+                        <p class="stackTrace">java.lang.RuntimeException: Event exception from EventTestFixture
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.EventTestFixture$$anon$1.apply(EventTestFixture.scala:43)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult event failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>7</th>
+            <td class="instruction">Event</td>
+            <td class="name">Event with parameters throwing exception</td>
+            <td></td>
+            <td></td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="parameterNames">
+            <th>8</th>
+            <td></td>
+            <td>Param One</td>
+            <td>Param Two</td>
+            <td>Param Three</td>
+
+        </tr>
+        <tr class="parameterValues failureSource">
+            <th>9</th>
+            <td></td>
+            <td>First One</td>
+            <td>First Two</td>
+            <td>First Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">An exception occurred while executing the event</p>
+                        <p class="errorCause">java.lang.RuntimeException: Event exception from EventTestFixture</p>
+                        <p class="stackTrace">java.lang.RuntimeException: Event exception from EventTestFixture
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.EventTestFixture$$anon$1.apply(EventTestFixture.scala:43)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr class="parameterValues failureSource">
+            <th>10</th>
+            <td></td>
+            <td>Second One</td>
+            <td>Second Two</td>
+            <td>Second Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">An exception occurred while executing the event</p>
+                        <p class="errorCause">java.lang.RuntimeException: Event exception from EventTestFixture</p>
+                        <p class="stackTrace">java.lang.RuntimeException: Event exception from EventTestFixture
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.EventTestFixture$$anon$1.apply(EventTestFixture.scala:43)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult event failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>12</th>
+            <td class="instruction">Event</td>
+            <td class="name">Event with parameter bind exception</td>
+            <td></td>
+            <td></td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="parameterNames">
+            <th>13</th>
+            <td></td>
+            <td>Param One</td>
+            <td>Param Two</td>
+            <td>Param Three</td>
+
+        </tr>
+        <tr class="parameterValues failure">
+            <th>14</th>
+            <td></td>
+            <td>First One</td>
+<td class="failureSource">Error Two</td>
+            <td>First Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">C: The Action was unable to bind the value 'Error Two' to parameter 'Param Two'</p>
+                        <p class="errorCause">This fixture is programmed to do this</p>
+                        <p class="stackTrace">java.lang.RuntimeException: An exception causing a bind failure
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.EventTestFixture$$anon$1.apply(EventTestFixture.scala:37)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr class="parameterValues failure">
+            <th>15</th>
+            <td></td>
+<td class="failureSource">Error One</td>
+            <td>Second Two</td>
+<td class="failureSource">Error Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: The Action was unable to bind the value 'Error One' to parameter 'Param One'</p>
+                        <p class="errorCause">This fixture is programmed to do this</p>
+                        <p class="stackTrace">java.lang.RuntimeException: An exception causing a bind failure
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.EventTestFixture$$anon$1.apply(EventTestFixture.scala:37)
+                        </p>
+                    </li>
+                    <li>
+                        <p class="errorMessage">D: The Action was unable to bind the value 'Error Three' to parameter 'Param Three'</p>
+                        <p class="errorCause">This fixture is programmed to do this</p>
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

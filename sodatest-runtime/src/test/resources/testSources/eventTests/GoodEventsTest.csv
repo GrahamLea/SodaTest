@@ -1,0 +1,39 @@
+Fixture,EventTestFixture
+
+Event,Event with no parameters
+
+Report,Last executed event,!!
+,Event name:,Event with no parameters
+,Parameters:
+,Execution #1:
+
+Event,Event with one parameter
+,Parameter One
+,Test Value One
+
+Report,Last executed event,!!
+,Event name:,Event with one parameter
+,Parameters:,Parameter One
+,Execution #1:,Test Value One
+
+Event,Event with multiple parameters
+,Param One,Param Two,Param Three
+,1,2,3
+
+Report,Last executed event,!!
+,Event name:,Event with multiple parameters
+,Parameters:,Param One,Param Three,Param Two
+,Execution #1:,1,3,2
+
+Event,Event with multiple executions
+,Param One,Param Two
+,First One,First Two
+,Second One,Second Two
+,Third One,Third Two
+
+Report,Last executed event,!!
+,Event name:,Event with multiple executions
+,Parameters:,Param One,Param Two
+,Execution #1:,First One,First Two
+,Execution #2:,Second One,Second Two
+,Execution #3:,Third One,Third Two

@@ -1,0 +1,12 @@
+Fixture,UnknownTestFixture
+
+Fixture,ExceptionDuringCreationTestFixture
+
+Fixture,NonEmptyConstructorTestFixture
+
+Fixture,NonPublicClassTestFixture
+
+Fixture,NonPublicConstructorTestFixture
+
+Fixture,ClassNotImplementingSodaFixture
+

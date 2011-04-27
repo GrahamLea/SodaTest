@@ -1,0 +1,51 @@
+Fixture,ReportTestFixture
+
+Event,Record data for report
+,1,2,3,4
+,Line 1,One,Two,Three
+,Line 2,A,B,C
+,Line 3,Uno,Dos,Tres
+
+Report,Data collected from Events,!!
+,Line 1,One,Two,Three
+,Line 2,A,Z,C
+,Line 3,Uno,Dos,Tres
+
+Report,Data collected from Events,!!
+,Line 1,One,Two,Three
+,Line 2,A,B,C,D
+,Line 3,Uno,Dos,Tres
+
+Report,Data collected from Events,!!
+,Line 1,One,Two,Three
+,Line 2,A,B,
+,Line 3,Uno,Dos,Tres
+
+Report,Data collected from Events,!!
+,Line 1,One,Two,Three
+,Line 2,A,B,C
+,Line 3,Uno,Dos,Tres
+,Line 4,Don't,Remember,This one
+
+Report,Data collected from Events,!!
+,Line 1,One,Two,Three
+,Line 2,A,B,C
+
+Report,Data lines collected from Events
+,First Line,Last Line
+!!,1,3
+,Line 1,One,Two
+,Line 2,A,Z,C
+,Line 3,Uno,Dos,Tres,Cuatro
+,Line 4,One potato, Two potato,Three potato,Four,Five potato...
+!!,1,2
+,Line 1,One,Two,Three
+!!,3,3
+,Line 3,Uno,Dos,Tres
+
+Event,Record data for report
+,1,2,3
+,One,Two,Three
+
+Report,Data collected from Events,!!
+,One,Two

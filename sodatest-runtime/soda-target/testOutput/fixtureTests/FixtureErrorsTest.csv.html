@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+        <title>Fixture Errors Test (src/test/resources/testSources/fixtureTests/FixtureErrorsTest.csv)</title>
+        <style type="text/css">
+          * {     font-size: 12px;     line-height: 200%;     font-family: 'Helvetica', 'Arial', sans-serif; }  body {     margin: 3em;     padding-bottom: 3em;     white-space: nowrap; }  div, table, p {     border: 0;     margin: 0;     padding: 0; }  h1 {     font-size: 300%;     margin: 0;     padding: 0;     line-height: 1.2em;     vertical-align: bottom; }  h2 {     font-size: 120%;     color: #666;     margin: 0;     padding: 0; }  div.testResult {     border-bottom: 3px solid #666;     margin-bottom: 3em; }  div.testResult p {     font-weight: bold;     font-size: 200%; }  body.passed div.testResult {     color: #095; }  body.failed div.testResult {     color: #C00; }  table {     border-collapse: collapse; }  div.blockResult {     clear: both;     display: inline-block;     float: left;     padding: 0.5em;     border-width: 3px;     border-radius: 0.5em;     -moz-border-radius: 0.5em;     -webkit-border-radius: 0.5em;     border-style: solid;     border-color: #FFF;     margin-bottom: 2em; }  body div.failure {     border-color: #C00; }  div.success td.fixtureName, div.success.event.inline td.eventName, div.event tr.parameterValues.success {     background-color: #E8F4FF; }  tr.result.match {     background-color: #DFD; }  th + td {     background-color: #FFF; }  td.fixtureName, td.eventName, td.reportName {     font-weight: bold;     color: #444;     font-size: 140%; }   td.instruction, tr.parameterNames td, .reportInvoker {     font-weight: bold;     font-style: italic;     color: #444;     background-color: #F6F6F6; }  th {     background-color: #EEE;     border: 1px solid #CCC;     color: #888;     font-weight: normal; }  col.lineNumbers {     min-width: 3em;     height: 4px; }  tr:first-child td:first-child {     background-color: #CCC;     border: 1px solid #CCC; }  td {     font-size: 120%;     padding: 0.2em 0.7em;     border: 1px solid #DDD; }  td.failureSource {     background-color: #FF9999; }  td.failureAccomodator {     width: 100%;     border: 0; }  tr.failureDetails td {     border: 0; }  tr.failureDetails ul {     margin: 0;     padding: 0;     list-style: none; }  tr.failureDetails p.errorMessage { }  tr.failureDetails p.errorCause {     padding-left: 2em; }  p.stackTrace {     white-space: pre;     font-family: monospace;     font-size: 80%;     line-height: 1.2em;     margin-left: 10em;     color: #888; }
+        </style>
+      </head><body class="failed"><div class="header">
+        <div class="title">
+          <h1>Fixture Errors Test</h1>
+          <h2>(src/test/resources/testSources/fixtureTests/FixtureErrorsTest.csv)</h2>
+        </div>
+        <div class="testResult">
+          <p>FAILED</p>
+        </div>
+      </div>
+<div class="blockResult fixture failure">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>1</th>
+            <td class="instruction">Fixture</td>
+            <td class="fixtureName failureSource">UnknownTestFixture</td>
+            <td class="failureAccomodator"></td>
+          </tr>
+          <tr class="failureDetails">
+                    <td></td>
+                    <td colspan="3">
+                        <ul>
+                            <li>
+                              <p class="errorMessage">B: Fixture class not found</p>
+                              <p class="errorCause">java.lang.ClassNotFoundException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.UnknownTestFixture</p>
+                              
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult fixture failure">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>3</th>
+            <td class="instruction">Fixture</td>
+            <td class="fixtureName failureSource">ExceptionDuringCreationTestFixture</td>
+<td class="failureAccomodator"></td>
+          </tr>
+          <tr class="failureDetails">
+                    <td></td>
+                    <td colspan="3">
+                        <ul>
+                            <li>
+                              <p class="errorMessage">B: Error while creating Fixture: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ExceptionDuringCreationTestFixture</p>
+                              <p class="errorCause">java.lang.RuntimeException: This fixture throws an error when created</p>
+                              <p class="stackTrace">java.lang.RuntimeException: This fixture throws an error when created
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ExceptionDuringCreationTestFixture.&lt;init&gt;(ExceptionDuringCreationTestFixture.scala:8)
+  at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+  at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+  at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+  at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+  at au.com.belmonttechnology.sodatest.runtime.execution.activity.FixtureBlockExecutor$.execute(FixtureBlockExecutor.scala:26)
+  at au.com.belmonttechnology.sodatest.runtime.data.blocks.FixtureBlock.execute(FixtureBlock.scala:10)
+  at au.com.belmonttechnology.sodatest.runtime.data.blocks.FixtureBlock.execute(FixtureBlock.scala:9)
+  at au.com.belmonttechnology.sodatest.runtime.processing.execution.SodaTestExecutor$$anonfun$1.apply(SodaTestExecutor.scala:15)
+  at au.com.belmonttechnology.sodatest.runtime.processing.execution.SodaTestExecutor$$anonfun$1.apply(SodaTestExecutor.scala:15)
+  at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:206)
+  at scala.collection.TraversableLike$$anonfun$map$1.apply(TraversableLike.scala:206)
+  at scala.collection.LinearSeqOptimized$class.foreach(LinearSeqOptimized.scala:61)
+  at scala.collection.immutable.List.foreach(List.scala:45)
+  at scala.collection.TraversableLike$class.map(TraversableLike.scala:206)
+  at scala.collection.immutable.List.map(List.scala:45)
+  at au.com.belmonttechnology.sodatest.runtime.processing.execution.SodaTestExecutor.execute(SodaTestExecutor.scala:15)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFileRunner$.run(SodaFileRunner.scala:31)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFileRunner$.execute(SodaFileRunner.scala:19)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunner$$anonfun$run$3.apply(SodaFolderRunner.scala:19)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunner$$anonfun$run$3.apply(SodaFolderRunner.scala:18)
+  at scala.collection.LinearSeqOptimized$class.foreach(LinearSeqOptimized.scala:61)
+  at scala.collection.immutable.List.foreach(List.scala:45)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunner$.run(SodaFolderRunner.scala:18)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunner$$anonfun$run$5.apply(SodaFolderRunner.scala:23)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunner$$anonfun$run$5.apply(SodaFolderRunner.scala:22)
+  at scala.collection.IndexedSeqOptimized$class.foreach(IndexedSeqOptimized.scala:34)
+  at scala.collection.mutable.ArrayOps.foreach(ArrayOps.scala:35)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunner$.run(SodaFolderRunner.scala:22)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunner$.main(SodaFolderRunner.scala:37)
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.SodaFolderRunnerIntegrationTest.runFolderRunner(SodaFolderRunnerIntegrationTest.scala:31)
+  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+  at java.lang.reflect.Method.invoke(Method.java:597)
+  at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+  at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+  at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+  at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+  at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+  at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+  at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+  at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+  at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+  at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+  at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+  at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+  at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+  at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+  at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:62)
+  at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.executeTestSet(AbstractDirectoryTestSuite.java:140)
+  at org.apache.maven.surefire.suite.AbstractDirectoryTestSuite.execute(AbstractDirectoryTestSuite.java:127)
+  at org.apache.maven.surefire.Surefire.run(Surefire.java:177)
+  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+  at java.lang.reflect.Method.invoke(Method.java:597)
+  at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:345)
+  at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:1009)
+</p>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult fixture failure">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>5</th>
+            <td class="instruction">Fixture</td>
+            <td class="fixtureName failureSource">NonEmptyConstructorTestFixture</td>
+<td class="failureAccomodator"></td>
+          </tr>
+          <tr class="failureDetails">
+                    <td></td>
+                    <td colspan="3">
+                        <ul>
+                            <li>
+                              <p class="errorMessage">B: Couldn't find Fixture class no-arg constructor: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonEmptyConstructorTestFixture</p>
+                              <p class="errorCause">java.lang.NoSuchMethodException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonEmptyConstructorTestFixture.&lt;init&gt;()</p>
+                              
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult fixture failure">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>7</th>
+            <td class="instruction">Fixture</td>
+            <td class="fixtureName failureSource">NonPublicClassTestFixture</td>
+<td class="failureAccomodator"></td>
+          </tr>
+          <tr class="failureDetails">
+                    <td></td>
+                    <td colspan="3">
+                        <ul>
+                            <li>
+                              <p class="errorMessage">B: Fixture class not found</p>
+                              <p class="errorCause">java.lang.ClassNotFoundException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonPublicClassTestFixture</p>
+                              
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult fixture failure">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>9</th>
+            <td class="instruction">Fixture</td>
+            <td class="fixtureName failureSource">NonPublicConstructorTestFixture</td>
+<td class="failureAccomodator"></td>
+          </tr>
+          <tr class="failureDetails">
+                    <td></td>
+                    <td colspan="3">
+                        <ul>
+                            <li>
+                              <p class="errorMessage">B: Fixture class not found</p>
+                              <p class="errorCause">java.lang.ClassNotFoundException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonPublicConstructorTestFixture</p>
+                              
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<div class="blockResult fixture failure">
+      <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+          <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>11</th>
+            <td class="instruction">Fixture</td>
+            <td class="fixtureName failureSource">ClassNotImplementingSodaFixture</td>
+<td class="failureAccomodator"></td>
+          </tr>
+          <tr class="failureDetails">
+                    <td></td>
+                    <td colspan="3">
+                        <ul>
+                            <li>
+                              <p class="errorMessage">B: Class doesn't implement SodaFixture: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ClassNotImplementingSodaFixture</p>
+                              <p class="errorCause">java.lang.ClassCastException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ClassNotImplementingSodaFixture cannot be cast to au.com.belmonttechnology.sodatest.api.SodaFixture</p>
+                              
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+</body>
+</html>

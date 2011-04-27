@@ -1,0 +1,15 @@
+Fixture,EventTestFixture
+
+Event,Non-existent event
+
+Event,Event with no parameters throwing exception
+
+Event,Event with parameters throwing exception
+,Param One,Param Two,Param Three
+,First One,First Two,First Three
+,Second One,Second Two,Second Three
+
+Event,Event with parameter bind exception
+,Param One,Param Two,Param Three
+,First One,Error Two,First Three
+,Error One,Second Two,Error Three

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Fixture Errors Test (src/test/resources/testSources/fixtureTests/FixtureErrorsTest.csv)</title>
+    <link rel="stylesheet" type="text/css" href="../../../../main/resources/defaultStylesheet.css"/>
+</head><body class="failed"><div class="header">
+    <div class="title">
+        <h1>Fixture Errors Test</h1>
+        <h2>(src/test/resources/testSources/fixtureTests/FixtureErrorsTest.csv)</h2>
+    </div>
+    <div class="testResult">
+        <p>FAILED</p>
+    </div>
+</div>
+<div class="blockResult fixture failure">
+    <table>
+        <colgroup><col class="lineNumbers"/></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>1</th>
+            <td class="instruction">Fixture</td>
+            <td class="name failureSource">UnknownTestFixture</td>
+<td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Fixture class not found</p>
+                        <p class="errorCause">java.lang.ClassNotFoundException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.UnknownTestFixture</p>
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="blockResult fixture failure">
+    <table>
+        <colgroup><col class="lineNumbers"/></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>3</th>
+            <td class="instruction">Fixture</td>
+            <td class="name failureSource">ExceptionDuringCreationTestFixture</td>
+<td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Error while creating Fixture: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ExceptionDuringCreationTestFixture</p>
+                        <p class="errorCause">java.lang.RuntimeException: This fixture throws an error when created</p>
+                              <p class="stackTrace">java.lang.RuntimeException: This fixture throws an error when created
+  at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ExceptionDuringCreationTestFixture.&lt;init&gt;(ExceptionDuringCreationTestFixture.scala:8)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="blockResult fixture failure">
+    <table>
+        <colgroup><col class="lineNumbers"/></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>5</th>
+            <td class="instruction">Fixture</td>
+            <td class="name failureSource">NonEmptyConstructorTestFixture</td>
+<td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Couldn't find Fixture class no-arg constructor: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonEmptyConstructorTestFixture</p>
+                        <p class="errorCause">java.lang.NoSuchMethodException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonEmptyConstructorTestFixture.&lt;init&gt;()</p>
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="blockResult fixture failure">
+    <table>
+        <colgroup><col class="lineNumbers"/></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>7</th>
+            <td class="instruction">Fixture</td>
+            <td class="name failureSource">NonPublicClassTestFixture</td>
+<td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Couldn't access Fixture class or constructor: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonPublicClassTestFixture</p>
+                        <p class="errorCause">java.lang.IllegalAccessException: Class au.com.belmonttechnology.sodatest.runtime.execution.activity.FixtureBlockExecutor$ can not access a member of class au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonPublicClassTestFixture with modifiers &quot;public&quot;</p>
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="blockResult fixture failure">
+    <table>
+        <colgroup><col class="lineNumbers"/></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>9</th>
+            <td class="instruction">Fixture</td>
+            <td class="name failureSource">NonPublicConstructorTestFixture</td>
+<td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Couldn't access Fixture class or constructor: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonPublicConstructorTestFixture</p>
+                        <p class="errorCause">java.lang.IllegalAccessException: Class au.com.belmonttechnology.sodatest.runtime.execution.activity.FixtureBlockExecutor$ can not access a member of class au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.NonPublicConstructorTestFixture with modifiers &quot;&quot;</p>
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="blockResult fixture failure">
+    <table>
+        <colgroup><col class="lineNumbers"/></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>11</th>
+            <td class="instruction">Fixture</td>
+            <td class="name failureSource">ClassNotImplementingSodaFixture</td>
+<td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="3">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Class doesn't implement SodaFixture: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ClassNotImplementingSodaFixture</p>
+                              <p class="errorCause">java.lang.ClassCastException: au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ClassNotImplementingSodaFixture cannot be cast to au.com.belmonttechnology.sodatest.api.SodaFixture</p>
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

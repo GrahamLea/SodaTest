@@ -1,0 +1,20 @@
+Fixture,ReportTestFixture
+
+Report,Non-existent report,!!
+
+Report,Report with no parameters throwing exception,!!
+,No output expected
+
+Report,Report with parameters throwing exception
+,Param One,Param Two,Param Three
+!!,First One,First Two,First Three
+,No output expected
+!!,Second One,Second Two,Second Three
+,No output expected
+
+Report,Report with parameter bind exception
+,Param One,Param Two,Param Three
+!!,First One,Error Two,First Three
+,No output expected
+!!,Error One,Second Two,Error Three
+,No output expected

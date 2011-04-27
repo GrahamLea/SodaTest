@@ -1,0 +1,24 @@
+Fixture,ReportTestFixture
+
+Event,Record data for report
+,1,2,3,4
+,Line 1,One,Two,Three
+,Line 2,A,B,C
+,Line 3,Uno,Dos,Tres
+
+Report,Data collected from Events,!!
+,Line 1,One,Two,Three
+,Line 2,A,B,C
+,Line 3,Uno,Dos,Tres
+
+Report,Data lines collected from Events
+,First Line,Last Line
+!!,1,3
+,Line 1,One,Two,Three
+,Line 2,A,B,C
+,Line 3,Uno,Dos,Tres
+!!,1,2
+,Line 1,One,Two,Three
+,Line 2,A,B,C
+!!,3,3
+,Line 3,Uno,Dos,Tres

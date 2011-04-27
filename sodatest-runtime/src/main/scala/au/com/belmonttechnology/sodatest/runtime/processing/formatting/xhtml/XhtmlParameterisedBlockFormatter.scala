@@ -1,0 +1,75 @@
+// Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
+
+package au.com.belmonttechnology.sodatest
+package runtime.processing.formatting.xhtml
+
+import runtime.data.blocks._
+import xml.NodeSeq
+import collection.immutable.List._
+import runtime.data.results._
+
+private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](result: BlockResult[T])
+  extends XhtmlBlockFormatter[T](result) {
+
+  def parameterNames: NodeSeq = {
+    if (!block.inline) {
+      lineToHtml(blockSource.lines(1), "parameterNames")
+    } else {
+      NO_XML
+    }
+  }
+
+  def bindFailureDetails(bindException: ParameterBindingException, result: BlockResult[_ <: ParamterisedBlock]) = {
+    for (val failure <- bindException.bindFailures) yield {
+      val parameterIndex = result.block.parameterNames.indexOf(failure.parameterName) + 1
+      val blockType = if (result.isInstanceOf[ReportBlockResult]) "Report" else "Action"
+      errorDetails(errorMessage = letters(parameterIndex) + ": The " + blockType + " was unable to bind the value '" + failure.parameterValue + "' to parameter '" + failure.parameterName + "'",
+                    errorCause = Some(failure.errorMessage),
+                    causeToString = failure.exception.map(_.toString),
+                    stackTrace = failure.exception.map(_.getStackTrace)) ++ NEWLINE
+    }
+  }
+
+  def parameterValuesRow[T <: ExecutionResult[_ <: ParameterValuesContainer]](executionResult: T): NodeSeq = {
+    executionResult.execution.parameterValues match {
+      case None => NO_XML
+      case Some(line) => {
+        val (rowClass, invokerClass, bindException) = executionResult.error match {
+          case None => (if (executionResult.isInstanceOf[EventExecutionResult]) " success" else "", " success", None)
+          case Some(error) => error.cause match {
+            case Some(bindException: ParameterBindingException) => (" failure", "", Some(bindException))
+            case _ => (" failureSource", " failure", None)
+          }
+        }
+        val bindFailureParameterNames: List[String] = bindException.map(e => e.bindFailures).getOrElse(Nil).map(_.parameterName)
+        <tr class={"parameterValues" + rowClass}>
+          <th>{line.lineNumber}</th>
+          {for (val parameterNamesAndValues <- ("" :: block.parameterNames) zip line.cells) yield
+            (if (parameterNamesAndValues._2 == "!!")
+              <td class={"reportInvoker" + invokerClass}>{parameterNamesAndValues._2}</td>
+            else if (bindFailureParameterNames.contains(parameterNamesAndValues._1)) {
+              <td class="failureSource">{parameterNamesAndValues._2}</td>
+            } else {
+              <td>{parameterNamesAndValues._2}</td>
+            }) ++ NEWLINE} {emptyCellsFrom(line.cells.size)}
+        </tr> ++ NEWLINE
+      }
+    }
+  }
+
+  @inline
+  def lineToHtml(line: Line, rowClass: String, containsExecutionError: Boolean = false, extraCell: Option[NodeSeq] = None): NodeSeq =
+    cellsToHtml(Some(line.lineNumber), line.cells, rowClass, containsExecutionError, extraCell)
+
+  @inline
+  def cellsToHtml(lineNumber: Option[Int], cells: List[String], rowClass: String, containsExecutionError: Boolean = false, extraCell: Option[NodeSeq] = None): NodeSeq = {
+    <tr class={rowClass}>
+      <th>{lineNumber match { case Some(i) => i; case None => "-"}}</th>
+      {for (val cell <- cells) yield
+        (if (cell == "!!")
+        <td class={"reportInvoker " + (if (containsExecutionError) "failure" else "success")}>{cell}</td>
+        else
+        <td>{cell}</td>) ++ NEWLINE} {emptyCellsFrom(cells.size)} {if (extraCell != None) extraCell.get}
+    </tr> ++ NEWLINE
+  }
+}

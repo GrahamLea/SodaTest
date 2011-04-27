@@ -1,0 +1,224 @@
+*
+{
+    font-size: 12px;
+    line-height: 200%;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+body
+{
+    margin: 3em;
+    padding-bottom: 3em;
+    white-space: nowrap;
+}
+
+div, table, p
+{
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+h1
+{
+    font-size: 300%;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2em;
+    vertical-align: bottom;
+}
+
+h2
+{
+    font-size: 120%;
+    color: #666;
+    margin: 0;
+    padding: 0;
+}
+
+div.testResult
+{
+    border-bottom: 3px solid #666;
+    margin-bottom: 3em;
+}
+
+div.testResult p
+{
+    font-weight: bold;
+    font-size: 200%;
+}
+
+body.passed div.testResult {
+    color: #095;
+}
+
+body.failed div.testResult {
+    color: #C00;
+}
+
+table
+{
+    border-collapse: collapse;
+}
+
+div.blockResult
+{
+    clear: both;
+    display: inline-block;
+    float: left;
+    padding: 0.5em;
+    border-width: 3px;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    -webkit-border-radius: 0.5em;
+    border-style: solid;
+    border-color: #FFF;
+    margin-bottom: 2em;
+}
+
+body div.failure
+{
+    border-color: #C00;
+}
+
+div.success.fixture td.name,
+div.success.event.inline td.name,
+div.event tr.parameterValues.success
+{
+    background-color: #E8F4FF;
+}
+
+tr.result.match,
+tr.result td.match
+{
+    background-color: #DFD;
+}
+
+th + td
+{
+    background-color: #FFF;
+}
+
+td.name
+{
+    font-weight: bold;
+    color: #444;
+    font-size: 140%;
+}
+
+
+td.instruction,
+tr.parameterNames td,
+.reportInvoker
+{
+    font-weight: bold;
+    font-style: italic;
+    color: #444;
+    background-color: #F6F6F6;
+}
+
+.reportInvoker
+{
+    text-align: center;
+}
+
+th
+{
+    background-color: #EEE;
+    border: 1px solid #CCC;
+    color: #888;
+    font-weight: normal;
+}
+
+col.lineNumbers
+{
+    min-width: 3em;
+}
+
+tr:first-child td:first-child
+{
+    background-color: #CCC;
+    border: 1px solid #CCC;
+}
+
+td
+{
+    font-size: 120%;
+    padding: 0.2em 0.7em;
+    border: 1px solid #DDD;
+}
+
+td.failureSource,
+tr.failureSource,
+td.mismatch,
+td.missing,
+td.extra,
+tr.missing
+{
+    background-color: #FF9999;
+}
+
+td.failureAccomodator
+{
+    width: 100%;
+    border: 0;
+}
+
+tr.failureDetails td
+{
+    border: 0;
+}
+
+tr.failureDetails ul
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+tr.failureDetails p.errorMessage
+{
+}
+
+tr.failureDetails p.errorCause
+{
+    padding-left: 2em;
+}
+
+p.stackTrace {
+    white-space: pre;
+    font-family: monospace;
+    font-size: 80%;
+    line-height: 1.2em;
+    margin-left: 10em;
+    color: #888;
+}
+
+span.valueLabel
+{
+    display: inline-block;
+    width: 5em;
+}
+
+td.mismatch hr
+{
+    border-color: #000;
+    border-style: solid;
+    border-width: 1px;
+    opacity: 0.6;
+}
+
+td.lineNote
+{
+    border: 0;
+    background-color: #FFF;
+}
+
+td.lineNote,
+tr.missing th,
+tr.extra th,
+tr.extra td
+{
+    color: #C00;
+    font-weight: bold;
+}

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Report Errors Test (src/test/resources/testSources/reportTests/ReportErrorsTest.csv)</title>
+    <link rel="stylesheet" type="text/css" href="../../../../main/resources/defaultStylesheet.css"/>
+</head><body class="failed"><div class="header">
+    <div class="title">
+        <h1>Report Errors Test</h1>
+        <h2>(src/test/resources/testSources/reportTests/ReportErrorsTest.csv)</h2>
+    </div>
+    <div class="testResult">
+        <p>FAILED</p>
+    </div>
+</div>
+<div class="blockResult fixture success">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>1</th>
+            <td class="instruction">Fixture</td>
+            <td class="name">ReportTestFixture</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult report inline failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>3</th>
+            <td class="instruction">Report</td>
+            <td class="name failureSource">Non-existent report</td>
+            <td class="reportInvoker failure">!!</td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="4">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Fixture 'ReportTestFixture' doesn't know how to create a report for 'Non-existent report'</p>
+
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult report inline failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>5</th>
+            <td class="instruction">Report</td>
+            <td class="name failureSource">Report with no parameters throwing exception</td>
+            <td class="reportInvoker failure">!!</td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="4">
+                <ul>
+                    <li>
+                        <p class="errorMessage">An exception occurred while executing the report</p>
+                        <p class="errorCause">java.lang.RuntimeException: Report exception from ReportTestFixture</p>
+                        <p class="stackTrace">java.lang.RuntimeException: Report exception from ReportTestFixture
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$5.apply(ReportTestFixture.scala:93)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult report failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>8</th>
+            <td class="instruction">Report</td>
+            <td class="name">Report with parameters throwing exception</td>
+
+            <td></td>
+            <td></td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="parameterNames">
+            <th>9</th>
+            <td></td>
+            <td>Param One</td>
+            <td>Param Two</td>
+            <td>Param Three</td>
+
+        </tr>
+
+        <tr class="parameterValues failureSource">
+            <th>10</th>
+            <td class="reportInvoker failure">!!</td>
+            <td>First One</td>
+            <td>First Two</td>
+            <td>First Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">An exception occurred while executing the report</p>
+                        <p class="errorCause">java.lang.RuntimeException: Report exception from ReportTestFixture</p>
+                        <p class="stackTrace">java.lang.RuntimeException: Report exception from ReportTestFixture
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$5.apply(ReportTestFixture.scala:93)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr class="parameterValues failureSource">
+            <th>12</th>
+            <td class="reportInvoker failure">!!</td>
+            <td>Second One</td>
+            <td>Second Two</td>
+            <td>Second Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">An exception occurred while executing the report</p>
+                        <p class="errorCause">java.lang.RuntimeException: Report exception from ReportTestFixture</p>
+                        <p class="stackTrace">java.lang.RuntimeException: Report exception from ReportTestFixture
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$5.apply(ReportTestFixture.scala:93)
+                        </p>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult report failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>15</th>
+            <td class="instruction">Report</td>
+            <td class="name">Report with parameter bind exception</td>
+
+            <td></td>
+            <td></td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="parameterNames">
+            <th>16</th>
+            <td></td>
+            <td>Param One</td>
+            <td>Param Two</td>
+            <td>Param Three</td>
+
+        </tr>
+
+        <tr class="parameterValues failure">
+            <th>17</th>
+            <td class="reportInvoker">!!</td>
+            <td>First One</td>
+            <td class="failureSource">Error Two</td>
+            <td>First Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">C: The Report was unable to bind the value 'Error Two' to parameter 'Param Two'</p>
+                        <p class="errorCause">This fixture is programmed to do this</p>
+                        <p class="stackTrace">java.lang.RuntimeException: An exception causing a bind failure
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$4.apply(ReportTestFixture.scala:84)
+                        </p>
+                    </li>
+
+                </ul>
+            </td>
+        </tr>
+        <tr class="parameterValues failure">
+            <th>19</th>
+            <td class="reportInvoker">!!</td>
+            <td class="failureSource">Error One</td>
+            <td>Second Two</td>
+            <td class="failureSource">Error Three</td>
+
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="5">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: The Report was unable to bind the value 'Error One' to parameter 'Param One'</p>
+                        <p class="errorCause">This fixture is programmed to do this</p>
+                        <p class="stackTrace">java.lang.RuntimeException: An exception causing a bind failure
+at au.com.belmonttechnology.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$4.apply(ReportTestFixture.scala:84)
+                        </p>
+                    </li>
+                    <li>
+                        <p class="errorMessage">D: The Report was unable to bind the value 'Error Three' to parameter 'Param Three'</p>
+                        <p class="errorCause">This fixture is programmed to do this</p>
+
+                    </li>
+
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
