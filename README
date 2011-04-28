@@ -64,16 +64,18 @@ TASKS ON THE ROADMAP
 The project is definitely in its infantile stages.
 These are the things that make the most sense to achieve in the near future, listed in rough priority order.
 
+If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
+
 * Rename everything about 'Action's to 'Event'
 * FolderRunner argument checking and usage advice
+* Java example
+* Parsing errors commuted to output
 * FolderRunner output an index page
 * Note blocks
 * Support for automatic formatting of report output to strings
 * More appropriate logging level out of the box
-* Listeners for catching the start+end of multiple-execution actions (e.g. writing a  multi-line file)
-* Parsing errors commuted to output
 * Shortcut for single-parameter blocks (Report, <reportName>, <parameterValue>)
-* Java example
+* Listeners for catching the start+end of multiple-execution actions (e.g. writing a  multi-line file)
 * JUnit integration & example
 * Spring integration & example
 * Maven plugin
