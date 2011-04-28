@@ -56,7 +56,6 @@ TASKS ON THE ROADMAP
 The project is definitely in its infantile stages.
 These are the things that make the most sense to achieve in the near future, listed in rough priority order.
 
-* Update Copyright statements to Apache Licence
 * Move Coercion into its own Module
 * Rename everything about 'Action's to 'Event'
 * FolderRunner argument checking and usage advice
@@ -70,3 +69,6 @@ These are the things that make the most sense to achieve in the near future, lis
 * JUnit integration & example
 * Spring integration & example
 * Maven plugin
+
+
+Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
