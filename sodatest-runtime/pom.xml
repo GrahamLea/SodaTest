@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>au.com.belmonttechnology</groupId>
+    <groupId>org.sodatest</groupId>
     <artifactId>sodatest-runtime</artifactId>
     <version>0.1-SNAPSHOT</version>
 
@@ -10,7 +10,7 @@
     <inceptionYear>2010</inceptionYear>
 
     <parent>
-        <groupId>au.com.belmonttechnology</groupId>
+        <groupId>org.sodatest</groupId>
         <artifactId>sodatest-parent</artifactId>
         <version>0.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
@@ -18,7 +18,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>au.com.belmonttechnology</groupId>
+            <groupId>org.sodatest</groupId>
             <artifactId>sodatest-api</artifactId>
         </dependency>
         <dependency>
