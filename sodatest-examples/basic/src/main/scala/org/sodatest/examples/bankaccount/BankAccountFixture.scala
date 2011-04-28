@@ -22,10 +22,10 @@ import org.sodatest.api.reflection._
 class BankAccountFixture extends ReflectiveSodaFixture {
   val service = new BankAccountService()
 
-  def openAccount = new OpenAccountAction(service)
-  def deposit = new DepositAction(service)
-  def withdraw = new WithdrawAction(service)
-  def endOfMonth = new EndOfMonthAction(service)
+  def openAccount = new OpenAccountEvent(service)
+  def deposit = new DepositEvent(service)
+  def withdraw = new WithdrawEvent(service)
+  def endOfMonth = new EndOfMonthEvent(service)
 
   def balance = new BalanceReport(service)
 }
@@ -39,7 +39,7 @@ class BalanceReport(val service: BankAccountService) extends ReflectiveSodaRepor
   }
 }
 
-class OpenAccountAction(val service: BankAccountService) extends ReflectiveSodaEvent {
+class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
   var accountName: String = null;
 
   def apply() {
@@ -47,7 +47,7 @@ class OpenAccountAction(val service: BankAccountService) extends ReflectiveSodaE
   }
 }
 
-class DepositAction(val service: BankAccountService) extends ReflectiveSodaEvent {
+class DepositEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
   var accountName: String = null;
   var amount: Money = null;
 
@@ -59,7 +59,7 @@ class DepositAction(val service: BankAccountService) extends ReflectiveSodaEvent
   }
 }
 
-class WithdrawAction(val service: BankAccountService) extends ReflectiveSodaEvent {
+class WithdrawEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
   var accountName: String = null;
   var amount: Money = null;
 
@@ -71,7 +71,7 @@ class WithdrawAction(val service: BankAccountService) extends ReflectiveSodaEven
   }
 }
 
-class EndOfMonthAction(val service: BankAccountService) extends ReflectiveSodaEvent {
+class EndOfMonthEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
   def apply() {
     service.accountsByName.values.foreach(b => {b.balance = b.balance + (b.balance * "0.1") })
   }

@@ -178,8 +178,8 @@ class BlockFactorySpec extends SpecificationWithJUnit {
     }
 
     // TODO: Extra cases:
-    // Action with no parameters and no !!
-    // Action with parameters but no values
+    // Event with no parameters and no !!
+    // Event with parameters but no values
     // Report with no parameters and no !!
     // Report with parameters but no values
     // Report with no output okay?

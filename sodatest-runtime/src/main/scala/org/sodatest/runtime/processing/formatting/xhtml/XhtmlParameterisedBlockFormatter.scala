@@ -36,7 +36,7 @@ private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](re
   def bindFailureDetails(bindException: ParameterBindingException, result: BlockResult[_ <: ParamterisedBlock]) = {
     for (val failure <- bindException.bindFailures) yield {
       val parameterIndex = result.block.parameterNames.indexOf(failure.parameterName) + 1
-      val blockType = if (result.isInstanceOf[ReportBlockResult]) "Report" else "Action"
+      val blockType = if (result.isInstanceOf[ReportBlockResult]) "Report" else "Event"
       errorDetails(errorMessage = letters(parameterIndex) + ": The " + blockType + " was unable to bind the value '" + failure.parameterValue + "' to parameter '" + failure.parameterName + "'",
                     errorCause = Some(failure.errorMessage),
                     causeToString = failure.exception.map(_.toString),
