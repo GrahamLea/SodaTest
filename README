@@ -62,6 +62,7 @@ These are the things that make the most sense to achieve in the near future, lis
 * FolderRunner output an index page
 * Note blocks
 * Support for automatic formatting of report output to strings
+* More appropriate logging level out of the box
 * Listeners for catching the start+end of multiple-execution actions (e.g. writing a  multi-line file)
 * Parsing errors commuted to output
 * Shortcut for single-parameter blocks (Report, <reportName>, <parameterValue>)
