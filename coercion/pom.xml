@@ -3,10 +3,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sodatest</groupId>
-    <artifactId>sodatest-api</artifactId>
+    <artifactId>coercion</artifactId>
     <version>0.1-SNAPSHOT</version>
 
-    <name>SodaTest API</name>
+    <name>SodaTest Coercion</name>
     <inceptionYear>2010</inceptionYear>
 
     <parent>
@@ -17,10 +17,6 @@
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>org.sodatest</groupId>
-            <artifactId>coercion</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>

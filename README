@@ -39,10 +39,12 @@ Other things that SodaTest tries to achieve are:
 
 PROJECT SECTIONS
 
-The SodaTest project is made up of 3 modules at present:
+The SodaTest project is made up of the following modules:
 
 * 'SodaTest API' is the only module on which your test code should depend at compile-time.
   The org.sodatest.api package contains the traits to be implemented in order to implement fixtures.
+
+* 'SodaTest Coercion' is a module used by the reflection parts of the API to coerce strings into strong types
 
 * 'SodaTest Runtime' contains applications that can be used to execute SodaTests.
   The SodaFolderRunner class in the org.sodatest.runtime.processing.running is currently the main
@@ -56,7 +58,6 @@ TASKS ON THE ROADMAP
 The project is definitely in its infantile stages.
 These are the things that make the most sense to achieve in the near future, listed in rough priority order.
 
-* Move Coercion into its own Module
 * Rename everything about 'Action's to 'Event'
 * FolderRunner argument checking and usage advice
 * FolderRunner output an index page

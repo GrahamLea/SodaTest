@@ -73,6 +73,11 @@
         <dependencies>
             <dependency>
                 <groupId>org.sodatest</groupId>
+                <artifactId>coercion</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.sodatest</groupId>
                 <artifactId>sodatest-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -102,6 +107,7 @@
     </dependencyManagement>
 
     <modules>
+        <module>coercion</module>
         <module>sodatest-api</module>
         <module>sodatest-runtime</module>
         <module>sodatest-examples</module>
