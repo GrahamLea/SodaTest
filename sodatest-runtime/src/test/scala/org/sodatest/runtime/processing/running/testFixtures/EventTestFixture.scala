@@ -44,7 +44,6 @@ class EventTestFixture extends SodaFixture {
                 None
             })
 
-            println("@@@ bindFailures = " + bindFailures)
             bindFailures match {
               case head :: tail =>
                 throw new ParameterBindingException(
