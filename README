@@ -48,13 +48,16 @@ The SodaTest project is made up of 3 modules at present:
   The SodaFolderRunner class in the org.sodatest.runtime.processing.running is currently the main
   entry point for running tests.
 
+* 'SodaTest Examples' contains examples of how to use different features of SodaTest
+
 
 TASKS ON THE ROADMAP
 
 The project is definitely in its infantile stages.
 These are the things that make the most sense to achieve in the near future, listed in rough priority order.
 
-* Update Copyright statements to Apache
+* Update Copyright statements to Apache Licence
+* Move Coercion into its own Module
 * Rename everything about 'Action's to 'Event'
 * FolderRunner argument checking and usage advice
 * FolderRunner output an index page
