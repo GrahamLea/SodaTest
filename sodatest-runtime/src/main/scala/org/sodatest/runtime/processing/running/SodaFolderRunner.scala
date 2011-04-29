@@ -20,35 +20,69 @@ package running
 
 import java.io.File
 import org.sodatest.api.SodaTestLog
-
 object SodaFolderRunner {
 
-  def run(inputFolder: File, outputFolder: File)(implicit properties: SodaTestProperties, log: SodaTestLog) {
-    // TODO: something nicer than assertions
-    assert(inputFolder.exists, "Input folder doesn't exist: " + inputFolder)
-    assert(outputFolder.exists || outputFolder.mkdirs, "Failed to create " + outputFolder)
+  class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
-    val csvFiles = inputFolder.listFiles.toList.filter(_.getName.toLowerCase.endsWith(".csv"))
-    for (val testFile <- csvFiles) {
-      SodaFileRunner.execute(testFile, new File(outputFolder, testFile.getName + ".html"), properties)
+  def run(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog) {
+    checkDirectories(inputDirectory, outputDirectory)
+
+    def runRecursive(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog) {
+      if (!outputDirectory.exists && !outputDirectory.mkdirs)
+        error("Failed to create output directory " + outputDirectory.getAbsolutePath)
+
+      for (val testFile <- inputDirectory.listFiles.filter(_.getName.toLowerCase.endsWith(".csv"))) {
+        SodaFileRunner.execute(testFile, new File(outputDirectory, testFile.getName + ".html"), properties)
+      }
+      // Recurse into sub-directories
+      for (val inputSubdirectory <- inputDirectory.listFiles.filter(_.isDirectory)) {
+        runRecursive(inputSubdirectory, new File(outputDirectory, inputSubdirectory.getName))
+      }
     }
 
-    for (val inputSubdirectory <- inputFolder.listFiles.filter(_.isDirectory)) {
-      run(inputSubdirectory, new File(outputFolder, inputSubdirectory.getName))
-    }
+    runRecursive(inputDirectory, outputDirectory)
+  }
 
-    //TODO: return codes
+  private def checkDirectories(inputDirectory: File, outputDirectory: File): Unit = {
+    if (!inputDirectory.exists)
+      throw new InvalidDirectoryException("Input directory " + inputDirectory.getAbsolutePath + " does not exist")
+
+    if (!inputDirectory.isDirectory)
+      throw new InvalidDirectoryException("Input directory " + inputDirectory.getAbsolutePath + " is not a directory")
+
+    if (!inputDirectory.canRead)
+      throw new InvalidDirectoryException("Insufficient permissions to read input directory " + inputDirectory.getAbsolutePath)
+
+    if (!outputDirectory.exists && !outputDirectory.mkdirs)
+      throw new InvalidDirectoryException("Failed to create output directory " + outputDirectory.getAbsolutePath)
+
+    if (!outputDirectory.isDirectory)
+      throw new InvalidDirectoryException("Output directory " + inputDirectory.getAbsolutePath + " is not a directory")
   }
 
   def main(args: Array[String]) {
-    // TODO: Argument checking
-    val fixtureRoot = args(0)
-    val inputFolder = new File(args(1))
-    val outputFolder = new File(args(2))
-    implicit val log = new ConsoleLog()
+    if (args.length != 3)
+      usage
 
+    val fixtureRoot = args(0)
+    val inputDirectory = new File(args(1))
+    val outputDirectory = new File(args(2))
+    implicit val log = new ConsoleLog()
     implicit val properties = new SodaTestProperties(fixtureRoot)
-    run(inputFolder, outputFolder)
+
+    try {
+      run(inputDirectory, outputDirectory)
+    } catch {
+      case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage))
+    }
   }
 
+  private def usage: Nothing = usage(None)
+
+  private def usage(message: Option[String]): Nothing = {
+    message map {System.err.println(_)}
+
+    System.err.println("usage: SodaDirectoryRunner <fixture_root_package> <input_directory> <output_directory>")
+    exit(1)
+  }
 }

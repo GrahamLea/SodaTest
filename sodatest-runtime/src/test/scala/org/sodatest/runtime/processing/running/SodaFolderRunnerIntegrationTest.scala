@@ -51,7 +51,7 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
 
   @Test
   def runFolderRunner() {
-//    cleanOnShutdown
+    cleanOnShutdown()
 
     SodaFolderRunner.main(Array(fixtureRoot, source, results))
 
@@ -83,10 +83,10 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
     f(document).toString.trim.replaceAll("\n +", "\n").replaceAll("\n\n+", "\n")
   }
 
-  private def cleanOnShutdown: Unit = {
+  private def cleanOnShutdown(): Unit = {
     Runtime.getRuntime.addShutdownHook(new Thread(new Runnable() {
-      def run {
-        clean(new File("soda-target"))
+      def run() {
+        clean(targetFolder)
       }
 
       def clean(f: File) {
