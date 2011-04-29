@@ -24,20 +24,25 @@ object SodaFolderRunner {
 
   class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
-  def run(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog) {
+  def run(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): Boolean = {
     checkDirectories(inputDirectory, outputDirectory)
 
-    def runRecursive(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog) {
+    def runRecursive(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): Boolean = {
       if (!outputDirectory.exists && !outputDirectory.mkdirs)
         error("Failed to create output directory " + outputDirectory.getAbsolutePath)
 
-      for (val testFile <- inputDirectory.listFiles.filter(_.getName.toLowerCase.endsWith(".csv"))) {
-        SodaFileRunner.execute(testFile, new File(outputDirectory, testFile.getName + ".html"), properties)
-      }
+      val resultsInDirectory =
+        for (val testFile <- inputDirectory.listFiles.filter(_.getName.toLowerCase.endsWith(".csv"))) yield {
+          SodaFileRunner.execute(testFile, new File(outputDirectory, testFile.getName + ".html"), properties)
+        }
+
       // Recurse into sub-directories
-      for (val inputSubdirectory <- inputDirectory.listFiles.filter(_.isDirectory)) {
-        runRecursive(inputSubdirectory, new File(outputDirectory, inputSubdirectory.getName))
-      }
+      val resultsInSubdirectories =
+        for (val inputSubdirectory <- inputDirectory.listFiles.filter(_.isDirectory)) yield {
+          runRecursive(inputSubdirectory, new File(outputDirectory, inputSubdirectory.getName))
+        }
+
+      !(resultsInDirectory ++ resultsInSubdirectories).contains(false)
     }
 
     runRecursive(inputDirectory, outputDirectory)
@@ -60,7 +65,11 @@ object SodaFolderRunner {
       throw new InvalidDirectoryException("Output directory " + inputDirectory.getAbsolutePath + " is not a directory")
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
+    exit(if (mainWithoutExit(args)) 0 else 1)
+  }
+
+  def mainWithoutExit(args: Array[String]): Boolean = {
     if (args.length != 3)
       usage
 

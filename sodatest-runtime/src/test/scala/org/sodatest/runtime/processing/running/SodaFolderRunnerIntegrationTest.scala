@@ -53,7 +53,7 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
   def runFolderRunner() {
     cleanOnShutdown()
 
-    SodaFolderRunner.main(Array(fixtureRoot, source, results))
+    assertThat(SodaFolderRunner.mainWithoutExit(Array(fixtureRoot, source, results)), is(false))
 
     assertThat(targetFolder.exists, is(true))
 

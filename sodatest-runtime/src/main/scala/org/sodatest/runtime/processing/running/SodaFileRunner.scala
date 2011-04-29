@@ -26,34 +26,35 @@ import parsing.blocks.{BlockSourceSplitter, BlockFactory}
 import parsing.csv.CsvCellSplitter
 import java.io.{FileWriter, PrintWriter, FileInputStream, BufferedInputStream, File}
 import org.sodatest.api.SodaTestLog
+import data.results.SodaTestResult
 
 object SodaFileRunner {
 
-  def execute(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog) {
+  def execute(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): Boolean = {
     log.info("Running " + inputFile)
-    val output = run(inputFile, outputFile, properties)
+    val (passed, output) = run(inputFile, outputFile, properties)
     log.info("Writing " + outputFile)
-    val out = new PrintWriter(new FileWriter(outputFile))
+    val writer = new PrintWriter(new FileWriter(outputFile))
     try {
-      out.println(output)
+      writer.println(output)
     } finally {
-      out.close
+      writer.close
     }
+    passed
   }
 
-  private def run(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog) = {
-    new XhtmlFormatter().format(
-      new SodaTestExecutor().execute(
-        new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, new BlockFactory().create(
-          new BlockSourceSplitter().parseBlocks(
-            new CsvCellSplitter().split(
-              new BufferedInputStream(new FileInputStream(inputFile))
-            )
-          ))
-        ),
-        new SodaTestContext(properties = properties)
-      )
+  private def run(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): (Boolean, String) = {
+    val testResult: SodaTestResult = new SodaTestExecutor().execute(
+      new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, new BlockFactory().create(
+        new BlockSourceSplitter().parseBlocks(
+          new CsvCellSplitter().split(
+            new BufferedInputStream(new FileInputStream(inputFile))
+          )
+        ))
+      ),
+      new SodaTestContext(properties = properties)
     )
+    (testResult.passed, new XhtmlFormatter().format(testResult))
   }
 
   def main(args: Array[String]) {
