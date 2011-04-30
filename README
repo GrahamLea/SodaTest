@@ -61,23 +61,8 @@ The SodaTest project is made up of the following modules:
 
 TASKS ON THE ROADMAP
 
-The project is definitely in its infantile stages.
-These are the things that make the most sense to achieve in the near future, listed in rough priority order.
-
+A roadmap for features that need to be implemented to make the framework more complete is listed in Roadmap.txt.
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
-
-* More comprehensive basic example
-* Java example
-* Parsing errors commuted to output
-* FolderRunner output an index page
-* Note blocks
-* Support for automatic formatting of report output to strings
-* More appropriate logging level out of the box
-* Shortcut for single-parameter blocks (Report, <reportName>, <parameterValue>)
-* Listeners for catching the start+end of multiple-execution events (e.g. writing a  multi-line file)
-* JUnit integration & example
-* Spring integration & example
-* Maven plugin
 
 
 Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
