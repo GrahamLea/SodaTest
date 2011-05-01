@@ -64,8 +64,7 @@ private[reflection] object ReflectionUtil {
   }
 
   def setByReflection[A <: Object](parameters: Map[String, String], target: A): A = {
-    // TODO: Need to go deeper than declared methods? Only use public methods?
-    setByReflection(withCanonicalKeyNames(parameters), target, coercionRegisterIn(target), target.getClass.getDeclaredMethods.toList)
+    setByReflection(withCanonicalKeyNames(parameters), target, coercionRegisterIn(target), target.getClass.getMethods.toList)
   }
 
   private def coercionRegisterIn(target: AnyRef) : Option[CoercionRegister] = {

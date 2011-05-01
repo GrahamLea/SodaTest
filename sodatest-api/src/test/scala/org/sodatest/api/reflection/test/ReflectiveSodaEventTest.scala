@@ -47,6 +47,25 @@ class ReflectiveSodaEventTest {
   }
 
   @Test
+  def apply_StringOnSuperClass() {
+
+    abstract class SuperClassEvent extends ReflectiveSodaEvent {
+      var value1: String = null
+    }
+    class SubClassEvent extends SuperClassEvent {
+      var value2: String = null
+      def apply() = { }
+    }
+
+    val event = new SubClassEvent
+
+    event.apply(Map("value1" -> "First value", "value2" -> "Second value"))
+
+    assertThat(event.value1, is("First value"))
+    assertThat(event.value2, is("Second value"))
+  }
+
+  @Test
   def apply_OptionString() {
 
     val event = new Object() with ReflectiveSodaEvent {
