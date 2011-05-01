@@ -19,10 +19,22 @@ package data.blocks
 
 import processing.execution.SodaTestExecutionContext
 import data.results.BlockResult
-
 abstract class Block(val source: BlockSource, val name: String, val inline: Boolean) {
   def execute(context: SodaTestExecutionContext): BlockResult[_]
 }
 
 abstract class ParamterisedBlock(source: BlockSource, name: String, inline: Boolean, val parameterNames: List[String])
-extends Block(source, name, inline)
+extends Block(source, name, inline) {
+  def parameterMap(execution: ParameterValuesContainer): Map[String, String] = {
+    execution.parameterValues match {
+      case Some(line) => {
+        if (line.cells.tail.size > parameterNames.size)
+          error("There are more parameter values than parameter names. This should be picked up when parsing.")
+        else
+          (parameterNames.zipAll(line.cells.tail, "", "")) toMap
+      }
+      case None => Map()
+    }
+  }
+}
+

@@ -36,14 +36,7 @@ class ReportBlock(
         val executions: List[ReportExecution]
 ) extends ParamterisedBlock(source, reportName, inline, parameterNames) {
 
-  def parameterMap(execution: ReportExecution): Map[String, String] = {
-    execution.parameterValues match {
-      case Some(line) => (parameterNames zip line.cells.tail) toMap
-      case None => Map()
-    }
-  }
-
   def execute(context: SodaTestExecutionContext): ReportBlockResult = ReportBlockExecutor.execute(this, context)
 
-  override def toString() = "ReportBlock: " + reportName
+  override def toString = "ReportBlock: " + reportName
 }

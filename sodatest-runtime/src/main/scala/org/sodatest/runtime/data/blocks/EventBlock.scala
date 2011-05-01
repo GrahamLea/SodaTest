@@ -38,12 +38,5 @@ class EventBlock (
 
   def execute(context: SodaTestExecutionContext): EventBlockResult = EventBlockExecutor.execute(this, context)
 
-  def parameterMap(execution: EventExecution): Map[String, String] = {
-    execution.parameterValues match {
-      case Some(line) => (parameterNames zip line.cells.tail) toMap
-      case None => Map()
-    }
-  }
-
   override def toString = "EventBlock: " + eventName
 }

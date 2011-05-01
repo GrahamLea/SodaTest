@@ -75,23 +75,22 @@ class BlockFactorySpec extends SpecificationWithJUnit {
         Line(30, List("", "and a second row"))
       ))
 
-      blockFactory.create(List(
-           basicReportBlockSource
-      ))
-
-      blockFactory.create(List(
-           parameterisedReportsBlockSource
+      val parameterisedEventWithBlankValueBlockSource = BlockSource(List(
+        Line(32, List("Event", "Parameterised Event With Blank Value")),
+        Line(33, List("", "Parameter 1", "Parameter 2")),
+        Line(34, List("", "argument one", ""))
       ))
 
       val blocks = blockFactory.create(List(
-           fixtureBlockSource,
+          fixtureBlockSource,
 //           noteBlockSource,
 //           junkBlockSource,
-           basicEventBlockSource,
-           basicReportBlockSource,
-           parameterisedEventsBlockSource,
+          basicEventBlockSource,
+          basicReportBlockSource,
+          parameterisedEventsBlockSource,
 //           parameterisedInlineReportBlockSource,
-           parameterisedReportsBlockSource
+          parameterisedReportsBlockSource,
+          parameterisedEventWithBlankValueBlockSource
       ))
 
       var blockIndex = 0;
@@ -159,7 +158,6 @@ class BlockFactorySpec extends SpecificationWithJUnit {
 
       {
         val parameterisedReportsBlock = blocks(blockIndex).asInstanceOf[ReportBlock]
-//        val parameterisedReportsBlock = blocks(7).asInstanceOf[ReportBlock]
         parameterisedReportsBlock.source must_== parameterisedReportsBlockSource
         parameterisedReportsBlock.reportName must_== "Parameterised Report"
         parameterisedReportsBlock.inline must_== false
@@ -170,6 +168,20 @@ class BlockFactorySpec extends SpecificationWithJUnit {
             e1.expectedResult == List(Line(27, List("", "some result"))) &&
             e2.parameterValues == Some(Line(28, List("!!", "argument one2", "argument two2"))) &&
             e2.expectedResult == List(Line(29, List("", "some other result", "with a second column")), Line(30, List("", "and a second row")))
+          }
+        }
+      }
+      blockIndex += 1
+
+      {
+        val parameterisedEventWithBlankValueBlock = blocks(blockIndex).asInstanceOf[EventBlock]
+        parameterisedEventWithBlankValueBlock.source must_== parameterisedEventWithBlankValueBlockSource
+        parameterisedEventWithBlankValueBlock.eventName must_== "Parameterised Event With Blank Value"
+        parameterisedEventWithBlankValueBlock.inline must_== false
+        parameterisedEventWithBlankValueBlock.parameterNames must_== List("Parameter 1", "Parameter 2")
+        parameterisedEventWithBlankValueBlock.executions must beLike {
+          case List(e1) => {
+            e1.parameterValues == Some(Line(34, List("", "argument one", "")))
           }
         }
       }
