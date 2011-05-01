@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
+ * Copyright (c) 2010-2011 Belmont Technology Pty Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.sodatest.runtime.data.results
+package org.sodatest.api
 
 class ParameterBindFailure(
   val parameterName: String,
@@ -26,11 +26,5 @@ class ParameterBindFailure(
 class ParameterBindingException(val bindFailures: List[ParameterBindFailure])
   extends RuntimeException
 
-object ContainsParameterBindingException {
-  def unapply(error: Option[ExecutionError]) = {
-    error.flatMap(_.cause) match {
-      case Some(e: ParameterBindingException) => Some(e)
-      case _ => None
-    }
-  }
-}
+
+

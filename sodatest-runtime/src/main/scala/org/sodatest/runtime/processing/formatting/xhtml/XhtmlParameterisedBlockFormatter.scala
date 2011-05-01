@@ -21,6 +21,7 @@ import runtime.data.blocks._
 import xml.NodeSeq
 import collection.immutable.List._
 import runtime.data.results._
+import api.ParameterBindingException
 
 private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](result: BlockResult[T])
   extends XhtmlBlockFormatter[T](result) {

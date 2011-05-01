@@ -18,9 +18,8 @@ package org.sodatest
 package runtime.processing.running.testFixtures
 
 import api.SodaFixture._
-import api.{SodaReport, SodaEvent, SodaFixture}
 import collection.immutable.TreeMap
-import runtime.data.results.{ParameterBindingException, ParameterBindFailure}
+import api._
 
 class ReportTestFixture extends SodaFixture {
 
