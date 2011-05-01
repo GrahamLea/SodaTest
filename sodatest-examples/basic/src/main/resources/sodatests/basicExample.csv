@@ -1,65 +1,98 @@
-"Fixture","BankAccountFixture",
-,,
-"Report","Balance",
-,"Account Name",
-"!!","Graham Lea",
-,"Unknown Account",
-"!!","Spike Spiegel",
-,"Unknown Account",
-,,
-"Event","Open Account",
-,"Account Name",
-,"Graham Lea",
-,,
-"Report","Balance",
-,"Account Name",
-"!!","Graham Lea",
+Fixture,BankAccountFixture,
+
+Report,Customers,!!
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,Unknown Account,
+!!,Spike Spiegel,
+,Unknown Account,
+
+Event,Open Account,
+,Account Name,Initial Deposit,Tags
+,Graham Lea,$1.00,"Sydney,Scala,Ninja"
+
+Report,Customers,!!
+,Graham Lea
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,$1.00,
+!!,Spike Spiegel,
+,Unknown Account,
+
+Event,Open Account,Tags
+,Account Name,Initial Deposit,Tags
+,Spike Spiegel,,"Mars,Jericho 941,Cowboy"
+
+Report,Customers,!!
+,Graham Lea
+,Spike Spiegel
+
+Report,Customer Tags,
+,Account Name
+!!,Graham Lea
+,Sydney
+,Scala
+,Ninja
+!!,Spike Spiegel
+,Mars
+,Jericho 941
+,Cowboy
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,$1.00,
+!!,Spike Spiegel,
 ,$0.00,
-"!!","Spike Spiegel",
-,"Unknown Account",
-,,
-"Event","Open Account",
-,"Account Name",
-,"Spike Spiegel",
-,,
-"Report","Balance",
-,"Account Name",
-"!!","Graham Lea",
-,$0.00,
-"!!","Spike Spiegel",
-,$0.00,
-,,
-"Event","Deposit",
-,"Account Name","Amount"
-,"Graham Lea",$6.00
-,,
-"Report","Balance",
-,"Account Name",
-"!!","Graham Lea",
+
+Event,Deposit,
+,Account Name,Amount
+,Graham Lea,$5.00
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
 ,$6.00,
-"!!","Spike Spiegel",
+!!,Spike Spiegel,
 ,$0.00,
-,,
-"Event","Deposit",
-,"Account Name","Amount"
-,"Spike Spiegel",$2.00
-,,
-"Event","Withdraw",
-,"Account Name","Amount"
-,"Graham Lea",$3.00
-,,
-"Report","Balance",
-,"Account Name",
-"!!","Graham Lea",
+
+Event,Deposit,
+,Account Name,Amount
+,Spike Spiegel,$2.00
+
+Event,Withdraw,
+,Account Name,Amount
+,Graham Lea,$3.00
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
 ,$3.00,
-"!!","Spike Spiegel",
+!!,Spike Spiegel,
 ,$2.00,
-,,
-"Event","End of month",
-,,
-"Report","Balance",
-,"Account Name",
-"!!","Graham Lea",
+
+Event,Interest accrued at the end of the month,
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
 ,$3.30,
-"!!","Spike Spiegel",
+!!,Spike Spiegel,
 ,$2.20,
+
+Report,Statement
+,Account Name
+!!,Graham Lea
+,Ref,Description,Credit,Debit,Balance
+,1,Deposit,$1.00,,$1.00
+,2,Deposit,$5.00,,$6.00
+,3,Withdrawal,,$3.00,$3.00
+,4,Interest,$0.30,,$3.30
+!!,Spike Spiegel
+,Ref,Description,Credit,Debit,Balance
+,1,Deposit,$2.00,,$2.00
+,2,Interest,$0.20,,$2.20

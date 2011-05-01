@@ -31,7 +31,6 @@ object FixtureBlockExecutor {
     val fixtureRoot = context.testContext.properties.fixtureRoot
     val fixtureName = fixtureBlock.fixtureName
     val qualifiedFixtureName = if (fixtureRoot == "") fixtureName else fixtureRoot + "." + fixtureName
-    println("qualifiedFixtureName: " + qualifiedFixtureName)
 
     def creationError(explanation: String, error: Throwable): FixtureBlockResult = new FixtureBlockResult(Some(new ExecutionError(explanation, error.toString)))
     

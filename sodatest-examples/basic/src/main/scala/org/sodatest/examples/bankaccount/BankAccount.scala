@@ -19,6 +19,8 @@ package org.sodatest.examples.bankaccount
 import _root_.java.beans.{PropertyEditorSupport}
 import _root_.java.lang.String
 import _root_.java.math.BigDecimal
+import collection.immutable.List._
+import org.sodatest.examples.bankaccount.Money._
 
 class Money(a: BigDecimal) {
   val amount = a.setScale(2);
@@ -30,6 +32,8 @@ class Money(a: BigDecimal) {
   def -(newAmount: Money) = new Money(amount.subtract(newAmount.amount))
   def *(multiplicand: String): Money = *(new BigDecimal(multiplicand))
   def *(multiplicand: BigDecimal): Money = new Money(amount.multiply(multiplicand))
+  def >(value: String): Boolean = amount.compareTo(new BigDecimal(value)) > 0
+  def negate = new Money(amount.negate)
 
   override def toString = "$" + amount.toString
 }
@@ -41,18 +45,50 @@ object Money {
 class MoneyEditor extends PropertyEditorSupport {
   val dollarPrefix = "^\\$.*".r
 
-  override def setAsText(text: String) = setValue(new Money(new BigDecimal(text match {
-    case dollarPrefix() => text.substring(1)
-    case _ => text
-  })))
+  override def setAsText(text: String): Unit = {
+    setValue(new Money(new BigDecimal(text match {
+      case dollarPrefix() => text.substring(1)
+      case _ => text
+    })))
+  }
 
   override def getAsText = "$" + getValue.asInstanceOf[Money].amount.toPlainString
 }
 
-class BankAccount {
-  var balance: Money = Money.ZERO
+case class AccountName(name: String)
+
+class BankAccount(val name: AccountName, val tags: List[String]) {
+  private var _transactions: List[Transaction] = Nil
+
+  def balance: Money = _transactions.foldLeft(Money.ZERO)((total, transaction) => {transaction.amount + total})
+  def transactions = _transactions
+
+  def deposit(amount: Money): Unit = {
+    _transactions :+= new Transaction(_transactions.size + 1, "Deposit", amount, balance + amount)
+  }
+
+  def withdraw(amount: Money): Unit = {
+    _transactions :+= new Transaction(_transactions.size + 1, "Withdrawal", amount.negate, balance - amount)
+  }
+
+  def interest(amount: Money): Unit = {
+    _transactions :+= new Transaction(_transactions.size + 1, "Interest", amount, balance + amount)
+  }
+
+  def statement: List[List[String]] = {
+    List("Ref", "Description", "Credit", "Debit", "Balance") ::
+    _transactions.map(t => {
+      if (t.amount > "0") {
+        List(t.ref.toString, t.description, t.amount.toString, "", t.balance.toString)
+      } else {
+        List(t.ref.toString, t.description, "", t.amount.negate.toString, t.balance.toString)
+      }
+    })
+  }
 }
 
+class Transaction(val ref: Int, val description: String, val amount: Money, val balance: Money)
+
 class BankAccountService {
-  var accountsByName: Map[String, BankAccount] = Map()
+  var accountsByName: Map[AccountName, BankAccount] = Map()
 }

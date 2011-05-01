@@ -5,20 +5,24 @@ These are the things that make the most sense to achieve in the near future, lis
 
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
-*** More comprehensive basic example ***
 
-The basic example should be simple, yet show all the basic features, incl:
-  - Inline Events
-  - Parameterised Events
-  - Parameterised Events with multiple invocations
-  - Inline Reports
-  - Parameterised Reports
-  - Parameterised Reports with multiple invocations
-  - Matching multi-line, multi-column reports
-  - Binding by String constructor
-  - Binding by PropertyEditor
-  - Binding to an Option
-  - Binding to a List
+*** Need to throw a ParameterBindingException if a paramter cannot be found ***
+
+
+*** Don't output the parameter names if the Event or Report couldn't be created ***
+
+
+*** Bug: In output of Line 26 of the Basic Example, column D is missing a RHS border ***
+
+It seems the width of the Parameter Names is not being included in determining the max width of the table.
+
+
+*** Change List[List[_]] to SeqLike[SeqLike[_]] in API ***
+
+Rather than force people to use List, an implementation, by naming that in the API,
+it would be better to use the SeqLike interface to allow flexibility in Fixture
+implementations. Theoretically, this shouldn't require any change in the execution
+implementation.
 
 
 *** Java example ***
@@ -46,6 +50,7 @@ It should be possible to use the file runner to execute a single test by name.
 *** Note blocks ***
 
 Need to be able to add comments in the form of Note blocks in the input that appear as text in the output.
+Notes should be added to the existing examples.
 
 
 *** Support for automatic formatting of report output to strings ***

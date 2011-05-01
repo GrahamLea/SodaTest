@@ -1,0 +1,21 @@
+SodaTest Basic Example
+
+This basic example shows most of the typical things you would do with SodaTest.
+
+Some of the elements covered are...
+
+* The basics of writing a SodaTest in a spreadsheet, including:
+   o Selecting a Fixture
+   o Inline Events
+   o Inline Reports
+   o Parameterised Events
+   o Parameterised Reports
+   o Multiple Executions of a parameterised Event or Report
+
+* How to create a SodaFixture using ReflectiveSodaFixture, ReflectiveSodaEvent and ReflectiveSodaReport
+
+* Demonstration of some of SodaTest's coercion capabilities for reflective binding, namely:
+   o Binding by String constructor  (c.f. class AccountName)
+   o Binding by PropertyEditor      (c.f. classes Money and MoneyEditor)
+   o Binding to an Option           (c.f. OpenAccountEvent.initialDeposit)
+   o Binding to a List              (c.f. OpenAccountEvent.tags)

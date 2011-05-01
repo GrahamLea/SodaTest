@@ -18,6 +18,8 @@ package org.sodatest.examples.bankaccount
 
 import _root_.java.lang.String
 import org.sodatest.api.reflection._
+import org.sodatest.api.SodaReport
+import collection.immutable.Map
 
 class BankAccountFixture extends ReflectiveSodaFixture {
   val service = new BankAccountService()
@@ -25,54 +27,86 @@ class BankAccountFixture extends ReflectiveSodaFixture {
   def openAccount = new OpenAccountEvent(service)
   def deposit = new DepositEvent(service)
   def withdraw = new WithdrawEvent(service)
-  def endOfMonth = new EndOfMonthEvent(service)
+  def interestAccruedAtTheEndOfTheMonth = new AddInterestEvent(service)
 
   def balance = new BalanceReport(service)
+  def customers = new CustomersReport(service)
+  def statement = new StatementReport(service)
+  def customerTags = new TagsReport(service)
 }
 
-class BalanceReport(val service: BankAccountService) extends ReflectiveSodaReport {
-  var accountName: String = null;
+abstract class CustomerReport(val service: BankAccountService) extends ReflectiveSodaReport {
+  var accountName: AccountName = null;
 
-  def apply() = service.accountsByName.get(accountName) match {
-    case Some(a: BankAccount) => List(List(a.balance.toString)) // TODO: Auto-format List[List[Any]] -> List[List[String]]
-    case None => List(List("Unknown Account"))
+  def apply(account: BankAccount): List[List[String]]
+
+  def apply(): List[List[String]] = {
+    service.accountsByName.get(accountName) match {
+      case Some(a: BankAccount) => apply(a)
+      case None => List(List("Unknown Account"))
+    }
   }
 }
 
+class BalanceReport(service: BankAccountService) extends CustomerReport(service) {
+  def apply(account: BankAccount) = List(List(account.balance.toString)) // TODO: Auto-format List[List[Any]] -> List[List[String]]
+}
+
+class TagsReport(service: BankAccountService) extends CustomerReport(service) {
+  def apply(account: BankAccount) = account.tags map (List(_))
+}
+
+class CustomersReport(val service: BankAccountService) extends SodaReport {
+  def apply(parameters: Map[String, String]): List[List[String]] = {
+    service.accountsByName.keys.toList.map(accountName => List(accountName.name))
+  }
+}
+
+class StatementReport(service: BankAccountService) extends CustomerReport(service) {
+  def apply(account: BankAccount) = account.statement
+}
+
 class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
-  var accountName: String = null;
+  var accountName: AccountName = null;
+  var initialDeposit: Option[Money] = None;
+  var tags: List[String] = Nil;
 
   def apply() {
-    service.accountsByName += accountName -> new BankAccount
+    val newAccount: BankAccount = new BankAccount(accountName, tags)
+    service.accountsByName += accountName -> newAccount
+    initialDeposit match {
+      case Some(amount) => newAccount.deposit(amount)
+      case None =>
+    }
   }
 }
 
 class DepositEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
-  var accountName: String = null;
+  var accountName: AccountName = null;
   var amount: Money = null;
 
   def apply() {
     service.accountsByName.get(accountName) match {
-      case Some(account) => account.balance = account.balance + amount
+      case Some(account) => account.deposit(amount)
       case None => throw new RuntimeException("Unknown account")
     }
   }
 }
 
 class WithdrawEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
-  var accountName: String = null;
+  var accountName: AccountName = null;
   var amount: Money = null;
 
   def apply() {
     service.accountsByName.get(accountName) match {
-      case Some(account) => account.balance = account.balance - amount
+      case Some(account) => account.withdraw(amount)
       case None => throw new RuntimeException("Unknown account")
     }
   }
 }
 
-class EndOfMonthEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
+class AddInterestEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
   def apply() {
-    service.accountsByName.values.foreach(b => {b.balance = b.balance + (b.balance * "0.1") })
+    service.accountsByName.values.foreach(account => {account.interest(account.balance * "0.1")})
   }
 }
