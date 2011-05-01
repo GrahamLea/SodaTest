@@ -59,7 +59,7 @@ object Coercion {
   })
 
   private def coerceCSV(value: String, targetType: Type, register: Option[CoercionRegister] = None): Array[_] =
-    value.split(',').map(coerce(_, targetType, register))
+    if (value.trim == "") Array() else value.split(',').map(coerce(_, targetType, register))
 
   private abstract class GenericTypeMatcher(val rawType: Class[_]) {
     def unapply(t: Type): Option[Type] = t match {

@@ -137,6 +137,22 @@ class CoercionSpec extends SpecificationWithJUnit {
       Coercion.coerce("123,234,345", typeOf("javaListInt")) must_== Arrays.asList(123, 234, 345)
     }
 
+    "coerce an empty string to a scala.List[Int] as Nil" in {
+      Coercion.coerce("", typeOf("listInt")) must beLike { case Nil => true }
+    }
+
+    "coerce an empty string to a java.util.List[Int] as an empty list" in {
+      Coercion.coerce("", typeOf("javaListInt")) must_== Arrays.asList[java.lang.Integer]()
+    }
+
+    "coerce a blank string to a scala.List[Int] as Nil" in {
+      Coercion.coerce(" \t ", typeOf("listInt")) must beLike { case Nil => true }
+    }
+
+    "coerce a blank string to a java.util.List[Int] as an empty list" in {
+      Coercion.coerce(" \t ", typeOf("javaListInt")) must_== Arrays.asList[Integer]()
+    }
+
   }
 
   private def typeOf(fieldName: String): Type = {
