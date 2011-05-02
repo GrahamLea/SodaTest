@@ -69,7 +69,7 @@ private[reflection] object ReflectionUtil {
 
   @throws(classOf[ParameterBindingException])
   def setByReflection(parameters: Map[String, String], target: Object): Unit = {
-    setByReflection(withCanonicalKeyNames(parameters), target, coercionRegisterIn(target), target.getClass.getMethods.toList)
+    setByReflection(parameters, target, coercionRegisterIn(target), target.getClass.getMethods.toList)
   }
 
   private def coercionRegisterIn(target: Object) : Option[CoercionRegister] = {

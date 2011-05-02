@@ -246,10 +246,10 @@ class ReflectiveSodaEventTest {
   }
 
   @Test
-  def apply_ThrowsParameterBindExceptionForFailureToConvertInt() {
+  def apply_ThrowsParameterBindExceptionsForFailureToConvertInt() {
 
     val event = new Object() with ReflectiveSodaEvent {
-      var value1: Int = -1
+      var firstValue: Int = -1
       var value2: Int = -2
       var value3: Int = -3
 
@@ -257,14 +257,14 @@ class ReflectiveSodaEventTest {
     }
 
     try {
-      event.apply(Map("value1" -> "aa", "value2" -> "bb"))
+      event.apply(Map("First Value" -> "aa", "value2" -> "bb"))
       fail("Expecting ParameterBindingException")
     }
     catch {
       case pbe: ParameterBindingException => {
         pbe.bindFailures match {
           case List(failure1, failure2) => {
-            assertThat(failure1.parameterName, is("value1"))
+            assertThat(failure1.parameterName, is("First Value"))
             assertThat(failure1.parameterValue, is("aa"))
             assertThat(failure1.errorMessage, is("org.sodatest.coercion.UnableToCoerceException: Unable to coerce value 'aa' to type java.lang.Integer: error invoking constructor public java.lang.Integer(java.lang.String) throws java.lang.NumberFormatException"))
             assertThat(failure1.exception.get, is(instanceOf(classOf[UnableToCoerceException])))
@@ -278,7 +278,7 @@ class ReflectiveSodaEventTest {
       }
     }
 
-    assertThat(event.value1, is(-1))
+    assertThat(event.firstValue, is(-1))
     assertThat(event.value2, is(-2))
     assertThat(event.value3, is(-3))
   }

@@ -24,8 +24,8 @@ Report,Balance,
 ,Unknown Account,
 
 Event,Open Account,Tags
-,Account Name,Initial Deposit,Tags
-,Spike Spiegel,,"Mars,Jericho 941,Cowboy"
+,Account Name,Initial Deposit,Tags,Junk
+,Spike Spiegel,,"Mars,Jericho 941,Cowboy",Ha Ha
 
 Report,Customers,!!
 ,Graham Lea
