@@ -6,9 +6,6 @@ These are the things that make the most sense to achieve in the near future, lis
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
-*** Reflective Event and Report need to throw a ParameterBindingExceptions ! ***
-
-
 *** Add example of using a CoercionRegister to the Basic Example ***
 
 

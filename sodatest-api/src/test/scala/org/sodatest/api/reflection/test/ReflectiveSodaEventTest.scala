@@ -16,15 +16,14 @@
 
 package org.sodatest.api.reflection { package test {
 
-import org.sodatest.coercion.Coercion
-import org.sodatest.coercion.CoercionRegister
 import java.beans.PropertyEditorSupport
 import java.lang.String
-import org.hamcrest.core.Is._
-import org.hamcrest.core.IsNull._
+import org.hamcrest.CoreMatchers._
 import collection.immutable.Map
 import org.junit.Assert._
 import org.junit.Test
+import org.sodatest.api.ParameterBindingException
+import org.sodatest.coercion.{UnableToCoerceException, Coercion, CoercionRegister}
 ;
 
 class ReflectiveSodaEventTest {
@@ -216,6 +215,72 @@ class ReflectiveSodaEventTest {
     assertThat(event.value1.get, is(ClassWithIntConstructor(12)))
     assertThat(event.value2.get, is(ClassWithIntConstructor(34)))
     assertThat(event.value3, is(None.asInstanceOf[Option[ClassWithIntConstructor]]))
+  }
+
+  @Test
+  def apply_ThrowExceptionForMissingParameter() {
+    class EventWithOneParameter extends ReflectiveSodaEvent {
+      var value1: String = null
+      def apply() = { }
+    }
+    val event = new EventWithOneParameter
+
+    try {
+      event.apply(Map("value1" -> "First value", "value2" -> "Second value"))
+      fail("Expecting ParameterBindingException")
+    }
+    catch {
+      case e: ParameterBindingException => {
+        e.bindFailures match {
+          case List(failure) => {
+            assertThat(failure.parameterName, is("value2"))
+            assertThat(failure.parameterValue, is("Second value"))
+            assertThat(failure.errorMessage, is("Parameter 'value2' could not be found on EventWithOneParameter$1 (org.sodatest.api.reflection.test)"))
+            assertThat(failure.exception, is(None.asInstanceOf[Option[Throwable]]))
+          }
+          case _ => fail("Expecting one bind failure")
+        }
+      }
+    }
+
+  }
+
+  @Test
+  def apply_ThrowsParameterBindExceptionForFailureToConvertInt() {
+
+    val event = new Object() with ReflectiveSodaEvent {
+      var value1: Int = -1
+      var value2: Int = -2
+      var value3: Int = -3
+
+      def apply() = { }
+    }
+
+    try {
+      event.apply(Map("value1" -> "aa", "value2" -> "bb"))
+      fail("Expecting ParameterBindingException")
+    }
+    catch {
+      case pbe: ParameterBindingException => {
+        pbe.bindFailures match {
+          case List(failure1, failure2) => {
+            assertThat(failure1.parameterName, is("value1"))
+            assertThat(failure1.parameterValue, is("aa"))
+            assertThat(failure1.errorMessage, is("org.sodatest.coercion.UnableToCoerceException: Unable to coerce value 'aa' to type java.lang.Integer: error invoking constructor public java.lang.Integer(java.lang.String) throws java.lang.NumberFormatException"))
+            assertThat(failure1.exception.get, is(instanceOf(classOf[UnableToCoerceException])))
+            assertThat(failure2.parameterName, is("value2"))
+            assertThat(failure2.parameterValue, is("bb"))
+            assertThat(failure2.errorMessage, is("org.sodatest.coercion.UnableToCoerceException: Unable to coerce value 'bb' to type java.lang.Integer: error invoking constructor public java.lang.Integer(java.lang.String) throws java.lang.NumberFormatException"))
+            assertThat(failure2.exception.get, is(instanceOf(classOf[UnableToCoerceException])))
+          }
+          case _ => fail("Expecting one bind failure")
+        }
+      }
+    }
+
+    assertThat(event.value1, is(-1))
+    assertThat(event.value2, is(-2))
+    assertThat(event.value3, is(-3))
   }
 
 }

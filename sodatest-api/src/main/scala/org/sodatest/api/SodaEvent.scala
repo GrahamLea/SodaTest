@@ -17,5 +17,6 @@
 package org.sodatest.api
 
 trait SodaEvent {
+  @throws(classOf[ParameterBindingException])
   def apply(parameters: Map[String, String]): Unit
 }
