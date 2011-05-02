@@ -79,7 +79,7 @@ object XhtmlReportFormatter {
         case l: ReportLineMatch => formatter.lineToHtml(l.sourceLine, "result match")
         case l: ReportLineMismatch => reportLineMismatchToHtml(l, "result mismatch")
         case l: ReportLineMissing => formatter.lineToHtml(l.sourceLine, "result missing", extraCell = Some(<td class="lineNote">(Missing line)</td>))
-        case l: ReportLineExtra => formatter.cellsToHtml(None, "" :: l.cells, "result extra", extraCell = Some(<td class="lineNote">(Extra line)</td>))
+        case l: ReportLineExtra => formatter.cellsToHtml(None, "" :: l.cells.toList, "result extra", extraCell = Some(<td class="lineNote">(Extra line)</td>))
       }
     }
   }

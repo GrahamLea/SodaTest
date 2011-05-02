@@ -18,5 +18,5 @@ package org.sodatest.api
 
 trait SodaReport {
   @throws(classOf[ParameterBindingException])
-  def apply(parameters: Map[String, String]): List[List[String]]
+  def apply(parameters: Map[String, String]): Seq[Seq[String]]
 }

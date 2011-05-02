@@ -16,6 +16,8 @@
 
 package org.sodatest.api
 
+import collection.SeqLike
+
 trait SodaFixture {
   def createEvent(name: String): Option[SodaEvent]
   def createReport(name: String): Option[SodaReport]
@@ -29,7 +31,7 @@ object SodaFixture {
     def apply(parameters: Map[String, String]) = f(parameters)
   }
 
-  implicit def function2ReportOption(f: (Map[String, String]) => List[List[String]]): Option[SodaReport] = new SodaReport {
+  implicit def function2ReportOption(f: (Map[String, String]) => Seq[Seq[String]]): Option[SodaReport] = new SodaReport {
     def apply(parameters: Map[String, String]) = f(parameters)
   }
 }

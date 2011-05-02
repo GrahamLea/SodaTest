@@ -20,6 +20,7 @@ package runtime.processing.running.testFixtures
 import api.SodaFixture._
 import collection.immutable.TreeMap
 import api._
+import collection.SeqLike
 
 class ReportTestFixture extends SodaFixture {
 
@@ -43,7 +44,7 @@ class ReportTestFixture extends SodaFixture {
   def createReport(name: String): Option[SodaReport] = name match {
     case "Data collected from Events" => {
       new SodaReport {
-        def apply(parameters: Map[String, String]): List[List[String]] = lastExecutedEventName match {
+        def apply(parameters: Map[String, String]): Seq[Seq[String]] = lastExecutedEventName match {
           case Some(eventName) => executedParameters
           case _ => List(List("NO EVENT EXECUTION"))
         }
@@ -54,7 +55,7 @@ class ReportTestFixture extends SodaFixture {
     case "Data lines collected from Events" => {
       new SodaReport {
 
-        def apply(parameters: Map[String, String]): List[List[String]] = {
+        def apply(parameters: Map[String, String]): Seq[Seq[String]] = {
           lastExecutedEventName match {
 
             case Some(eventName) => (parameters.get("First Line"), parameters.get("Last Line")) match {
@@ -83,7 +84,7 @@ class ReportTestFixture extends SodaFixture {
     case _ => {
       if (name.endsWith("bind exception")) {
         new SodaReport {
-          def apply(parameters: Map[String, String]): List[List[String]] = {
+          def apply(parameters: Map[String, String]): Seq[Seq[String]] = {
             val bindFailures = parameters.flatMap((kv) => {
               if (kv._2 startsWith "Error")
                 Some(new ParameterBindFailure(kv._1, kv._2, "This fixture is programmed to do this"))
@@ -102,7 +103,7 @@ class ReportTestFixture extends SodaFixture {
 
       } else if (name endsWith "throwing exception") {
         new SodaReport {
-          def apply(parameters: Map[String, String]): List[List[String]] = {
+          def apply(parameters: Map[String, String]): Seq[Seq[String]] = {
             throw new RuntimeException("Report exception from ReportTestFixture")
           }
         }

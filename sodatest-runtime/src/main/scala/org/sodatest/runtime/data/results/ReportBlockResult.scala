@@ -43,7 +43,7 @@ abstract sealed class ReportMatchLineResult
 class ReportLineMatch(val sourceLine: Line, val cells: List[String]) extends ReportMatchLineResult
 class ReportLineMismatch(val sourceLine: Line, val cellResults: List[ReportMatchCellResult]) extends ReportMatchLineResult
 class ReportLineMissing(val sourceLine: Line) extends ReportMatchLineResult
-class ReportLineExtra(val cells: List[String]) extends ReportMatchLineResult
+class ReportLineExtra(val cells: Seq[String]) extends ReportMatchLineResult
 
 abstract sealed class ReportMatchCellResult
 class ReportCellMatch(val value: String) extends ReportMatchCellResult

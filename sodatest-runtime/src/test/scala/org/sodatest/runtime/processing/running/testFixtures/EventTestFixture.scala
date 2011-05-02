@@ -66,7 +66,7 @@ class EventTestFixture extends SodaFixture {
     case "Last executed event" => {
       new SodaReport {
 
-        def apply(parameters: Map[String, String]): List[List[String]] = (lastExecutedEventName, executedParameters) match {
+        def apply(parameters: Map[String, String]): Seq[Seq[String]] = (lastExecutedEventName, executedParameters) match {
           case (Some(eventName), parameterMapList) => {
             val sortedMaps = parameterMapList.map(new TreeMap[String, String]() ++ _)
             var i: Int = 1;

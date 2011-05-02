@@ -44,11 +44,11 @@ object ReportBlockExecutor {
   }
 
   @inline
-  private def diff(expected: List[Line], actual: List[List[String]]): List[ReportMatchLineResult] =
+  private def diff(expected: List[Line], actual: Seq[Seq[String]]): List[ReportMatchLineResult] =
     for (val line <- expected.map{Some(_)}.zipAll(actual.map{Some(_)}, None, None)) yield compareRow(line)
 
   @inline
-  private def compareRow(zippedRow: (Option[Line], Option[List[String]])) : ReportMatchLineResult = {
+  private def compareRow(zippedRow: (Option[Line], Option[Seq[String]])) : ReportMatchLineResult = {
     zippedRow match {
       case (Some(expectedLine), Some(outputCells)) => compareCells(expectedLine, expectedLine.cells.tail.map({Some(_)}).zipAll(outputCells.map({Some(_)}), None, None))
       case (Some(expectedLine), None)              => new ReportLineMissing(expectedLine)

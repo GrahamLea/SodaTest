@@ -39,7 +39,7 @@ trait ReflectiveSodaEvent extends SodaEvent {
 }
 
 trait ReflectiveSodaReport extends SodaReport {
-  def apply(): List[List[String]]
+  def apply(): Seq[Seq[String]]
 
   @throws(classOf[ParameterBindingException])
   def apply(parameters: Map[String, String]) = {

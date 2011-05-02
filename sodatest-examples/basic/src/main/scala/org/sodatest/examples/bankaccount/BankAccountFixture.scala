@@ -39,9 +39,9 @@ class BankAccountFixture extends ReflectiveSodaFixture {
 abstract class CustomerReport(val service: BankAccountService) extends ReflectiveSodaReport {
   var accountName: AccountName = null;
 
-  def apply(account: BankAccount): List[List[String]]
+  def apply(account: BankAccount): Seq[Seq[String]]
 
-  def apply(): List[List[String]] = {
+  def apply(): Seq[Seq[String]] = {
     service.accountsByName.get(accountName) match {
       case Some(a: BankAccount) => apply(a)
       case None => List(List("Unknown Account"))
@@ -50,7 +50,7 @@ abstract class CustomerReport(val service: BankAccountService) extends Reflectiv
 }
 
 class BalanceReport(service: BankAccountService) extends CustomerReport(service) {
-  def apply(account: BankAccount) = List(List(account.balance.toString)) // TODO: Auto-format List[List[Any]] -> List[List[String]]
+  def apply(account: BankAccount) = List(List(account.balance.toString)) // TODO: Auto-format List[List[Any]] -> Seq[Seq[String]]
 }
 
 class TagsReport(service: BankAccountService) extends CustomerReport(service) {
@@ -58,7 +58,7 @@ class TagsReport(service: BankAccountService) extends CustomerReport(service) {
 }
 
 class CustomersReport(val service: BankAccountService) extends SodaReport {
-  def apply(parameters: Map[String, String]): List[List[String]] = {
+  def apply(parameters: Map[String, String]): Seq[Seq[String]] = {
     service.accountsByName.keys.toList.map(accountName => List(accountName.name))
   }
 }

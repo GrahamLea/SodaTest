@@ -173,7 +173,7 @@ class ReflectiveSodaFixtureTest {
 
   private def newMockReport(): SodaReport =
     new Object() with SodaReport {
-      def apply(parameters: Map[String, String]): List[List[String]] = throw new UnsupportedOperationException
+      def apply(parameters: Map[String, String]): Seq[Seq[String]] = throw new UnsupportedOperationException
     }
 
   private def newMockEvent(): SodaEvent =
