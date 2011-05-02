@@ -2,6 +2,12 @@ Fixture,ReportTestFixture
 
 Report,Non-existent report,!!
 
+Report,Non-existent report with parameters
+,Param One,Param Two
+!!,First One,Second One
+,Some junk output
+,That shouldn't even be printed
+
 Report,Report with no parameters throwing exception,!!
 ,No output expected
 

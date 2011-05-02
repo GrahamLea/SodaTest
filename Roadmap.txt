@@ -9,9 +9,6 @@ If you think you'd like to try your hand at helping out with some of this stuff,
 *** Add example of using a CoercionRegister to the Basic Example ***
 
 
-*** Don't output the parameter names if the Event or Report couldn't be created ***
-
-
 *** Bug: In output of Line 26 of the Basic Example, column D is missing a RHS border ***
 
 It seems the width of the Parameter Names is not being included in determining the max width of the table.

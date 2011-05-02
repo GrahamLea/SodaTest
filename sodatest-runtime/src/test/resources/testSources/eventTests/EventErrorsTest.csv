@@ -2,6 +2,10 @@ Fixture,EventTestFixture
 
 Event,Non-existent event
 
+Event,Non-existent event with parameters
+,Param One,Param Two
+,Fist One,First Two
+
 Event,Event with no parameters throwing exception
 
 Event,Event with parameters throwing exception

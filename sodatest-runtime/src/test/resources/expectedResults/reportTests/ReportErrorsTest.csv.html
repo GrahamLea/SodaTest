@@ -86,7 +86,7 @@
         </tbody>
     </table>
 </div>
-<div class="blockResult report inline failure">
+<div class="blockResult report failure">
     <table>
         <colgroup><col class="lineNumbers"></col></colgroup>
         <thead>
@@ -101,6 +101,43 @@
         <tbody>
         <tr>
             <th>5</th>
+            <td class="instruction">Report</td>
+            <td class="name failureSource">Non-existent report with parameters</td>
+            <td></td>
+
+            <td class="failureAccomodator"></td>
+        </tr>
+        <tr class="failureDetails">
+            <td></td>
+            <td colspan="4">
+                <ul>
+                    <li>
+                        <p class="errorMessage">B: Fixture 'ReportTestFixture' doesn't know how to create a report for 'Non-existent report with parameters'</p>
+
+
+                    </li>
+                </ul>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="blockResult report inline failure">
+    <table>
+        <colgroup><col class="lineNumbers"></col></colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>11</th>
             <td class="instruction">Report</td>
             <td class="name failureSource">Report with no parameters throwing exception</td>
             <td class="reportInvoker failure">!!</td>
@@ -141,7 +178,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
         </thead>
         <tbody>
         <tr>
-            <th>8</th>
+            <th>14</th>
             <td class="instruction">Report</td>
             <td class="name">Report with parameters throwing exception</td>
 
@@ -151,7 +188,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
             <td class="failureAccomodator"></td>
         </tr>
         <tr class="parameterNames">
-            <th>9</th>
+            <th>15</th>
             <td></td>
             <td>Param One</td>
             <td>Param Two</td>
@@ -160,7 +197,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
         </tr>
 
         <tr class="parameterValues failureSource">
-            <th>10</th>
+            <th>16</th>
             <td class="reportInvoker failure">!!</td>
             <td>First One</td>
             <td>First Two</td>
@@ -182,7 +219,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
             </td>
         </tr>
         <tr class="parameterValues failureSource">
-            <th>12</th>
+            <th>18</th>
             <td class="reportInvoker failure">!!</td>
             <td>Second One</td>
             <td>Second Two</td>
@@ -222,7 +259,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
         </thead>
         <tbody>
         <tr>
-            <th>15</th>
+            <th>21</th>
             <td class="instruction">Report</td>
             <td class="name">Report with parameter bind exception</td>
 
@@ -232,7 +269,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
             <td class="failureAccomodator"></td>
         </tr>
         <tr class="parameterNames">
-            <th>16</th>
+            <th>22</th>
             <td></td>
             <td>Param One</td>
             <td>Param Two</td>
@@ -241,7 +278,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
         </tr>
 
         <tr class="parameterValues failure">
-            <th>17</th>
+            <th>23</th>
             <td class="reportInvoker">!!</td>
             <td>First One</td>
             <td class="failureSource">Error Two</td>
@@ -264,7 +301,7 @@ at org.sodatest.runtime.processing.running.testFixtures.ReportTestFixture$$anon$
             </td>
         </tr>
         <tr class="parameterValues failure">
-            <th>19</th>
+            <th>25</th>
             <td class="reportInvoker">!!</td>
             <td class="failureSource">Error One</td>
             <td>Second Two</td>
