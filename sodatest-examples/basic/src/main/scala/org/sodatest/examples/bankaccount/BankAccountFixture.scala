@@ -20,6 +20,7 @@ import _root_.java.lang.String
 import org.sodatest.api.reflection._
 import org.sodatest.api.SodaReport
 import collection.immutable.Map
+import org.sodatest.coercion.{Coercion, CoercionRegister}
 
 class BankAccountFixture extends ReflectiveSodaFixture {
   val service = new BankAccountService()
@@ -67,12 +68,16 @@ class StatementReport(service: BankAccountService) extends CustomerReport(servic
 }
 
 class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
+
+  val coercionRegister = new CoercionRegister(InterestFormulaCoercion)
+
   var accountName: AccountName = null;
   var initialDeposit: Option[Money] = None;
   var tags: List[String] = Nil;
+  var interestFormula: InterestFormula = null;
 
   def apply() {
-    val newAccount: BankAccount = new BankAccount(accountName, tags)
+    val newAccount: BankAccount = new BankAccount(accountName, tags, interestFormula)
     service.accountsByName += accountName -> newAccount
     initialDeposit match {
       case Some(amount) => newAccount.deposit(amount)
@@ -107,6 +112,11 @@ class WithdrawEvent(val service: BankAccountService) extends ReflectiveSodaEvent
 
 class AddInterestEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
   def apply() {
-    service.accountsByName.values.foreach(account => {account.interest(account.balance * "0.1")})
+    service.accountsByName.values.foreach(account => {account.addInterest()})
   }
 }
+
+object InterestFormulaCoercion extends Coercion[InterestFormula] {
+  def apply(s: String) = InterestFormula.fromString(s)
+}
+

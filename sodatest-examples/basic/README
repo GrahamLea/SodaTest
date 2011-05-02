@@ -15,7 +15,8 @@ Some of the elements covered are...
 * How to create a SodaFixture using ReflectiveSodaFixture, ReflectiveSodaEvent and ReflectiveSodaReport
 
 * Demonstration of some of SodaTest's coercion capabilities for reflective binding, namely:
-   o Binding by String constructor  (c.f. class AccountName)
-   o Binding by PropertyEditor      (c.f. classes Money and MoneyEditor)
-   o Binding to an Option           (c.f. OpenAccountEvent.initialDeposit)
-   o Binding to a List              (c.f. OpenAccountEvent.tags)
+   o Binding by String constructor    (c.f. class AccountName)
+   o Binding by PropertyEditor        (c.f. classes Money and MoneyEditor)
+   o Binding to an Option             (c.f. OpenAccountEvent.initialDeposit)
+   o Binding to a List                (c.f. OpenAccountEvent.tags)
+   o Binding using a custom Coercion  (c.f. OpenAccountEvent.interestForumla)

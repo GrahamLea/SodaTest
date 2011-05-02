@@ -6,9 +6,6 @@ These are the things that make the most sense to achieve in the near future, lis
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
-*** Add example of using a CoercionRegister to the Basic Example ***
-
-
 *** Bug: In output of Line 26 of the Basic Example, column D is missing a RHS border ***
 
 It seems the width of the Parameter Names is not being included in determining the max width of the table.

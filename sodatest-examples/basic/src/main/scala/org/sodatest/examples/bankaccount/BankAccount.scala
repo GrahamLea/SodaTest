@@ -57,7 +57,7 @@ class MoneyEditor extends PropertyEditorSupport {
 
 case class AccountName(name: String)
 
-class BankAccount(val name: AccountName, val tags: List[String]) {
+class BankAccount(val name: AccountName, val tags: List[String], val interestFormula: InterestFormula) {
   private var _transactions: List[Transaction] = Nil
 
   def balance: Money = _transactions.foldLeft(Money.ZERO)((total, transaction) => {transaction.amount + total})
@@ -71,8 +71,9 @@ class BankAccount(val name: AccountName, val tags: List[String]) {
     _transactions :+= new Transaction(_transactions.size + 1, "Withdrawal", amount.negate, balance - amount)
   }
 
-  def interest(amount: Money): Unit = {
-    _transactions :+= new Transaction(_transactions.size + 1, "Interest", amount, balance + amount)
+  def addInterest(): Unit = {
+    val interest = interestFormula.interestOn(balance)
+    _transactions :+= new Transaction(_transactions.size + 1, "Interest", interest, balance + interest)
   }
 
   def statement: List[List[String]] = {
@@ -91,4 +92,30 @@ class Transaction(val ref: Int, val description: String, val amount: Money, val 
 
 class BankAccountService {
   var accountsByName: Map[AccountName, BankAccount] = Map()
+}
+
+trait InterestFormula {
+  def interestOn(currentBalance: Money): Money
+}
+
+object InterestFormula {
+  val adValoremRegex = """(\d+(\.\d+)?)%""".r
+  val fixedRegex = """\$(\d+(\.\d+)?)""".r
+
+  def fromString(formulaString: String): InterestFormula = {
+    formulaString match {
+      case adValoremRegex(rate, decimals) => new AdValoremInterest(rate)
+      case fixedRegex(amount, decimals) => new FixedInterest(new Money(amount))
+      case _ => error("Unparseable interest formula: " + formulaString)
+    }
+  }
+}
+
+class AdValoremInterest(interestRate: String) extends InterestFormula {
+  val rate = new BigDecimal(interestRate).movePointLeft(2)
+  def interestOn(currentBalance: Money): Money = currentBalance * rate
+}
+
+class FixedInterest(val interestAmount: Money) extends InterestFormula {
+  def interestOn(currentBalance: Money): Money = interestAmount
 }

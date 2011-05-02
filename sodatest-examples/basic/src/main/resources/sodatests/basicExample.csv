@@ -10,8 +10,8 @@ Report,Balance,
 ,Unknown Account,
 
 Event,Open Account,
-,Account Name,Initial Deposit,Tags
-,Graham Lea,$1.00,"Sydney,Scala,Ninja"
+,Account Name,Initial Deposit,Tags,Interest Formula
+,Graham Lea,$1.00,"Sydney,Scala,Ninja",10%
 
 Report,Customers,!!
 ,Graham Lea
@@ -23,9 +23,9 @@ Report,Balance,
 !!,Spike Spiegel,
 ,Unknown Account,
 
-Event,Open Account,Tags
-,Account Name,Initial Deposit,Tags
-,Spike Spiegel,,"Mars,Jericho 941,Cowboy"
+Event,Open Account
+,Account Name,Initial Deposit,Tags,Interest Formula
+,Spike Spiegel,,"Mars,Jericho 941,Cowboy",$0.50
 
 Report,Customers,!!
 ,Graham Lea
@@ -82,7 +82,7 @@ Report,Balance,
 !!,Graham Lea,
 ,$3.30,
 !!,Spike Spiegel,
-,$2.20,
+,$2.50,
 
 Report,Statement
 ,Account Name
@@ -95,4 +95,4 @@ Report,Statement
 !!,Spike Spiegel
 ,Ref,Description,Credit,Debit,Balance
 ,1,Deposit,$2.00,,$2.00
-,2,Interest,$0.20,,$2.20
+,2,Interest,$0.50,,$2.50
