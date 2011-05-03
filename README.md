@@ -17,6 +17,7 @@ non-technical Customers of the software under test.
 
 The core design of SodaTest focusses around resolving a number of niggles experienced with FIT over the
 years, namely:
+
 * HTML as an input format is annoying for developers to manage
 * HTML as an input format prevents Customers from getting involved in test writing
 * The API is too flexible, bringing the developer too close to the input format and making poor
@@ -33,11 +34,13 @@ differentiation was the motivation for the name choice:
 Spreadsheet-Driven Integration Testing  =>  S-D Test  =>  SodaTest
 
 Good ideas froms FIT which are maintained in SodaTest are:
+
 * The use of tables to format and structure lots of information
 * Using reflection to automate a lot of string-conversion boilerplate for the fixture author
 * HTML as an excellent format for test output
 
 Other things that SodaTest tries to achieve are:
+
 * [Command-Query Separation](http://en.wikipedia.org/wiki/Command-query_separation) is built into the API by making the distinction between Events, which cause
   side-effects within the System, and Reports, which merely query the state of the System.
 * Powerful and flexible (yet simple!) coercion of strings to strong types, including support for
@@ -71,4 +74,21 @@ A roadmap for features that need to be implemented to make the framework more co
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
-Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
+Licence
+-------
+
+SodaTest is Copyright (c) 2010-2011 Belmont Technology Pty Ltd.
+
+It is licensed under the Apache License, Version 2.0 (the "License")
+You may obtain a copy of the License at
+
+    [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+    Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
