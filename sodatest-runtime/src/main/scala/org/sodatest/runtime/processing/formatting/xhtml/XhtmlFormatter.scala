@@ -21,7 +21,7 @@ package runtime.processing.formatting.xhtml
 import java.io.{StringWriter, PrintWriter}
 import runtime.processing.ResultFormatter
 import org.sodatest.api.SodaTestLog
-import runtime.data.results.{ReportBlockResult, EventBlockResult, FixtureBlockResult, SodaTestResult}
+import runtime.data.results._
 
 class XhtmlFormatter(val stylesheet: String)(implicit val log: SodaTestLog) extends ResultFormatter {
 
@@ -65,6 +65,7 @@ class XhtmlFormatter(val stylesheet: String)(implicit val log: SodaTestLog) exte
       case fbr: FixtureBlockResult => XhtmlFixtureFormatter.format(fbr)
       case ebr: EventBlockResult => XhtmlEventFormatter.format(ebr)
       case rbr: ReportBlockResult => XhtmlReportFormatter.format(rbr)
+      case nbr: NoteBlockResult => XhtmlNoteFormatter.format(nbr)
       case anything => <p>Don't know how to format {anything.getClass.getName}!</p>
     }).addString(sb, "\n")
       .append('\n')

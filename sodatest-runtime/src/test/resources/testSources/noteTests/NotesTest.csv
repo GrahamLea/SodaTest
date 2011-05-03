@@ -1,0 +1,12 @@
+Note,This is a single cell note. It's just a block of text.
+
+Note,"This note has several lines,"
+,but they are all in the second column
+,so we don't show them as a table
+
+Note,This note,has more than one cell,so it's a table
+
+Note,This note,has many cells
+,and spans
+,more than,one line
+,so it's also,going to be shown as,a table

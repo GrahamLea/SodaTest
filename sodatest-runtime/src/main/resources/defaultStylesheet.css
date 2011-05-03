@@ -240,3 +240,23 @@ tr.extra td
     color: #C00;
     font-weight: bold;
 }
+
+div.blockResult.note {
+    background-color: #EEE;
+    border: 1px solid #888;
+}
+
+div.blockResult.note p.lineNumber {
+    font-weight: bold;
+    color: #888;
+    font-size: 100%;
+}
+
+div.blockResult.note p {
+    font-size: 120%;
+    padding: 0.2em 0.7em;
+}
+
+div.blockResult.note td {
+    background-color: #FFF;
+}

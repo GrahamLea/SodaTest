@@ -66,6 +66,8 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
     checkOutputOf("reportTests/GoodReportsTest")
     checkOutputOf("reportTests/MismatchReportsTest")
     checkOutputOf("reportTests/ReportErrorsTest")
+    
+    checkOutputOf("noteTests/NotesTest")
   }
 
   def toStringWithoutStyle(document: Node): String = {

@@ -18,7 +18,7 @@ package org.sodatest.runtime
 package processing.parsing.blocks
 
 import org.specs.SpecificationWithJUnit
-import data.blocks.{ReportBlock, EventBlock, FixtureBlock, BlockSource, Line}
+import data.blocks._
 
 class BlockFactorySpec extends SpecificationWithJUnit {
 
@@ -83,7 +83,7 @@ class BlockFactorySpec extends SpecificationWithJUnit {
 
       val blocks = blockFactory.create(List(
           fixtureBlockSource,
-//           noteBlockSource,
+           noteBlockSource,
 //           junkBlockSource,
           basicEventBlockSource,
           basicReportBlockSource,
@@ -101,13 +101,12 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       }
       blockIndex += 1
 
-//      {
-//        val recordNote = blocks(blockIndex++).asInstanceOf[RecordNote]
-//        recordNote.lineNumber must_== 3
-//        recordNote.source must_== noteBlock
-//      }
-//      blockIndex += 1
-//
+      {
+        val noteBlock = blocks(blockIndex).asInstanceOf[NoteBlock]
+        noteBlock.source must_== noteBlockSource
+      }
+      blockIndex += 1
+
 //      {
 //        val recordParseError = blocks(blockIndex++).asInstanceOf[RecordParseError]
 //        recordParseError.lineNumber must_== 6

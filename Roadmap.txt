@@ -28,12 +28,6 @@ that were run and a summary of the results.
 It should be possible to use the file runner to execute a single test by name.
 
 
-*** Note blocks ***
-
-Need to be able to add comments in the form of Note blocks in the input that appear as text in the output.
-Notes should be added to the existing examples.
-
-
 *** Support for automatic formatting of report output to strings ***
 
 The interface for SodaReports requires apply() to return a List[List[String]]

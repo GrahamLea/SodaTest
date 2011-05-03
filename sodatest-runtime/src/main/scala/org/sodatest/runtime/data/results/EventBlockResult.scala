@@ -22,9 +22,9 @@ import data.blocks.{EventExecution, EventBlock}
 class EventExecutionResult(execution: EventExecution, error: Option[ExecutionError] = None) extends ExecutionResult(execution, error)
 
 class EventBlockResult(
-    val executionResults: List[EventExecutionResult],
-    error: Option[ExecutionError] = None
-)(implicit block: EventBlock)
+  val executionResults: List[EventExecutionResult],
+  error: Option[ExecutionError] = None)
+  (implicit block: EventBlock)
 extends BlockResult[EventBlock](
   block,
   executionErrorOccurred = error != None || !executionResults.filter(_.error != None).isEmpty,

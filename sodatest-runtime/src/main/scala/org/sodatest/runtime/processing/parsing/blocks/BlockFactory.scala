@@ -17,14 +17,15 @@
 package org.sodatest.runtime.processing.parsing.blocks
 
 import org.sodatest.api.SodaTestLog
-import org.sodatest.runtime.data.blocks.{Line, EventExecution, ReportExecution, ReportBlock, EventBlock, FixtureBlock, Block, BlockSource}
+import org.sodatest.runtime.data.blocks._
 
 class BlockFactory(implicit val log: SodaTestLog) {
 
   private val factories = Map(
-    "Fixture" -> FixtureFactory,
     "Event" -> EventFactory,
-    "Report" -> ReportFactory
+    "Report" -> ReportFactory,
+    "Note" -> NoteFactory,
+    "Fixture" -> FixtureFactory
   )
 
   def create(blocks: List[BlockSource]): List[Block] = {
@@ -46,6 +47,11 @@ class BlockFactory(implicit val log: SodaTestLog) {
       // TODO: deal with fail cases: multiple lines, no td #1, more than #1 td
       new FixtureBlock(source, source.lines(0).cells(1))
     }
+  }
+
+  private object NoteFactory extends Factory {
+    // TODO: Parsing errors: text in cell(0); empty note
+    def createBlock(source: BlockSource): NoteBlock = new NoteBlock(source)
   }
 
   private object EventFactory extends Factory {
