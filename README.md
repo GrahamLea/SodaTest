@@ -1,16 +1,19 @@
 SodaTest: Spreadsheet-Driven Integration Testing
+================================================
 
 SodaTest is a framework for Integration and Acceptance testing.
 
 The input format is CSV files, the output format is pretty HTML, and the programming model in between
-for creating fixtures is kept as simple as possible.
+for creating [fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software) is kept as simple as possible.
 
 
-MOTIVATION
+Motivation
+----------
 
-SodaTest is intended as an alternative to FIT. It is a framework that allows the creation of executable
-test cases in a format that is easily readable by non-programmers, with the goal of being easily
-understood, edited or even authored by the non-technical Customers of the software under test.
+SodaTest is intended as an alternative to Ward Cunningham's [Framework for Integration Testing, "FIT"](http://fit.c2.com/).
+It is a framework that allows the creation of executable test cases in a format that is easily
+readable by non-programmers, with the goal of being easily understood, edited or even authored by the
+non-technical Customers of the software under test.
 
 The core design of SodaTest focusses around resolving a number of niggles experienced with FIT over the
 years, namely:
@@ -30,19 +33,21 @@ differentiation was the motivation for the name choice:
 Spreadsheet-Driven Integration Testing  =>  S-D Test  =>  SodaTest
 
 Good ideas froms FIT which are maintained in SodaTest are:
+* The use of tables to format and structure lots of information
 * Using reflection to automate a lot of string-conversion boilerplate for the fixture author
 * HTML as an excellent format for test output
 
 Other things that SodaTest tries to achieve are:
-* A separation between Events, which cause side-effects within the System, and Reports, which merely
-  query the state of the System.
-* Powerful and flexible (yet simple!) coercion of strings to strong types, including support for the
-  PropertyEditor pattern
-* Simple and localised control of Report formatting from strong types to strings
+* [Command-Query Separation](http://en.wikipedia.org/wiki/Command-query_separation) is built into the API by making the distinction between Events, which cause
+  side-effects within the System, and Reports, which merely query the state of the System.
+* Powerful and flexible (yet simple!) coercion of strings to strong types, including support for
+  co-located [PropertyEditor](http://download.oracle.com/javase/6/docs/api/java/beans/PropertyEditor.html) implementations
+* Simple and localised control of Report formatting from strong types to strings (**Not done yet**)
 * Case-agnosticism when binding input strings to programmattic symbols
 
 
-PROJECT SECTIONS
+Project Sections
+----------------
 
 The SodaTest project is made up of the following modules:
 
@@ -59,7 +64,8 @@ The SodaTest project is made up of the following modules:
 * 'SodaTest Examples' contains examples of how to use different features of SodaTest
 
 
-TASKS ON THE ROADMAP
+Tasks on the Roadmap
+--------------------
 
 A roadmap for features that need to be implemented to make the framework more complete is listed in Roadmap.txt.
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
