@@ -255,6 +255,7 @@ div.blockResult.note p.lineNumber {
 div.blockResult.note p {
     font-size: 120%;
     padding: 0.2em 0.7em;
+    white-space: normal;
 }
 
 div.blockResult.note td {

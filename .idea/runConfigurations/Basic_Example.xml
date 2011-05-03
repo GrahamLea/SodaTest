@@ -3,7 +3,7 @@
     <extension name="coverage" enabled="false" merge="false" />
     <option name="MAIN_CLASS_NAME" value="org.sodatest.runtime.processing.running.SodaFolderRunner" />
     <option name="VM_PARAMETERS" value="" />
-    <option name="PROGRAM_PARAMETERS" value="org.sodatest.examples.bankaccount src/main/resources/sodatests x-sodatest-output" />
+    <option name="PROGRAM_PARAMETERS" value="org.sodatest.examples.bankaccount src/main/resources/sodatests ." />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/sodatest-examples/basic" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
