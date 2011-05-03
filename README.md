@@ -40,7 +40,7 @@ in the form of CSV files, for these reasons:
 3. Spreadsheets (especially in CSV format) are extremely portable across platforms;
 4. CSV files are very easy to edit in source format.
 
-Good ideas froms FIT which are maintained in SodaTest are:
+Good ideas from FIT which are maintained in SodaTest are:
 
 * Tables for giving format and structure to large amounts of information
 * Reflection for automating a lot of string-conversion boilerplate for the fixture author
@@ -65,7 +65,7 @@ The SodaTest project is made up of the following modules:
 * [SodaTest API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples)
   is the only module on which your test code should depend at compile-time.
   The `org.sodatest.api` package contains the traits to be implemented in order to implement fixtures,
-  though the 'Reflective*' traits in the `org.sodatest.api.reflection` package are what you will
+  though the `Reflective*` traits in the `org.sodatest.api.reflection` package are what you will
   probably want to use 99% of the time.
 
 * [Coercion](https://github.com/GrahamLea/SodaTest/tree/master/coercion)
