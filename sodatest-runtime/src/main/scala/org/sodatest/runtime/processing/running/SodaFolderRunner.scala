@@ -20,20 +20,24 @@ package running
 
 import java.io.File
 import org.sodatest.api.SodaTestLog
+import data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
+
 object SodaFolderRunner {
+
+  class SodaTestResultSummary(val testName: String, val testPath: String, val mismatchCount: Int, val errorCount: Int)
 
   class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
-  def run(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): Boolean = {
+  def run(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): List[SodaTestResultSummary] = {
     checkDirectories(inputDirectory, outputDirectory)
 
-    def runRecursive(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): Boolean = {
+    def runRecursive(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): List[SodaTestResultSummary] = {
       if (!outputDirectory.exists && !outputDirectory.mkdirs)
         error("Failed to create output directory " + outputDirectory.getAbsolutePath)
 
       val resultsInDirectory =
         for (val testFile <- inputDirectory.listFiles.filter(_.getName.toLowerCase.endsWith(".csv"))) yield {
-          SodaFileRunner.execute(testFile, new File(outputDirectory, testFile.getName + ".html"), properties)
+          SodaFileRunner.runAndWrite(testFile, new File(outputDirectory, testFile.getName + ".html"), properties)
         }
 
       // Recurse into sub-directories
@@ -42,7 +46,7 @@ object SodaFolderRunner {
           runRecursive(inputSubdirectory, new File(outputDirectory, inputSubdirectory.getName))
         }
 
-      !(resultsInDirectory ++ resultsInSubdirectories).contains(false)
+      summariseList(resultsInDirectory.toList) ++ resultsInSubdirectories.toList.flatten
     }
 
     runRecursive(inputDirectory, outputDirectory)
@@ -65,6 +69,26 @@ object SodaFolderRunner {
       throw new InvalidDirectoryException("Output directory " + inputDirectory.getAbsolutePath + " is not a directory")
   }
 
+  private def summariseList(rs: List[SodaTestResult]): List[SodaTestResultSummary] =
+    rs.map(r => summarise(r))
+
+  private def summarise(r: SodaTestResult): SodaTestResultSummary = {
+    val mismatchedBlocks: Int = r.results.flatMap {_ match {
+        case rbr: ReportBlockResult => rbr.executionResults.map {er => if (er.matchResult.passed) 0 else 1}
+        case _ => Nil
+    }}.foldLeft(0)(_ + _)
+
+    val blockErrors = r.results.map(br => {(if (br.error == None) 0 else 1)}).foldLeft(0)(_ + _)
+
+    val executionErrors = r.results.flatMap(br => {br match {
+        case rbr: ReportBlockResult => rbr.executionResults.map{er => if (er.error == None) 0 else 1}
+        case ebr: EventBlockResult => ebr.executionResults.map{er => if (er.error == None) 0 else 1}
+        case _ => Nil
+      }}).foldLeft(0)(_ + _)
+
+    new SodaTestResultSummary(r.test.testName, r.test.testPath, mismatchedBlocks, blockErrors + executionErrors)
+  }
+
   def main(args: Array[String]): Unit = {
     exit(if (mainWithoutExit(args)) 0 else 1)
   }
@@ -80,9 +104,32 @@ object SodaFolderRunner {
     implicit val properties = new SodaTestProperties(fixtureRoot)
 
     try {
-      run(inputDirectory, outputDirectory)
+      val results = run(inputDirectory, outputDirectory)
+      printSummary(results)
+      !results.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
     } catch {
       case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage))
+    }
+  }
+
+  private def printSummary(results: Seq[SodaTestResultSummary]): Unit = {
+    val totalErrors = results.foldLeft(0)(_ + _.errorCount)
+    val totalMismatches = results.foldLeft(0)(_ + _.mismatchCount)
+    if (totalErrors == 0 && totalMismatches == 0) {
+      printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
+      println("No errors or mismatches")
+      println("SodaTest Result: ALL TESTS PASSED")
+    } else {
+      println("Failing Tests:")
+      for (failedTest <- results.filter(r => r.errorCount != 0 || r.mismatchCount != 0)) {
+        printf("\t%s (%s)\n", failedTest.testName, failedTest.testPath)
+      }
+      printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
+      if (totalMismatches != 0)
+        println(totalMismatches + " Report(s) had mismatches")
+      if (totalErrors != 0)
+        println(totalErrors + " Block(s) caused errors")
+      println("SodaTest Result: THERE WERE FAILURES")
     }
   }
 

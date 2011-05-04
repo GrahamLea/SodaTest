@@ -30,21 +30,21 @@ import data.results.SodaTestResult
 
 object SodaFileRunner {
 
-  def execute(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): Boolean = {
+  def runAndWrite(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): SodaTestResult = {
     log.info("Running " + inputFile)
-    val (passed, output) = run(inputFile, outputFile, properties)
+    val result = run(inputFile, properties)
     log.info("Writing " + outputFile)
     val writer = new PrintWriter(new FileWriter(outputFile))
     try {
-      writer.println(output)
+      writer.println(new XhtmlFormatter().format(result))
     } finally {
       writer.close
     }
-    passed
+    result
   }
 
-  private def run(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): (Boolean, String) = {
-    val testResult: SodaTestResult = new SodaTestExecutor().execute(
+  def run(inputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): SodaTestResult = {
+    new SodaTestExecutor().execute(
       new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, new BlockFactory().create(
         new BlockSourceSplitter().parseBlocks(
           new CsvCellSplitter().split(
@@ -54,7 +54,6 @@ object SodaFileRunner {
       ),
       new SodaTestContext(properties = properties)
     )
-    (testResult.passed, new XhtmlFormatter().format(testResult))
   }
 
   def main(args: Array[String]) {

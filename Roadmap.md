@@ -25,11 +25,6 @@ The SodaFolderRunner should output, at the root of the output directory, an inde
 that were run and a summary of the results.
 
 
-SodaFolderRunner summary output
--------------------------------------
-SodaFolderRunner should print a summary of its results to the console at the end of the run.
-
-
 SodaFileRunner should have a main() method
 ------------------------------------------
 It should be possible to use the file runner to execute a single test by name.
