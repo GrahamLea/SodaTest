@@ -4,15 +4,15 @@
 <head>
         <title>Basic Example (src\main\resources\sodatests\basicExample.csv)</title>
         <style type="text/css">
-          /*  * Copyright (c) 2010-2011 Belmont Technology Pty Ltd. All rights reserved.  *  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);  * you may not use this file except in compliance with the License.  * You may obtain a copy of the License at  *  *     http://www.apache.org/licenses/LICENSE-2.0  *  * Unless required by applicable law or agreed to in writing, software  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  * See the License for the specific language governing permissions and  * limitations under the License.  */  * {     font-size: 12px;     line-height: 200%;     font-family: 'Helvetica', 'Arial', sans-serif; }  body {     margin: 3em;     padding-bottom: 3em;     white-space: nowrap; }  div, table, p {     border: 0;     margin: 0;     padding: 0; }  h1 {     font-size: 300%;     margin: 0;     padding: 0;     line-height: 1.2em;     vertical-align: bottom; }  h2 {     font-size: 120%;     color: #666;     margin: 0;     padding: 0; }  div.testResult {     border-bottom: 3px solid #666;     margin-bottom: 3em; }  div.testResult p {     font-weight: bold;     font-size: 200%; }  body.passed div.testResult {     color: #095; }  body.failed div.testResult {     color: #C00; }  table {     border-collapse: collapse; }  div.blockResult {     clear: both;     display: inline-block;     float: left;     padding: 0.5em;     border-width: 3px;     border-radius: 0.5em;     -moz-border-radius: 0.5em;     -webkit-border-radius: 0.5em;     border-style: solid;     border-color: #FFF;     margin-bottom: 2em; }  body div.failure {     border-color: #C00; }  div.success.fixture td.name, div.success.event.inline td.name, div.event tr.parameterValues.success {     background-color: #E8F4FF; }  tr.result.match, tr.result td.match {     background-color: #DFD; }  th + td {     background-color: #FFF; }  td.name {     font-weight: bold;     color: #444;     font-size: 140%; }   td.instruction, tr.parameterNames td, .reportInvoker {     font-weight: bold;     font-style: italic;     color: #444;     background-color: #F6F6F6; }  .reportInvoker {     text-align: center; }  th {     background-color: #EEE;     border: 1px solid #CCC;     color: #888;     font-weight: normal; }  col.lineNumbers {     min-width: 3em; }  tr:first-child td:first-child {     background-color: #CCC;     border: 1px solid #CCC; }  td {     font-size: 120%;     padding: 0.2em 0.7em;     border: 1px solid #DDD; }  td.failureSource, tr.failureSource, td.mismatch, td.missing, td.extra, tr.missing {     background-color: #FF9999; }  td.failureAccomodator {     width: 100%;     border: 0; }  tr.failureDetails td {     border: 0; }  tr.failureDetails ul {     margin: 0;     padding: 0;     list-style: none; }  tr.failureDetails p.errorMessage { }  tr.failureDetails p.errorCause {     padding-left: 2em; }  p.stackTrace {     white-space: pre;     font-family: monospace;     font-size: 80%;     line-height: 1.2em;     margin-left: 10em;     color: #888; }  span.valueLabel {     display: inline-block;     width: 5em;     font-weight: bold;     font-style: italic; }  td.mismatch hr {     border-color: #000;     border-style: solid;     border-width: 1px;     opacity: 0.6; }  td.lineNote {     border: 0;     background-color: #FFF; }  td.lineNote, tr.missing th, tr.extra th, tr.extra td {     color: #C00;     font-weight: bold; }  div.blockResult.note {     background-color: #EEE;     border: 1px solid #888; }  div.blockResult.note p.lineNumber {     font-weight: bold;     color: #888;     font-size: 100%; }  div.blockResult.note p {     font-size: 120%;     padding: 0.2em 0.7em;     white-space: normal; }  div.blockResult.note td {     background-color: #FFF; }
+          /*  * Copyright (c) 2010-2011 Belmont Technology Pty Ltd. All rights reserved.  *  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);  * you may not use this file except in compliance with the License.  * You may obtain a copy of the License at  *  *     http://www.apache.org/licenses/LICENSE-2.0  *  * Unless required by applicable law or agreed to in writing, software  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  * See the License for the specific language governing permissions and  * limitations under the License.  */  * {     font-size: 12px;     line-height: 200%;     font-family: 'Helvetica', 'Arial', sans-serif; }  body {     margin: 3em;     padding-bottom: 3em;     white-space: nowrap; }  div, table, p {     border: 0;     margin: 0;     padding: 0; }  h1 {     font-size: 300%;     margin: 0;     padding: 0;     line-height: 1.2em;     vertical-align: bottom; }  h2 {     font-size: 120%;     color: #666;     margin: 0;     padding: 0; }  div.testResult {     border-bottom: 3px solid #666;     margin-bottom: 3em; }  div.testResult p {     font-weight: bold;     font-size: 200%; }  body.passed div.testResult {     color: #095; }  body.failed div.testResult {     color: #C00; }  table {     border-collapse: collapse; }  div.blockResult {     clear: both;     display: inline-block;     float: left;     padding: 0.5em;     border-width: 3px;     border-radius: 0.5em;     -moz-border-radius: 0.5em;     -webkit-border-radius: 0.5em;     border-style: solid;     border-color: #FFF;     margin-bottom: 2em; }  body div.failure {     border-color: #C00; }  div.success.fixture td.name, div.success.event.inline td.name, div.event tr.parameterValues.success {     background-color: #E8F4FF; }  tr.result.match, tr.result td.match {     background-color: #DFD; }  th + td {     background-color: #FFF; }  td.name {     font-weight: bold;     color: #444;     font-size: 140%; }   td.instruction, tr.parameterNames td, .reportInvoker {     font-weight: bold;     font-style: italic;     color: #444;     background-color: #F6F6F6; }  .reportInvoker {     text-align: center; }  th {     background-color: #EEE;     border: 1px solid #CCC;     color: #888;     font-weight: normal; }  col.lineNumbers {     min-width: 3em; }  tr:first-child td:first-child {     background-color: #CCC;     border: 1px solid #CCC; }  td {     font-size: 120%;     padding: 0.2em 0.7em;     border: 1px solid #DDD; }  td.failureSource, tr.failureSource, td.mismatch, td.missing, td.extra, tr.missing {     background-color: #FF9999; }  td.failureAccomodator {     width: 100%;     border: 0; }  tr.failureDetails td {     border: 0; }  tr.failureDetails ul {     margin: 0;     padding: 0;     list-style: none; }  tr.failureDetails p.errorMessage { }  tr.failureDetails p.errorCause {     padding-left: 2em; }  p.stackTrace {     white-space: pre;     font-family: monospace;     font-size: 80%;     line-height: 1.2em;     margin-left: 10em;     color: #888; }  span.valueLabel {     display: inline-block;     width: 5em;     font-weight: bold;     font-style: italic; }  td.mismatch hr {     border-color: #000;     border-style: solid;     border-width: 1px;     opacity: 0.6; }  td.lineNote {     border: 0;     background-color: #FFF; }  td.lineNote, tr.missing th, tr.extra th, tr.extra td {     color: #C00;     font-weight: bold; }  div.blockResult.note {     background-color: #EEE;     border: 1px solid #888; }  div.blockResult.note p.lineNumber {     font-weight: bold;     color: #888;     font-size: 100%; }  div.blockResult.note p {     font-size: 120%;     padding: 0.2em 0.7em; }  div.blockResult.note td {     background-color: #FFF; }
         </style>
-      </head><body class="passed"><div class="header">
+      </head><body class="failed"><div class="header">
         <div class="title">
           <h1>Basic Example</h1>
           <h2>(src\main\resources\sodatests\basicExample.csv)</h2>
         </div>
         <div class="testResult">
-          <p>PASSED</p>
+          <p>FAILED</p>
         </div>
       </div>
 <div class="blockResult note">
@@ -872,7 +872,7 @@ o Adding a cell to a line (or removing one)o<br></br>
 o Adding or removing whole lines
           </p>
     </div>
-<div class="blockResult report success">
+<div class="blockResult report failure">
       <table>
         <colgroup><col class="lineNumbers"></col></colgroup>
         <thead>
@@ -1002,15 +1002,19 @@ o Adding or removing whole lines
 <td>$2.00</td>
   
     </tr>
-<tr class="result match">
+<tr class="result mismatch">
       <th>145</th>
       <td></td>
-<td>2</td>
-<td>Interest</td>
-<td>$0.50</td>
-<td></td>
-<td>$2.50</td>
-  
+      <td class="match">2</td>
+<td class="match">Interest</td>
+<td class="match">$0.50</td>
+<td class="match"></td>
+<td class="mismatch">
+              <span class="valueLabel">Expected:</span> $2.51
+              <hr></hr>
+              <span class="valueLabel">Actual:</span> $2.50
+            </td>
+ 
     </tr>
 
         </tbody>
