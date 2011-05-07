@@ -19,6 +19,7 @@
 
     <modules>
         <module>basic</module>
+        <module>basic-java</module>
     </modules>
 
 </project>

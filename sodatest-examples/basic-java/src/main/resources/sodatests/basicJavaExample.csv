@@ -1,0 +1,145 @@
+Note,Welcome to the Basic SodaTest Example!
+,This block is an example of a Note.
+,The number in [square brackets] above shows the line number from which this Note was sourced.
+,"Above, you can see the name of this test, the path of its source file relative to the input root, and whether it passed or failed."
+
+Note,"Below, the Fixture is set from which the subsequent Events and Reports will be created."
+,"While most tests will be written using a single Fixture, it's possible to change the Fixture any number of times throughout a test."
+,"In the executable blocks - Fixtures, Events and Reports - line numbers are shown in the left-hand column."
+
+Fixture,BankAccountFixtureJava,
+
+Note,The following block is a Report which has no paramters.
+,"This is an inline Report, because the execution marker - !! - appears on the same line as the Report name."
+,"There is no difference in the Report implementation. It's just shorthand for executing a zero-parameter Report in one line."
+,"As we have no Customers at the moment, the expected result of this Report is an empty table, hence why the execution is the only line in the block."
+
+Report,Customers,!!
+
+Note,The following Report block takes one parameter: Account Name.
+,"The Report is executed twice, once for an Account Name of 'Graham Lea' and once for 'Spike Spiegel'."
+,"If you look at the abstract CustomerReport class that BalanceReport extends, you'll see that Account Name is not simply a String but an instance of the AccountName class."
+,SodaTest automatically coerces the string from the table into an AccountName object using the public constructor on AccountName that takes a String.
+,The Report is expected to return 'Unknown Account' for both executions.
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,Unknown Account,
+!!,Spike Spiegel,
+,Unknown Account,
+
+Note,The following block is an Event block.
+,"This invocation of the Event takes four parameters, each of which is coerced in a different fashion before being bound to the Event:"
+,"  o 'Account Name', as with the Balance Report above, is coerced to an AccountName object."
+,"  o 'Initial Deposit' is coerced to an Option[Money], where the String -> Money coercion is made by discovering the MoneyEditor class, then creating and invoking an instance."
+,"  o 'Tags' is coerced to a List[String] by splitting the cell's value at each comma. You can also coerce a comma-separated list into a List of any other type for which a Coercion is available, e.g. a List[Money]"
+,"  o Finally, 'Interest Formula' is coerced using a custom instance of Coercion that is disovered through a CoercionRegister instance inside the OpenAccountEvent."
+
+Event,Open Account,
+,Account Name,Initial Deposit,Tags,Interest Formula
+,Graham Lea,$1.00,"Sydney,Scala,Ninja",10%
+
+Note,"Here we have another invocation of the inline Report from the top, except this time it returns the name of the new Account."
+
+Report,Customers,!!
+,Graham Lea
+
+Note,"Notice in the Report block below that the reflective APIs of SodaTest are not case-sensitive, and also ignore all non-alphanumeric characters."
+
+Report,Balance,
+,* aCcOuNt - NaMe *,
+!!,Graham Lea,
+,$1.00,
+!!,Spike Spiegel,
+,Unknown Account,
+
+Note,"In the following Event, the value of 'Initial Deposit', which is bound to an Option[Money], is left as an empty string."
+,"This will be coerced to the None value, as will any String that trim()s to the empty string and is bound to an Option."
+
+Event,Open Account
+,Account Name,Initial Deposit,Tags,Interest Formula
+,Spike Spiegel,,"Mars,Jericho 941,Cowboy",$0.50
+
+Report,Customers,!!
+,Graham Lea
+,Spike Spiegel
+
+Note,Below you can see the list of tags that were parsed by SodaTest into List[String] objects when the accounts were created.
+
+Report,Customer Tags,
+,Account Name
+!!,Graham Lea
+,Sydney
+,Scala
+,Ninja
+!!,Spike Spiegel
+,Mars
+,Jericho 941
+,Cowboy
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,$1.00,
+!!,Spike Spiegel,
+,$0.00,
+
+Note,"It's probably worth noting that Events do not use an execution marker. (!!)"
+,"This is simply because Events have no output to match, so every line under the Event name is an execution."
+
+Event,Deposit,
+,Account Name,Amount
+,Graham Lea,$5.00
+,Spike Spiegel,$2.00
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,$6.00,
+!!,Spike Spiegel,
+,$2.00,
+
+Event,Withdraw,
+,Account Name,Amount
+,Graham Lea,$3.00
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,$3.00,
+!!,Spike Spiegel,
+,$2.00,
+
+Note,"Here is an example of an inline Event."
+,"It simply invokes the Event once with no parameters."
+
+Event,Interest accrued at the end of the month
+
+Report,Balance,
+,Account Name,
+!!,Graham Lea,
+,$3.30,
+!!,Spike Spiegel,
+,$2.50,
+
+Note,"Finally, here is a Report that expects more complex output than the others above."
+,"You can play around with the source of this block to see how SodaTest represents different kinds of Report mismatches."
+,You could try:
+,o Changing the value in a cell
+,o Removing the value in a cell
+,o Adding a cell to a line (or removing one)o
+,o Adding or removing whole lines
+
+Report,Statement
+,Account Name
+!!,Graham Lea
+,Ref,Description,Credit,Debit,Balance
+,1,Deposit,$1.00,,$1.00
+,2,Deposit,$5.00,,$6.00
+,3,Withdrawal,,$3.00,$3.00
+,4,Interest,$0.30,,$3.30
+!!,Spike Spiegel
+,Ref,Description,Credit,Debit,Balance
+,1,Deposit,$2.00,,$2.00
+,2,Interest,$0.50,,$2.50
