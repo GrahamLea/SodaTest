@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.sodatest.examples.bankaccount
+package org.sodatest.examples.basic.fixtures
 
 import _root_.java.lang.String
 import org.sodatest.api.reflection._
 import org.sodatest.api.SodaReport
 import collection.immutable.Map
 import org.sodatest.coercion.{Coercion, CoercionRegister}
+import org.sodatest.examples.basic._
 
 class BankAccountFixture extends ReflectiveSodaFixture {
   val service = new BankAccountService()
@@ -36,7 +37,7 @@ class BankAccountFixture extends ReflectiveSodaFixture {
   def customerTags = new TagsReport(service)
 }
 
-abstract class CustomerReport(val service: BankAccountService) extends ReflectiveSodaReport {
+abstract class AbstractCustomerReport(val service: BankAccountService) extends ReflectiveSodaReport {
   var accountName: AccountName = null;
 
   def apply(account: BankAccount): Seq[Seq[String]]
@@ -49,11 +50,11 @@ abstract class CustomerReport(val service: BankAccountService) extends Reflectiv
   }
 }
 
-class BalanceReport(service: BankAccountService) extends CustomerReport(service) {
+class BalanceReport(service: BankAccountService) extends AbstractCustomerReport(service) {
   def apply(account: BankAccount) = List(List(account.balance.toString)) // TODO: Auto-format List[List[Any]] -> Seq[Seq[String]]
 }
 
-class TagsReport(service: BankAccountService) extends CustomerReport(service) {
+class TagsReport(service: BankAccountService) extends AbstractCustomerReport(service) {
   def apply(account: BankAccount) = account.tags map (List(_))
 }
 
@@ -63,7 +64,7 @@ class CustomersReport(val service: BankAccountService) extends SodaReport {
   }
 }
 
-class StatementReport(service: BankAccountService) extends CustomerReport(service) {
+class StatementReport(service: BankAccountService) extends AbstractCustomerReport(service) {
   def apply(account: BankAccount) = account.statement
 }
 

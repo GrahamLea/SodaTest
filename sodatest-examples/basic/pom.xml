@@ -52,7 +52,7 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>org.sodatest.runtime.processing.running.SodaFolderRunner</argument>
-                                <argument>org.sodatest.examples.bankaccount</argument>
+                                <argument>org.sodatest.examples.basic.fixtures</argument>
                                 <argument>src/main/resources/sodatests</argument>
                                 <argument>.</argument>
                             </arguments>

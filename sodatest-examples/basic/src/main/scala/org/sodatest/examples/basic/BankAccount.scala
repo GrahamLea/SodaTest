@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.sodatest.examples.bankaccount
+package org.sodatest.examples.basic
 
 import _root_.java.beans.{PropertyEditorSupport}
 import _root_.java.lang.String
 import _root_.java.math.BigDecimal
 import collection.immutable.List._
-import org.sodatest.examples.bankaccount.Money._
 
 class Money(a: BigDecimal) {
   val amount = a.setScale(2);
