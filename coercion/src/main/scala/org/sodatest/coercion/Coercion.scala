@@ -22,7 +22,12 @@ import java.beans.PropertyEditor
 import collection._
 import mutable.ArrayBuffer
 
-abstract class Coercion[A](implicit manifest: Manifest[A]) { val resultClass = manifest.erasure; def apply(s: String): A }
+abstract class Coercion[A](implicit manifest: Manifest[A]) {
+  // TODO: Pretty sure using 'erasure' here means that we can't be specific enough
+  //       Test case is probably choosing between two coercions for different types having same generic type
+  val resultClass = manifest.erasure
+  def apply(s: String): A
+}
 
 class CoercionRegister(c: Coercion[_]*) {
 
@@ -150,6 +155,5 @@ object Coercion {
 
 class UnableToCoerceException(val reason: String, val value: String, val targetType: Class[_], cause: Option[Throwable] = None)
   extends RuntimeException("Unable to coerce value '" + value + "' to type " + targetType.getName + ": " + reason, cause.getOrElse(null))
-
 
 }}
