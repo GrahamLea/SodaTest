@@ -13,6 +13,11 @@ Java example
 Basically want to re-run the same basic example but using Java for the Fixture and System Under Test instead of Scala
 
 
+Scaladoc + Javadoc for the APIs
+-------------------------------
+Makes sense to have a little bit of doc to help those who are just starting out.
+
+
 Parsing errors commuted to output
 ---------------------------------
 Errors in parsing the input currently cause exceptions that halt execution.

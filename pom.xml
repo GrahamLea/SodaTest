@@ -83,6 +83,11 @@
             </dependency>
             <dependency>
                 <groupId>org.sodatest</groupId>
+                <artifactId>sodatest-api-java</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.sodatest</groupId>
                 <artifactId>sodatest-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -109,6 +114,7 @@
     <modules>
         <module>coercion</module>
         <module>sodatest-api</module>
+        <module>sodatest-api-java</module>
         <module>sodatest-runtime</module>
         <module>sodatest-examples</module>
     </modules>
@@ -121,10 +127,18 @@
                 <version>2.15.2</version>
                 <executions>
                     <execution>
+                        <id>compile</id>
                         <goals>
                             <goal>compile</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
                             <goal>testCompile</goal>
                         </goals>
+                        <phase>process-test-resources</phase>
                     </execution>
                 </executions>
                 <configuration>
