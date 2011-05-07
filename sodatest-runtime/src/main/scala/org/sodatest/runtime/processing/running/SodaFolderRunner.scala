@@ -24,7 +24,9 @@ import data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
 
 object SodaFolderRunner {
 
-  class SodaTestResultSummary(val testName: String, val testPath: String, val mismatchCount: Int, val errorCount: Int)
+  class SodaTestResultSummary(val testName: String, val testPath: String, val mismatchCount: Int, val errorCount: Int) {
+    val failed = mismatchCount != 0 || errorCount != 0
+  }
 
   class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
@@ -76,15 +78,15 @@ object SodaFolderRunner {
     val mismatchedBlocks: Int = r.results.flatMap {_ match {
         case rbr: ReportBlockResult => rbr.executionResults.map {er => if (er.matchResult.passed) 0 else 1}
         case _ => Nil
-    }}.foldLeft(0)(_ + _)
+    }}.sum
 
-    val blockErrors = r.results.map(br => {(if (br.error == None) 0 else 1)}).foldLeft(0)(_ + _)
+    val blockErrors = r.results.map(br => {(if (br.error == None) 0 else 1)}).sum
 
     val executionErrors = r.results.flatMap(br => {br match {
         case rbr: ReportBlockResult => rbr.executionResults.map{er => if (er.error == None) 0 else 1}
         case ebr: EventBlockResult => ebr.executionResults.map{er => if (er.error == None) 0 else 1}
         case _ => Nil
-      }}).foldLeft(0)(_ + _)
+      }}).sum
 
     new SodaTestResultSummary(r.test.testName, r.test.testPath, mismatchedBlocks, blockErrors + executionErrors)
   }
@@ -113,8 +115,10 @@ object SodaFolderRunner {
   }
 
   private def printSummary(results: Seq[SodaTestResultSummary]): Unit = {
-    val totalErrors = results.foldLeft(0)(_ + _.errorCount)
-    val totalMismatches = results.foldLeft(0)(_ + _.mismatchCount)
+    val totalFailedTests = results.filter(_.failed).size
+    val totalErrors = results.map(_.errorCount).sum
+    val totalMismatches = results.map(_.mismatchCount).sum
+    println("----------------------------------------")
     if (totalErrors == 0 && totalMismatches == 0) {
       printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
       println("No errors or mismatches")
@@ -125,12 +129,14 @@ object SodaFolderRunner {
         printf("\t%s (%s)\n", failedTest.testName, failedTest.testPath)
       }
       printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
+      printf("%s Test%s failed\n", totalFailedTests, if (totalFailedTests == 1) "" else "s")
       if (totalMismatches != 0)
-        println(totalMismatches + " Report(s) had mismatches")
+        println("\t" + totalMismatches + " Report(s) had mismatches")
       if (totalErrors != 0)
-        println(totalErrors + " Block(s) caused errors")
+        println("\t" + totalErrors + " Block(s) caused errors")
       println("SodaTest Result: THERE WERE FAILURES")
     }
+    println("----------------------------------------")
   }
 
   private def usage: Nothing = usage(None)
