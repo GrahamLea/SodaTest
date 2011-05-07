@@ -16,7 +16,7 @@
 
 package org.sodatest.api { package reflection {
 
-import java.lang.reflect._
+import _root_.java.lang.reflect._
 import collection.immutable.Map
 import org.sodatest.coercion.{CoercionRegister, Coercion}
 
@@ -29,7 +29,7 @@ trait ReflectiveSodaFixture extends SodaFixture {
 }
 
 trait ReflectiveSodaEvent extends SodaEvent {
-  def apply(): Unit
+  protected def apply(): Unit
 
   @throws(classOf[ParameterBindingException])
   def apply(parameters: Map[String, String]) = {
@@ -39,7 +39,7 @@ trait ReflectiveSodaEvent extends SodaEvent {
 }
 
 trait ReflectiveSodaReport extends SodaReport {
-  def apply(): Seq[Seq[String]]
+  protected def apply(): Seq[Seq[String]]
 
   @throws(classOf[ParameterBindingException])
   def apply(parameters: Map[String, String]) = {
@@ -69,7 +69,52 @@ private[reflection] object ReflectionUtil {
 
   @throws(classOf[ParameterBindingException])
   def setByReflection(parameters: Map[String, String], target: Object): Unit = {
-    setByReflection(parameters, target, coercionRegisterIn(target), target.getClass.getMethods.toList)
+
+    val coercionRegister = coercionRegisterIn(target)
+
+    val assignmentMethodsMap: Map[String, Method] = target.getClass.getMethods.flatMap(m => m match {
+          case AssignmentMethod(fieldName) => Some((canonizedName(fieldName), m))
+          case _ => None
+    }) toMap
+
+    val fieldsMap: Map[String, Field] = target.getClass.getFields.toList.map(f => (canonizedName(f.getName), f)).toMap
+
+    val bindFailures: Iterable[Option[ParameterBindFailure]] = for (val (parameterName, parameterValue) <- parameters) yield {
+      val canonizedParameterName: String = canonizedName(parameterName)
+      assignmentMethodsMap.get(canonizedParameterName) match {
+        case Some(method) => {
+          method.setAccessible(true)
+          try {
+            method.invoke(target, Coercion.coerce(parameterValue, getSingleParameterTypeFrom(method), coercionRegister).asInstanceOf[Object])
+            None
+          }
+          catch {
+            case e => Some(new ParameterBindFailure(parameterName, parameterValue, e.toString, Some(e)))
+          }
+        }
+        case None => {
+          fieldsMap.get(canonizedParameterName) match {
+            case Some(field) => {
+              field.setAccessible(true)
+              try {
+                field.set(target, Coercion.coerce(parameterValue, field.getGenericType, coercionRegister).asInstanceOf[Object])
+                None
+              }
+              catch {
+                case e => Some(new ParameterBindFailure(parameterName, parameterValue, e.toString, Some(e)))
+              }
+            }
+            case None => Some(new ParameterBindFailure(parameterName, parameterValue,
+                            String.format("Parameter '%s' could not be found on %s (%s)", parameterName, target.getClass.getSimpleName, target.getClass.getPackage.getName)))
+          }
+        }
+      }
+    }
+
+    bindFailures flatten match {
+      case Nil => {}
+      case failureList => throw new ParameterBindingException(failureList toList)
+    }
   }
 
   private def coercionRegisterIn(target: Object) : Option[CoercionRegister] = {
@@ -83,43 +128,7 @@ private[reflection] object ReflectionUtil {
     }
   }
 
-  private def withCanonicalKeyNames(map: Map[String, String]) = {
-    map.map(p => (canonizedName(p._1), p._2))
-  }
-
   def canonizedName(s: String) = s.toLowerCase.replaceAll("[^a-z0-9]", "")
-
-  @throws(classOf[ParameterBindingException])
-  private def setByReflection(
-      parameters: Map[String, String], target: Object, coercionRegister: Option[CoercionRegister], methods: List[Method]): Unit = {
-
-    val assignmentMethodsMap: Map[String, Method] = methods.flatMap(m => m match {
-          case AssignmentMethod(fieldName) => Some((canonizedName(fieldName), m))
-          case _ => None
-    }) toMap
-
-    val bindFailures: Iterable[Option[ParameterBindFailure]] = for (val (parameterName, parameterValue) <- parameters) yield {
-      assignmentMethodsMap.get(canonizedName(parameterName)) match {
-        case None => Some(new ParameterBindFailure(parameterName, parameterValue,
-                            String.format("Parameter '%s' could not be found on %s (%s)", parameterName, target.getClass.getSimpleName, target.getClass.getPackage.getName)))
-        case Some(method) => {
-          method.setAccessible(true)
-          try {
-            method.invoke(target, Coercion.coerce(parameterValue, getSingleParameterTypeFrom(method), coercionRegister).asInstanceOf[Object])
-            None
-          }
-          catch {
-            case e => Some(new ParameterBindFailure(parameterName, parameterValue, e.toString, Some(e)))
-          }
-        }
-      }
-    }
-
-    bindFailures flatten match {
-      case Nil => {}
-      case failureList => throw new ParameterBindingException(failureList toList)
-    }
-  }
 
   private def getSingleParameterTypeFrom(method: Method): Type = method.getGenericParameterTypes.toList match {
     case oneParameterType :: Nil => oneParameterType
@@ -127,11 +136,13 @@ private[reflection] object ReflectionUtil {
   }
 
   private object AssignmentMethod {
-    val assignMethodRegex = "^(.*)_\\$eq$".r
+    val scalaAssignMethodRegex = "^(.*)_\\$eq$".r
+    val setterMethodRegex = "^set(.*)$".r
 
     def unapply(method: Method): Option[String] = method.getGenericParameterTypes.toList match {
       case oneParameterType :: Nil => method.getName match {
-        case assignMethodRegex(fieldName) => Some(fieldName)
+        case scalaAssignMethodRegex(fieldName) => Some(fieldName)
+        case setterMethodRegex(fieldName) => Some(fieldName)
         case _ => None
       }
       case _ => None
