@@ -23,8 +23,9 @@ class ParameterBindFailure(
   val exception: Option[Throwable] = None
 ) {}
 
-class ParameterBindingException(val bindFailures: List[ParameterBindFailure])
-  extends RuntimeException
+class ParameterBindingException(val bindFailures: List[ParameterBindFailure]) extends RuntimeException {
+  override def toString = "ParameterBindingException: " + bindFailures.map(f => f.parameterName + ": " + f.parameterValue).mkString(", ")
+}
 
 
 
