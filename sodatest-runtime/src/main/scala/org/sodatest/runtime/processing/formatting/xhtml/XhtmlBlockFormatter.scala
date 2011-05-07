@@ -78,7 +78,7 @@ private[xhtml] class XhtmlBlockFormatter[T <: Block](val result: BlockResult[T])
       case None => NO_XML
       case Some(error) =>
         failureDetails(() => {
-          errorDetails("B: " + error.message, error.causeString, None, stackTrace = error.causeTrace)
+          errorDetails("B: " + error.message, error.causeString, None, error.cause)
         })
     }
   }
@@ -95,14 +95,16 @@ private[xhtml] class XhtmlBlockFormatter[T <: Block](val result: BlockResult[T])
   }
 
   def errorDetails(errorMessage: String, errorCause: Option[String], causeToString: Option[String] = None,
-                   stackTrace: Option[Array[StackTraceElement]]): Node = {
+                   cause: Option[Throwable]): Node = {
       <li>
         <p class="errorMessage">{errorMessage}</p>
         { errorCause map (cs => <p class="errorCause">{cs}</p>) getOrElse "" }
-        { stackTrace map (st =>
+        { cause map (e =>
             <p class="stackTrace">{
-causeToString.getOrElse(errorCause.getOrElse("")) + "\n  at " + st.map(_.toString).mkString("\n  at ") + "\n"
-           }</p>) getOrElse NO_XML
+e.toString + "\n  at " + e.getStackTrace.map(_.toString).mkString("\n  at ") + "\n" + (if (e.getCause != null) {
+e.getCause.toString + "\n  at " + e.getCause.getStackTrace.map(_.toString).mkString("\n  at ") + "\n"
+} else {""})
+            }</p>) getOrElse NO_XML
         }
       </li>
   }

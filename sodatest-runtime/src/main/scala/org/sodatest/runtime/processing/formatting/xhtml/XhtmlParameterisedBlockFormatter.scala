@@ -41,7 +41,7 @@ private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](re
       errorDetails(errorMessage = letters(parameterIndex) + ": The " + blockType + " was unable to bind the value '" + failure.parameterValue + "' to parameter '" + failure.parameterName + "'",
                     errorCause = Some(failure.errorMessage),
                     causeToString = failure.exception.map(_.toString),
-                    stackTrace = failure.exception.map(_.getStackTrace)) ++ NEWLINE
+                    cause = failure.exception) ++ NEWLINE
     }
   }
 

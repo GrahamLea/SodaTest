@@ -53,7 +53,7 @@ object XhtmlReportFormatter {
 
                 case Some(error) => {
                   formatter.failureDetails(() => {
-                    formatter.errorDetails(error.message, error.causeString, None, error.causeTrace)
+                    formatter.errorDetails(error.message, error.causeString, None, error.cause)
                   }) ++ NEWLINE
                 }
               })
