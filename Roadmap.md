@@ -13,6 +13,12 @@ Scaladoc + Javadoc for the APIs
 Makes sense to have a little bit of doc to help those who are just starting out.
 
 
+Sanitise test input and output for XHTML
+----------------------------------------
+Any non-framework text that appears in the output should be sanitised so as to not open up to
+HTML injection attacks.
+
+
 Parsing errors commuted to output
 ---------------------------------
 Errors in parsing the input currently cause exceptions that halt execution.
