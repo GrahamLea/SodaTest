@@ -8,11 +8,6 @@ These are the things that make the most sense to achieve in the near future, lis
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
-Java example
-------------
-Basically want to re-run the same basic example but using Java for the Fixture and System Under Test instead of Scala
-
-
 Scaladoc + Javadoc for the APIs
 -------------------------------
 Makes sense to have a little bit of doc to help those who are just starting out.
@@ -41,6 +36,22 @@ The interface for SodaReports requires apply() to return a List[List[String]]
 While this shouldn't change, it should be possible to return a List[List[Any]] and have SodaTest sensibly convert
 the value to a List[List[String]], primarily using convention but also allowing configuration. Thinking is that a
 val of type Map[Class[_], Formatter] could be provided in the Report and/or in the Fixture.
+
+
+Coercion limitation
+------------------
+The current implementation of Coercion, which uses only the 'erasure' from the Manifest,
+is probably not able to match types at runtime as powerfully as it should be.
+The test case is probably to create two coercions for two different concrete types of a single
+generic type.
+
+
+Java Example
+------------
+The Java example is 95% done, however the InterestFormulaJavaCoercion is written in Scala.
+Need to figure out how to create a Manifest from Java in order to be able to implement the
+Coercion in Java instead.
+It would probalby be wise to solve the Coercion limitation before fixing this.
 
 
 More appropriate logging level out of the box
