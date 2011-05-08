@@ -1,7 +1,14 @@
-Note,Welcome to the Basic SodaTest Example!
+Note,Welcome to the Basic SodaTest JAVA Example!
 ,This block is an example of a Note.
 ,The number in [square brackets] above shows the line number from which this Note was sourced.
 ,"Above, you can see the name of this test, the path of its source file relative to the input root, and whether it passed or failed."
+
+Note,"Except for this block, the line numbers, and any appearance of the word 'Java', this test is identical to the SodaTest Basic Example for Scala."
+,There are two main differences between coding fixtures in Scala and coding them in Java.
+,"Firstly, a Scala fixture uses the 'sodatest-api' module and extends traits like SodaReport or ReflectiveSodaReport."
+,"However, a Java fixture should be written using the 'sodatest-java-api' module (which extends sodatest-api) and will extend classes like SodaReportForJava or ReflectiveSodaReportForJava."
+,"Secondly, in Scala you would normally write reflective events and reports by exposing public vals, while in Java you will write them by exposing either public fields or public setter methods."
+,"Other than that, everything is pretty much the same, so if you've already read through the Basic Example, there's not much point in reading this one, too."
 
 Note,"Below, the Fixture is set from which the subsequent Events and Reports will be created."
 ,"While most tests will be written using a single Fixture, it's possible to change the Fixture any number of times throughout a test."
