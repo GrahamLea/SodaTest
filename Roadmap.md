@@ -44,6 +44,14 @@ the value to a List[List[String]], primarily using convention but also allowing 
 val of type Map[Class[_], Formatter] could be provided in the Report and/or in the Fixture.
 
 
+Required Parameters
+-------------------
+It is obvious that for many Events and Reports, some parameters will be required in order to
+apply the Event or Report properly. It would be nice to have functionality built into the API
+allowing a parameter to be annotated as required and have the framework ensure all required
+parameters have been set before execution.
+
+
 Coercion limitation
 ------------------
 The current implementation of Coercion, which uses only the 'erasure' from the Manifest,
