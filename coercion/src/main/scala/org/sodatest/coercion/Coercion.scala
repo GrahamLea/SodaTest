@@ -22,6 +22,9 @@ import java.beans.PropertyEditor
 import collection._
 import mutable.ArrayBuffer
 
+/**
+ * Superclass for types that can coerce a string into a 'strong type'/value object.
+ */
 abstract class Coercion[A](implicit manifest: Manifest[A]) {
   // TODO: Pretty sure using 'erasure' here means that we can't be specific enough
   //       Test case is probably choosing between two coercions for different types having same generic type
@@ -29,6 +32,9 @@ abstract class Coercion[A](implicit manifest: Manifest[A]) {
   def apply(s: String): A
 }
 
+/**
+ * Contains a map of Coercions that are applicable within some context.
+ */
 class CoercionRegister(c: Coercion[_]*) {
 
   private var coercions: Map[Class[_], Coercion[_]] = Map()
@@ -40,6 +46,28 @@ class CoercionRegister(c: Coercion[_]*) {
   def get[A](targetClass: Class[A]): Option[Coercion[A]] = { coercions.get(targetClass).asInstanceOf[Option[Coercion[A]]] }
 }
 
+/**
+ * Functions for coercing string values into strongly typed value objects.
+ *
+ * Coercion attempts to use the following types of coercion (in order of highest precedence):
+ * <ol>
+ *   <li>Strings are returned unchanged</li>
+ *   <li>Any applicable instance of [[org.sodatest.coercion.Coercion]] in the given [[org.sodatest.coercion.CoercionRegister]]</li>
+ *   <li>The wrapper type for Java primitives</li>
+ *   <li>A [[java.beans.PropertyEditor]] instance (having the name of the type with 'Editor' appended; the type must also have a no-args constructor)</li>
+ *   <li>A constructor on the target type accepting one String.</li>
+ * </ol>
+ *
+ * The first of these coercion types that is found to be applicable is applied and, if it failes,
+ * an error is thrown immediately.
+ *
+ * Where the target type is an [[scala.Option]], Coercion will attempt to coerce any non-whitespacestring
+ * to the type parameter of the Option, while empty or whitespace-only strings are coerced to [[scala.None]]
+ *
+ * Where the target type is a scala.collection.immutable.List or a java.util.List,
+ * Coercion will split the string at each and every comma and attempt to coerce each split value to
+ * the type parameter of the List. 
+ */
 object Coercion {
 
   private val wrapperTypes: Map[Class[_], Class[_]] = Map(
@@ -53,8 +81,18 @@ object Coercion {
     java.lang.Double.TYPE ->    classOf[java.lang.Double]
   )
 
+  /**
+   * Coerce the given String value to the specified target Type, using any Coercions in the given
+   * CoercionRegister, if applicable.
+   */
+  @throws(classOf[UnableToCoerceException])
   def coerce(value: String, targetType: Type, register: CoercionRegister): Any = coerce(value, targetType, Some(register))
 
+  /**
+   * Coerce the given String value to the specified target Type, using any Coercions in the given
+   * CoercionRegister, if applicable.
+   */
+  @throws(classOf[UnableToCoerceException])
   def coerce(value: String, targetType: Type, register: Option[CoercionRegister] = None): Any = (targetType match {
     case c: Class[_] => coerceToClass(value, c)(register);
     case OptionType(wrappedType) =>
@@ -77,6 +115,17 @@ object Coercion {
   private object ScalaListType extends GenericTypeMatcher(classOf[List[_]])
   private object JavaListType extends GenericTypeMatcher(classOf[java.util.List[_]])
 
+  /**
+   * Coerce the given String value to the specified Class, using any Coercions in the given
+   * CoercionRegister, if applicable.
+   *
+   * Unlike the version that accepts a type, this function will not attempt to perform special
+   * handling for Options or Lists.
+   *
+   * @throws UnableToCoerceException if no applicable coercion method can be found for the type,
+   * or if the first selected coercion method results in an error
+   */
+  @throws(classOf[UnableToCoerceException])
   def coerceToClass[A](value: String, targetType: Class[A])(implicit register: Option[CoercionRegister] = None): A = (targetType match {
     case StringClass(c) => value.asInstanceOf[A]
     case ClassWithCoercion(coercion) => coercion(value)
