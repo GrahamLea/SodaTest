@@ -24,7 +24,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstract class for Java-based {@link org.sodatest.api.SodaReport}s that provides helper methods for
+ * Java-Scala integration, especially around conversion of Report results.
+ */
 public abstract class JavaReportConverter extends JavaParameterConverter {
+    /**
+     * Converts a Java <code>List<List<String>></String></code> to a Scala <code>Seq[Seq[String]]</code>
+     *
+     * Subclasses can override this method if they wish to use a different conversion.
+     *
+     * @return the contents of 'report' inserted into a Scala Seq of Seqs.
+     */
     protected Seq<Seq<String>> convertReport(List<List<String>> report) {
         List<Seq<String>> convertedRows = new ArrayList<Seq<String>>();
         for (List<String> row : report) {

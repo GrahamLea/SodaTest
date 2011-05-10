@@ -16,6 +16,9 @@
 
 package org.sodatest.api
 
+/**
+ * A bridge trait used to connect SodaTest into any kind of logging infrastructure.
+ */
 trait SodaTestLog {
   def error(message: String): Unit
   def info(message: String): Unit

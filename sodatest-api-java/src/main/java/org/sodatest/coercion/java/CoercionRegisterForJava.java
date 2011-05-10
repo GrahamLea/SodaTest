@@ -22,6 +22,9 @@ import scala.collection.JavaConversions;
 
 import java.util.Arrays;
 
+/**
+ * Contains a map of {@link Coercion}s that are applicable within some context.
+ */
 public class CoercionRegisterForJava extends CoercionRegister {
     public CoercionRegisterForJava(Coercion<?>... coercions) {
         super(JavaConversions.asScalaBuffer(Arrays.asList(coercions)));

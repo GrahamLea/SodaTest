@@ -25,6 +25,9 @@
 
     <name>SodaTest: Spreadsheet-Driven Integration Testing</name>
     <inceptionYear>2010</inceptionYear>
+    <organization>
+        <name>Belmont Technology Pty Ltd</name>
+    </organization>
     <licenses>
         <license>
             <name>Apache Licence 2.0</name>
@@ -194,16 +197,4 @@
             </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-                <version>2.15.2</version>
-                <configuration>
-                    <scalaVersion>${scala.version}</scalaVersion>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 </project>

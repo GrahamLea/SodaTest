@@ -22,21 +22,46 @@ import org.sodatest.api.reflection.ReflectiveSodaEvent;
 import org.sodatest.api.reflection.ReflectiveSodaEvent$class;
 import scala.collection.immutable.Map;
 
+/**
+ * A Java [[org.sodatest.api.SodaEvent]] base class that supports the automatic binding of parameters to
+ * public and strongly-typed fields or setter methods.
+ *
+ * The documentation of {@link ReflectiveSodaEvent} explains the details of coercion and binding
+ * that are applied to Reflective Events in both Scala and Java.
+ *
+ * <b>Example</b>
+ * <pre>
+ * public class MySodaEvent extends ReflectiveSodaEventForJava {
+ *     public BigDecimal amount = null;
+ *
+ *     public void executeEvent() {
+ *         ... // Execute the Event on the System, making use of 'amount'
+ *     }
+ * }
+ * </pre>
+ */
 public abstract class ReflectiveSodaEventForJava extends JavaParameterConverter implements ReflectiveSodaEvent {
 
+    /**
+     * Executes this Event on the System under test using the parameters that have been coerced and
+     * bound by reflection into the members of this instance.
+     */
     protected abstract void executeEvent();
 
-    protected void preBinding(Map<String, String> parameters) {
-    }
-
+    
+    /**
+     * Invokes the {@link #executeEvent()} method.
+     */
     @Override
     public final void apply() {
         executeEvent();
     }
 
+    /**
+     * Coerces and binds the parameters to this Event, then delegates to the {@link #apply()} function.
+     */
     @Override
     public final void apply(Map<String, String> parameters) throws ParameterBindingException {
-        preBinding(parameters);
         ReflectiveSodaEvent$class.apply(this, parameters);
     }
 }

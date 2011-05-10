@@ -16,6 +16,9 @@
 
 package org.sodatest.api
 
+/**
+ * Details about the failure to bind a single parameter.
+ */
 class ParameterBindFailure(
   val parameterName: String,
   val parameterValue: String,
@@ -23,6 +26,13 @@ class ParameterBindFailure(
   val exception: Option[Throwable] = None
 ) {}
 
+/**
+ * An exception indicating that one or more failures occured while attempting to bind paramter
+ * values to the parameters of a [[org.sodatest.api.SodaEvent]] or [org.sodatest.api.SodaReport]].
+ *
+ * Rather than failing on the first occurrence of a bind failure, Events and Reports will typically
+ * attempt to bind all parameters and then report all failures at once in a single ParameterBindingException.
+ */
 class ParameterBindingException(val bindFailures: List[ParameterBindFailure]) extends RuntimeException {
   override def toString = "ParameterBindingException: " + bindFailures.map(f => f.parameterName + ": " + f.parameterValue).mkString(", ")
 }

@@ -16,7 +16,33 @@
 
 package org.sodatest.api
 
+/**
+ * An Event that, when applied, causes some input to be applied to the system under test.
+ *
+ * Events represent the 'Command' element of the Command-Query Separation principle that is encouraged
+ * by SodaTest. It performs actions on the System under test, but reports nothing back to the invoker
+ * as long as the action succeeds.
+ *
+ * SodaEvents are a one-shot object. The apply() method will only ever be called once.
+ *
+ * The majority of Events will be more easily written by extending [[org.sodatest.api.reflection.ReflectiveSodaEvent]]
+ *
+ * @see [[org.sodatest.api.reflection.ReflectiveSodaEvent]]
+ * @see [[org.sodatest.api.java.reflection.SodaEventForJava]]
+ * @see [[org.sodatest.api.java.reflection.ReflectiveSodaEventForJava]]
+ */
 trait SodaEvent {
+  /**
+   * Applies this event to the System under test using the given parameters.
+   *
+   * @param parameters A map of parameter names and values that should be used in applying the
+   * Event.
+   *
+   * @throws ParameterBindingException if an error occurs while attempting to translate one of the
+   * string values in the parameter map into a value that can be used by the Event.
+   *
+   * @throws java.lang.Throwable if anything else goes wrong while executing the Event.
+   */
   @throws(classOf[ParameterBindingException])
   def apply(parameters: Map[String, String]): Unit
 }

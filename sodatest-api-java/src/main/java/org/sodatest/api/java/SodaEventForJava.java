@@ -16,6 +16,7 @@
 
 package org.sodatest.api.java;
 
+import org.sodatest.api.ParameterBindingException;
 import org.sodatest.api.SodaEvent;
 import org.sodatest.api.SodaReport;
 import scala.collection.JavaConversions;
@@ -25,12 +26,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstract base class for Java-based {@link org.sodatest.api.SodaEvent}s that do not require
+ * reflection-based coercion and binding.
+ *
+ * The majority of Events will more easily be written by extending {@link org.sodatest.api.java.reflection.ReflectiveSodaEventForJava}
+ *
+ * @see org.sodatest.api.java.reflection.ReflectiveSodaEventForJava
+ */
 public abstract class SodaEventForJava extends JavaParameterConverter implements SodaEvent {
 
-    public abstract void executeEvent(Map<String, String> parameters);
+    /**
+     * Applies this event to the System under test using the given parameters.
+     *
+     * @param parameters A map of parameter names and values that should be used in applying the
+     * Event.
+     *
+     * @throws ParameterBindingException if an error occurs while attempting to translate one of the
+     * string values in the parameter map into a value that can be used by the Event.
+     *
+     * @throws java.lang.Throwable if anything else goes wrong while executing the Event.
+     */
+    public abstract void executeEvent(Map<String, String> parameters) throws ParameterBindingException;
 
+    /**
+     * Converts the parameters to a Java Map and passes them to {@link #executeEvent(java.util.Map)}
+     *
+     * You can override {@link #convertParameters(scala.collection.immutable.Map)} if you want to use
+     * a different method of conversion.
+     */
     @Override
-    public final void apply(scala.collection.immutable.Map<String, String> parameters) {
+    public final void apply(scala.collection.immutable.Map<String, String> parameters) throws ParameterBindingException {
         executeEvent(convertParameters(parameters));
     }
 }
