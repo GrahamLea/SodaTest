@@ -17,7 +17,6 @@
 package org.sodatest.examples.basic.java.fixtures;
 
 import org.sodatest.api.java.reflection.ReflectiveSodaEventForJava;
-import org.sodatest.coercion.Coercion;
 import org.sodatest.coercion.CoercionRegister;
 import org.sodatest.coercion.java.CoercionRegisterForJava;
 import org.sodatest.examples.basic.java.*;

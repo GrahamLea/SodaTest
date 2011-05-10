@@ -17,12 +17,10 @@
 package org.sodatest.examples.basic.java.fixtures;
 
 import org.sodatest.api.java.reflection.ReflectiveSodaEventForJava;
-import org.sodatest.coercion.CoercionRegister;
-import org.sodatest.coercion.java.CoercionRegisterForJava;
-import org.sodatest.examples.basic.java.*;
-import scala.Option;
-
-import java.util.List;
+import org.sodatest.examples.basic.java.AccountNameJava;
+import org.sodatest.examples.basic.java.BankAccountJava;
+import org.sodatest.examples.basic.java.BankAccountServiceJava;
+import org.sodatest.examples.basic.java.MoneyJava;
 
 public class DepositEventJava extends ReflectiveSodaEventForJava {
     private BankAccountServiceJava service;
