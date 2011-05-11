@@ -45,7 +45,7 @@ class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummary
 
     val resultsSummaries = summariseList(filesAndResults.map(_._2))
 
-    resultSummaryWriter.writeSummaries(resultsSummaries)
+    resultSummaryWriter.writeSummaries(resultsSummaries, inputRoot, outputRoot)
 
     val succeeded = !resultsSummaries.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
     successCallback(succeeded)

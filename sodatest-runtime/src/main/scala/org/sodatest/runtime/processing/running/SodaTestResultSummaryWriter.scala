@@ -16,33 +16,8 @@
 
 package org.sodatest.runtime.processing.running
 
-trait SodaTestResultSummaryWriter {
-  def writeSummaries(results: Seq[SodaTestResultSummary]): Unit
-}
+import java.io.File
 
-object ConsoleResultSummaryWriter extends SodaTestResultSummaryWriter {
-  def writeSummaries(results: Seq[SodaTestResultSummary]) {
-    val totalFailedTests = results.filter(_.failed).size
-    val totalErrors = results.map(_.errorCount).sum
-    val totalMismatches = results.map(_.mismatchCount).sum
-    println("----------------------------------------")
-    if (totalErrors == 0 && totalMismatches == 0) {
-      printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
-      println("No errors or mismatches")
-      println("SodaTest Result: ALL TESTS PASSED")
-    } else {
-      println("Failing Tests:")
-      for (failedTest <- results.filter(r => r.errorCount != 0 || r.mismatchCount != 0)) {
-        printf("\t%s (%s)\n", failedTest.testName, failedTest.testPath)
-      }
-      printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
-      printf("%s Test%s failed\n", totalFailedTests, if (totalFailedTests == 1) "" else "s")
-      if (totalMismatches != 0)
-        println("\t" + totalMismatches + " Report(s) had mismatches")
-      if (totalErrors != 0)
-        println("\t" + totalErrors + " Block(s) caused errors")
-      println("SodaTest Result: THERE WERE FAILURES")
-    }
-    println("----------------------------------------")
-  }
+trait SodaTestResultSummaryWriter {
+  def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File): Unit
 }
