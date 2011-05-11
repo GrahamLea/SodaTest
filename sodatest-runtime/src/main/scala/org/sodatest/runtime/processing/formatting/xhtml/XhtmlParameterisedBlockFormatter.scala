@@ -59,13 +59,13 @@ private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](re
         val bindFailureParameterNames: List[String] = bindException.map(e => e.bindFailures).getOrElse(Nil).map(_.parameterName)
         <tr class={"parameterValues" + rowClass}>
           <th>{line.lineNumber}</th>
-          {for (val parameterNamesAndValues <- ("" :: block.parameterNames) zip line.cells) yield
-            (if (parameterNamesAndValues._2 == "!!")
-              <td class={"reportInvoker" + invokerClass}>{parameterNamesAndValues._2}</td>
-            else if (bindFailureParameterNames.contains(parameterNamesAndValues._1)) {
-              <td class="failureSource">{parameterNamesAndValues._2}</td>
+          {for ((parameterName, value) <- ("" :: block.parameterNames) zip line.cells) yield
+            (if (value == "!!")
+              <td class={"reportInvoker" + invokerClass}>{value}</td>
+            else if (bindFailureParameterNames.contains(parameterName)) {
+              <td class="failureSource">{value}</td>
             } else {
-              <td>{parameterNamesAndValues._2}</td>
+              <td>{value}</td>
             }) ++ NEWLINE} {emptyCellsFrom(line.cells.size)}
         </tr> ++ NEWLINE
       }

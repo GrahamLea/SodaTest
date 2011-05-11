@@ -59,7 +59,7 @@ object ReportBlockExecutor {
 
   @inline
   private def compareCells(line: Line, zippedCells: List[(Option[String], Option[String])]) : ReportMatchLineResult = {
-    if (zippedCells.map(_._1) == zippedCells.map(_._2))
+    if (zippedCells.filterNot(c => {c._1 == c._2}).isEmpty)
       new ReportLineMatch(line, zippedCells.flatMap(_._1))
     else
       new ReportLineMismatch(line, zippedCells.map(compareCell(_)))

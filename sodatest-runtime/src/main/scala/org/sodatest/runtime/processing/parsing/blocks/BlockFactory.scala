@@ -93,13 +93,13 @@ class BlockFactory(implicit val log: SodaTestLog) {
     }
 
     private def executionsFrom(lines: List[Line]): List[ReportExecution] = {
-      val initialList: List[(Line, List[Line]) ] = Nil
+      type ExecutionAndResults = (Line, List[Line])
 
-      lines.foldLeft(initialList)((executionAccList, line) => {
-        line.cells match {
-          case "!!" :: parameterList => (line, Nil) :: executionAccList
-          case "" :: reportResultLine => executionAccList match {
-            case head :: tail => (head._1, head._2 :+ line) :: tail
+      lines.foldLeft(List[ExecutionAndResults]())((listOfExecutionsAndResults, nextLine) => {
+        nextLine.cells match {
+          case "!!" :: parameterList => (nextLine, Nil) :: listOfExecutionsAndResults
+          case "" :: reportResultLine => listOfExecutionsAndResults match {
+            case (lastExecutionLine, resultsLines) :: earlierExecutions => (lastExecutionLine, resultsLines :+ nextLine) :: earlierExecutions
             case _ => throw new RuntimeException("TODO: Empty line before parameter values list")
           }
           case _ => throw new RuntimeException("TODO: Handle non-!! or empty line under report")

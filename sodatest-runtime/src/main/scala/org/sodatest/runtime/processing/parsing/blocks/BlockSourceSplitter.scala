@@ -31,17 +31,19 @@ class BlockSourceSplitter(implicit val log: SodaTestLog) {
       .map(_.map(_.trim)) // Trim the content of every td
       .map(trimTrailingEmptyCells) // Trim empty cells from the ends of lines (also converts empty/whitespace lines to Nil)
       .zip(1 to Integer.MAX_VALUE) // Pair each line with a line number
-      .map(p => Line(p._2, p._1)) // Map (List[String], Int) => Line
-      .foldLeft ((List[Line](), List[BlockSource]())) ((linesAndBlocks, line) => {
-        line.cells match {
-          case Nil => linesAndBlocks._1 match {
-            case Nil => (Nil, linesAndBlocks._2)
-            case _ =>   (Nil, BlockSource(linesAndBlocks._1.reverse) :: linesAndBlocks._2)
+      .map(_ match { case (line, number) => Line(number, line) }) // Map (List[String], Int) => Line
+      .foldLeft ((List[Line](), List[BlockSource]())) ((collectorPair, nextLine) => {
+        val (unblockedLines, finishedBlocks) = collectorPair
+        nextLine.cells match {
+          case Nil => {
+            if (unblockedLines == Nil)
+              (Nil, finishedBlocks)
+            else
+              (Nil, BlockSource(unblockedLines.reverse) :: finishedBlocks)
           }
-          case _ => (line :: linesAndBlocks._1, linesAndBlocks._2)
+          case _ => (nextLine :: unblockedLines, finishedBlocks)
         }
-      })
-      ._2.reverse
+      })._2.reverse
   }
 
   @inline
