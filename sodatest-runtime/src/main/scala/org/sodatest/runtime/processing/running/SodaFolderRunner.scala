@@ -20,75 +20,35 @@ package running
 
 import org.sodatest.api.SodaTestLog
 import data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
-import java.io.{FileWriter, PrintWriter, File}
-import formatting.xhtml.XhtmlFormatter
-import annotation.tailrec
+import java.io.File
 import collection.immutable.List
 
-object SodaFolderRunner {
+class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
-  class SodaTestResultSummary(val testName: String, val testPath: String, val mismatchCount: Int, val errorCount: Int) {
-    val failed = mismatchCount != 0 || errorCount != 0
-  }
+class SodaTestResultSummary(val testName: String, val testPath: String, val mismatchCount: Int, val errorCount: Int) {
+  val failed = mismatchCount != 0 || errorCount != 0
+}
 
-  class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
+class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummaryWriter: SodaTestResultSummaryWriter) {
 
+  @throws(classOf[InvalidDirectoryException])
   def run(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit properties: SodaTestProperties, log: SodaTestLog): Unit = {
-    try {
-      checkDirectories(inputRoot, outputRoot)
+    checkDirectories(inputRoot, outputRoot)
 
-      val files = getFilesRecursive(inputRoot, _.getName.toLowerCase.endsWith(".csv"))
+    val files = getFilesRecursive(inputRoot, _.getName.toLowerCase.endsWith(".csv"))
 
-      createOutputDirectories(inputRoot, files, outputRoot)
+    resultWriter.createOutputDirectories(inputRoot, files, outputRoot)
 
-      val filesAndResults = files.map(f => (f, SodaFileRunner.run(f)))
+    val filesAndResults = files.map(f => (f, SodaFileRunner.run(f)))
 
-      writeResultsFiles(filesAndResults, inputRoot, outputRoot)
+    resultWriter.writeResultsFiles(filesAndResults, inputRoot, outputRoot)
 
-      val resultsSummaries = summariseList(filesAndResults.map(_._2))
+    val resultsSummaries = summariseList(filesAndResults.map(_._2))
 
-      printSummary(resultsSummaries)
+    resultSummaryWriter.writeSummaries(resultsSummaries)
 
-      val succeeded = !resultsSummaries.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
-      successCallback(succeeded)
-    }
-    catch {
-      case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage)); successCallback(false)
-    }
-  }
-
-  private def createOutputDirectories(inputRoot: File, files: scala.List[File], outputRoot: File) {
-    val inputDirectories = files.map(_.getParentFile).toSet
-    val inputRootSize = asList(inputRoot).size
-    for (outputDirectory <- inputDirectories.map(getOutputPath(_, inputRootSize, outputRoot))) {
-      if (!outputDirectory.exists && !outputDirectory.mkdirs)
-        error("Failed to create output directory " + outputDirectory.getAbsolutePath)
-    }
-  }
-
-  private def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit log: SodaTestLog): Unit = {
-    val inputRootSize = asList(inputRoot).size
-    for ((file, result) <- filesAndResults) {
-      val writer = new PrintWriter(new FileWriter(getOutputPath(file, inputRootSize, outputRoot, ".html")))
-      try {
-        writer.println(new XhtmlFormatter().format(result))
-      } finally {
-        writer.close
-      }
-    }
-  }
-
-  private def getOutputPath(inputPath: File, inputRootSize: Int, outputRoot: File, newSuffix: String = ""): File = {
-    val relativePathList = asList(inputPath).drop(inputRootSize)
-    new File(outputRoot, relativePathList.mkString(File.separator) + newSuffix)
-  }
-
-  @tailrec
-  private def asList(file: File, list: List[String] = Nil): List[String] = {
-    file.getParentFile match {
-      case null => list
-      case p => asList(p, file.getName :: list)
-    }
+    val succeeded = !resultsSummaries.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
+    successCallback(succeeded)
   }
 
   private def getFilesRecursive(inputDirectory: File, fileFilter: File => Boolean): List[File] = {
@@ -96,6 +56,7 @@ object SodaFolderRunner {
       inputDirectory.listFiles.filter(_.isDirectory).map(getFilesRecursive(_, fileFilter)).toList.flatten
   }
 
+  @throws(classOf[InvalidDirectoryException])
   private def checkDirectories(inputDirectory: File, outputDirectory: File): Unit = {
     if (!inputDirectory.exists)
       throw new InvalidDirectoryException("Input directory " + inputDirectory.getAbsolutePath + " does not exist")
@@ -132,6 +93,9 @@ object SodaFolderRunner {
 
     new SodaTestResultSummary(r.test.testName, r.test.testPath, mismatchedBlocks, blockErrors + executionErrors)
   }
+}
+
+object SodaFolderRunner {
 
   def main(args: Array[String]): Unit = {
     main(args, succeeded => { exit(if (succeeded) 0 else 1) } );
@@ -139,7 +103,7 @@ object SodaFolderRunner {
 
   def main(args: Array[String], successCallback: (Boolean) => Unit): Unit = {
     if (args.length != 3) {
-      usage
+      usage()
       successCallback(false)
     } else {
       val fixtureRoot = args(0)
@@ -148,36 +112,16 @@ object SodaFolderRunner {
       implicit val log = new ConsoleLog()
       implicit val properties = new SodaTestProperties(fixtureRoot)
 
-      run(inputDirectory, outputDirectory, successCallback)
-    }
-  }
-
-  private def printSummary(results: Seq[SodaTestResultSummary]): Unit = {
-    val totalFailedTests = results.filter(_.failed).size
-    val totalErrors = results.map(_.errorCount).sum
-    val totalMismatches = results.map(_.mismatchCount).sum
-    println("----------------------------------------")
-    if (totalErrors == 0 && totalMismatches == 0) {
-      printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
-      println("No errors or mismatches")
-      println("SodaTest Result: ALL TESTS PASSED")
-    } else {
-      println("Failing Tests:")
-      for (failedTest <- results.filter(r => r.errorCount != 0 || r.mismatchCount != 0)) {
-        printf("\t%s (%s)\n", failedTest.testName, failedTest.testPath)
+      try {
+        new SodaFolderRunner(XhtmlSodaTestResultWriter, ConsoleResultSummaryWriter).run(inputDirectory, outputDirectory, successCallback)
       }
-      printf("%s Test%s ran\n", results.size, if (results.size == 1) "" else "s")
-      printf("%s Test%s failed\n", totalFailedTests, if (totalFailedTests == 1) "" else "s")
-      if (totalMismatches != 0)
-        println("\t" + totalMismatches + " Report(s) had mismatches")
-      if (totalErrors != 0)
-        println("\t" + totalErrors + " Block(s) caused errors")
-      println("SodaTest Result: THERE WERE FAILURES")
+      catch {
+        case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage)); successCallback(false)
+      }
     }
-    println("----------------------------------------")
   }
 
-  private def usage: Unit = usage(None)
+  private def usage(): Unit = usage(None)
 
   private def usage(message: Option[String]): Unit = {
     message map {System.err.println(_)}

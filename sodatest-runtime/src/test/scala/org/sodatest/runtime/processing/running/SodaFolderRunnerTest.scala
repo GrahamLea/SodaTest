@@ -22,8 +22,6 @@ import xml.Elem
 import org.sodatest.runtime.processing.SodaTestProperties
 import org.sodatest.runtime.ConsoleLog
 import org.junit.{After, Test}
-import org.hamcrest.CoreMatchers._
-import org.junit.Assert._
 
 class SodaFolderRunnerTest extends XMLLoader[Elem] {
 
@@ -34,47 +32,37 @@ class SodaFolderRunnerTest extends XMLLoader[Elem] {
   implicit val properties = new SodaTestProperties()
   implicit val log = new ConsoleLog()
 
-  @Test
+  @Test(expected = classOf[InvalidDirectoryException])
   def nonExistentInputDirectory() {
-    var success: Option[Boolean] = None
-    SodaFolderRunner.run(new File(systemTempDir, "DOESNOTEXIST.sodatest"), systemTempDir, (b) => {success = Some(b)})
-    assertThat(success.get, is(false))
+    new SodaFolderRunner(null, null).run(new File(systemTempDir, "DOESNOTEXIST.sodatest"), systemTempDir, (b) => {})
   }
 
-  @Test
+  @Test(expected = classOf[InvalidDirectoryException])
   def nonDirectoryInputDirectory() {
-    var success: Option[Boolean] = None
-    SodaFolderRunner.run(tempFile, systemTempDir, (b) => {success = Some(b)})
-    assertThat(success.get, is(false))
+    new SodaFolderRunner(null, null).run(tempFile, systemTempDir, (b) => {})
   }
 
     // TODO: Does this work on Unix?
-//  @Test
+//  @Test(expected = classOf[InvalidDirectoryException])
 //  def unreadableInputDirectory() {
 //    changeTempFileToDirectory()
 //    tempFile.setReadable(false)
-//    assertFalse(tempFile.canRead)
-//    var success: Option[Boolean] = None
-//    SodaFolderRunner.run(tempFile, systemTempDir, (b) => {success = Some(b)})
-//    assertThat(success.get, is(false))
+//    Assert.assertFalse(tempFile.canRead)
+//    new SodaFolderRunner(null, null).run(tempFile, systemTempDir, (b) => {})
 //  }
 
-  @Test
+  @Test(expected = classOf[InvalidDirectoryException])
   def nonDirectoryOutputFolder() {
-    var success: Option[Boolean] = None
-    SodaFolderRunner.run(systemTempDir, tempFile, (b) => {success = Some(b)})
-    assertThat(success.get, is(false))
+    new SodaFolderRunner(null, null).run(systemTempDir, tempFile, (b) => {})
   }
 
     // TODO: Does this work on Unix?
-//  @Test
+//  @Test(expected = classOf[InvalidDirectoryException])
 //  def nonCreatableOutputFolder() {
 //    changeTempFileToDirectory()
-//    assertTrue(tempFile.setWritable(false))
-//    assertFalse(tempFile.canWrite)
-//    var success: Option[Boolean] = None
-//    SodaFolderRunner.run(systemTempDir, new File(tempFile, "subdir"), (b) => {success = Some(b)})
-//    assertThat(success.get, is(false))
+//    Assert.assertTrue(tempFile.setWritable(false))
+//    Assert.assertFalse(tempFile.canWrite)
+//    new SodaFolderRunner(null, null).run(systemTempDir, new File(tempFile, "subdir"), (b) => {})
 //  }
 
   private def changeTempFileToDirectory(): Unit = {
