@@ -17,12 +17,12 @@
 package org.sodatest.runtime.processing.running
 
 import java.io.File
-import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
 import xml.factory.XMLLoader
 import javax.xml.parsers.{SAXParserFactory, SAXParser}
 import xml.{Text, Node, Elem}
 import org.junit.{After, Before, Test}
+import org.junit.Assert._
 
 class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
 
@@ -53,8 +53,10 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
   def runFolderRunner() {
     cleanOnShutdown()
 
-    assertThat(SodaFolderRunner.mainWithoutExit(Array(fixtureRoot, source, results)), is(false))
-
+    var success: Option[Boolean] = None
+    SodaFolderRunner.main(Array(fixtureRoot, source, results), (b) => {success = Some(b)})
+    assertThat(success.get, is(false))
+      
     assertThat(targetFolder.exists, is(true))
 
     checkOutputOf("fixtureTests/GoodFixtureTest")

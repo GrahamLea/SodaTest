@@ -18,9 +18,12 @@ package org.sodatest.runtime
 package processing
 package running
 
-import java.io.File
 import org.sodatest.api.SodaTestLog
 import data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
+import java.io.{FileWriter, PrintWriter, File}
+import formatting.xhtml.XhtmlFormatter
+import annotation.tailrec
+import collection.immutable.List
 
 object SodaFolderRunner {
 
@@ -30,28 +33,67 @@ object SodaFolderRunner {
 
   class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
-  def run(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): List[SodaTestResultSummary] = {
-    checkDirectories(inputDirectory, outputDirectory)
+  def run(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit properties: SodaTestProperties, log: SodaTestLog): Unit = {
+    try {
+      checkDirectories(inputRoot, outputRoot)
 
-    def runRecursive(inputDirectory: File, outputDirectory: File)(implicit properties: SodaTestProperties, log: SodaTestLog): List[SodaTestResultSummary] = {
+      val files = getFilesRecursive(inputRoot, _.getName.toLowerCase.endsWith(".csv"))
+
+      createOutputDirectories(inputRoot, files, outputRoot)
+
+      val filesAndResults = files.map(f => (f, SodaFileRunner.run(f)))
+
+      writeResultsFiles(filesAndResults, inputRoot, outputRoot)
+
+      val resultsSummaries = summariseList(filesAndResults.map(_._2))
+
+      printSummary(resultsSummaries)
+
+      val succeeded = !resultsSummaries.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
+      successCallback(succeeded)
+    }
+    catch {
+      case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage)); successCallback(false)
+    }
+  }
+
+  private def createOutputDirectories(inputRoot: File, files: scala.List[File], outputRoot: File) {
+    val inputDirectories = files.map(_.getParentFile).toSet
+    val inputRootSize = asList(inputRoot).size
+    for (outputDirectory <- inputDirectories.map(getOutputPath(_, inputRootSize, outputRoot))) {
       if (!outputDirectory.exists && !outputDirectory.mkdirs)
         error("Failed to create output directory " + outputDirectory.getAbsolutePath)
-
-      val resultsInDirectory =
-        for (val testFile <- inputDirectory.listFiles.filter(_.getName.toLowerCase.endsWith(".csv"))) yield {
-          SodaFileRunner.runAndWrite(testFile, new File(outputDirectory, testFile.getName + ".html"), properties)
-        }
-
-      // Recurse into sub-directories
-      val resultsInSubdirectories =
-        for (val inputSubdirectory <- inputDirectory.listFiles.filter(_.isDirectory)) yield {
-          runRecursive(inputSubdirectory, new File(outputDirectory, inputSubdirectory.getName))
-        }
-
-      summariseList(resultsInDirectory.toList) ++ resultsInSubdirectories.toList.flatten
     }
+  }
 
-    runRecursive(inputDirectory, outputDirectory)
+  private def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit log: SodaTestLog): Unit = {
+    val inputRootSize = asList(inputRoot).size
+    for ((file, result) <- filesAndResults) {
+      val writer = new PrintWriter(new FileWriter(getOutputPath(file, inputRootSize, outputRoot, ".html")))
+      try {
+        writer.println(new XhtmlFormatter().format(result))
+      } finally {
+        writer.close
+      }
+    }
+  }
+
+  private def getOutputPath(inputPath: File, inputRootSize: Int, outputRoot: File, newSuffix: String = ""): File = {
+    val relativePathList = asList(inputPath).drop(inputRootSize)
+    new File(outputRoot, relativePathList.mkString(File.separator) + newSuffix)
+  }
+
+  @tailrec
+  private def asList(file: File, list: List[String] = Nil): List[String] = {
+    file.getParentFile match {
+      case null => list
+      case p => asList(p, file.getName :: list)
+    }
+  }
+
+  private def getFilesRecursive(inputDirectory: File, fileFilter: File => Boolean): List[File] = {
+    inputDirectory.listFiles.filter(fileFilter).toList ++
+      inputDirectory.listFiles.filter(_.isDirectory).map(getFilesRecursive(_, fileFilter)).toList.flatten
   }
 
   private def checkDirectories(inputDirectory: File, outputDirectory: File): Unit = {
@@ -92,25 +134,21 @@ object SodaFolderRunner {
   }
 
   def main(args: Array[String]): Unit = {
-    exit(if (mainWithoutExit(args)) 0 else 1)
+    main(args, succeeded => { exit(if (succeeded) 0 else 1) } );
   }
 
-  def mainWithoutExit(args: Array[String]): Boolean = {
-    if (args.length != 3)
+  def main(args: Array[String], successCallback: (Boolean) => Unit): Unit = {
+    if (args.length != 3) {
       usage
+      successCallback(false)
+    } else {
+      val fixtureRoot = args(0)
+      val inputDirectory = new File(args(1))
+      val outputDirectory = new File(args(2))
+      implicit val log = new ConsoleLog()
+      implicit val properties = new SodaTestProperties(fixtureRoot)
 
-    val fixtureRoot = args(0)
-    val inputDirectory = new File(args(1))
-    val outputDirectory = new File(args(2))
-    implicit val log = new ConsoleLog()
-    implicit val properties = new SodaTestProperties(fixtureRoot)
-
-    try {
-      val results = run(inputDirectory, outputDirectory)
-      printSummary(results)
-      !results.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
-    } catch {
-      case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage))
+      run(inputDirectory, outputDirectory, successCallback)
     }
   }
 
@@ -139,12 +177,10 @@ object SodaFolderRunner {
     println("----------------------------------------")
   }
 
-  private def usage: Nothing = usage(None)
+  private def usage: Unit = usage(None)
 
-  private def usage(message: Option[String]): Nothing = {
+  private def usage(message: Option[String]): Unit = {
     message map {System.err.println(_)}
-
     System.err.println("usage: SodaDirectoryRunner <fixture_root_package> <input_directory> <output_directory>")
-    exit(1)
   }
 }

@@ -18,32 +18,18 @@ package org.sodatest.runtime
 package processing
 package running
 
-import formatting.xhtml.XhtmlFormatter
 import execution.SodaTestExecutor
 import processing.SodaTestContext
 import data.SodaTest
 import parsing.blocks.{BlockSourceSplitter, BlockFactory}
 import parsing.csv.CsvCellSplitter
-import java.io.{FileWriter, PrintWriter, FileInputStream, BufferedInputStream, File}
+import java.io.{FileInputStream, BufferedInputStream, File}
 import org.sodatest.api.SodaTestLog
 import data.results.SodaTestResult
 
 object SodaFileRunner {
 
-  def runAndWrite(inputFile: File, outputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): SodaTestResult = {
-    log.info("Running " + inputFile)
-    val result = run(inputFile, properties)
-    log.info("Writing " + outputFile)
-    val writer = new PrintWriter(new FileWriter(outputFile))
-    try {
-      writer.println(new XhtmlFormatter().format(result))
-    } finally {
-      writer.close
-    }
-    result
-  }
-
-  def run(inputFile: File, properties: SodaTestProperties)(implicit log : SodaTestLog): SodaTestResult = {
+  def run(inputFile: File)(implicit properties: SodaTestProperties, log: SodaTestLog): SodaTestResult = {
     new SodaTestExecutor().execute(
       new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, new BlockFactory().create(
         new BlockSourceSplitter().parseBlocks(
