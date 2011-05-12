@@ -22,6 +22,8 @@ import org.sodatest.api.SodaTestLog
 import data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
 import java.io.File
 import collection.immutable.List
+import formatting.xhtml.{XhtmlIndexFileSummaryWriter, XhtmlSodaTestResultWriter}
+import formatting.console.ConsoleResultSummaryWriter
 
 class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
@@ -29,7 +31,7 @@ class SodaTestResultSummary(val testName: String, val testPath: String, val mism
   val failed = mismatchCount != 0 || errorCount != 0
 }
 
-class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummaryWriter: SodaTestResultSummaryWriter) {
+class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummaryWriters: Seq[SodaTestResultSummaryWriter]) {
 
   @throws(classOf[InvalidDirectoryException])
   def run(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit properties: SodaTestProperties, log: SodaTestLog): Unit = {
@@ -45,7 +47,7 @@ class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummary
 
     val resultsSummaries = summariseList(filesAndResults.map(_._2))
 
-    resultSummaryWriter.writeSummaries(resultsSummaries, inputRoot, outputRoot)
+    resultSummaryWriters.map(_.writeSummaries(resultsSummaries, inputRoot, outputRoot))
 
     val succeeded = !resultsSummaries.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
     successCallback(succeeded)
@@ -113,7 +115,8 @@ object SodaFolderRunner {
       implicit val properties = new SodaTestProperties(fixtureRoot)
 
       try {
-        new SodaFolderRunner(XhtmlSodaTestResultWriter, ConsoleResultSummaryWriter).run(inputDirectory, outputDirectory, successCallback)
+        new SodaFolderRunner(XhtmlSodaTestResultWriter, List(ConsoleResultSummaryWriter,  XhtmlIndexFileSummaryWriter))
+          .run(inputDirectory, outputDirectory, successCallback)
       }
       catch {
         case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage)); successCallback(false)

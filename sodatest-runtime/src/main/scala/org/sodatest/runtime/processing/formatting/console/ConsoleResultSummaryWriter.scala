@@ -1,3 +1,5 @@
+package org.sodatest.runtime.processing.formatting.console
+
 /*
  * Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
  *
@@ -14,9 +16,8 @@
  * limitations under the License.
  */
 
-package org.sodatest.runtime.processing.running
-
 import java.io.File
+import org.sodatest.runtime.processing.running.{SodaTestResultSummary, SodaTestResultSummaryWriter}
 
 object ConsoleResultSummaryWriter extends SodaTestResultSummaryWriter {
   def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File) {

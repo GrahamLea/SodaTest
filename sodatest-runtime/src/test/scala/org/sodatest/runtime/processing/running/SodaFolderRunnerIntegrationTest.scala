@@ -23,6 +23,7 @@ import javax.xml.parsers.{SAXParserFactory, SAXParser}
 import xml.{Text, Node, Elem}
 import org.junit.{After, Before, Test}
 import org.junit.Assert._
+import java.lang.String
 
 class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
 
@@ -43,21 +44,24 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
   }
 
   def checkOutputOf(test: String): Unit = {
-    val testOutput = loadFile(new File(results + "/" + test + ".csv.html"))
-    val expectedOutput = loadFile(new File(expectedResults + "/" + test + ".csv.html"))
-//    assertThat(test, toStringWithoutStyle(testOutput), is(toStringWithoutStyle(expectedOutput)))
-    assertEquals(test, toStringWithoutStyle(expectedOutput), toStringWithoutStyle(testOutput))
+    val extension: String = if (test endsWith ".html") "" else ".csv.html"
+    val testOutput = loadFile(new File(results + "/" + test + extension))
+    val expectedOutput = loadFile(new File(expectedResults + "/" + test + extension))
+//    assertThat(test, toStringWithExecutionDependentPartsRemoved(testOutput), is(toStringWithExecutionDependentPartsRemoved(expectedOutput)))
+    assertEquals(test, toStringWithExecutionDependentPartsRemoved(expectedOutput), toStringWithExecutionDependentPartsRemoved(testOutput))
   }
 
   @Test
   def runFolderRunner() {
-    cleanOnShutdown()
+//    cleanOnShutdown()
 
     var success: Option[Boolean] = None
     SodaFolderRunner.main(Array(fixtureRoot, source, results), (b) => {success = Some(b)})
     assertThat(success.get, is(false))
       
     assertThat(targetFolder.exists, is(true))
+
+    checkOutputOf("index.html")
 
     checkOutputOf("fixtureTests/GoodFixtureTest")
     checkOutputOf("fixtureTests/FixtureErrorsTest")
@@ -72,13 +76,14 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
     checkOutputOf("noteTests/NotesTest")
   }
 
-  def toStringWithoutStyle(document: Node): String = {
+  def toStringWithExecutionDependentPartsRemoved(document: Node): String = {
     def f(n: Node): Node = {
       n match {
         case e: Elem => e.label match {
           case "style" => Text("")
           case "link" if (e.attribute("href") != None) => Text("")
           case "p" if (e.attribute("class") == Some(Text("stackTrace"))) => shortCleanStackTrace(e)
+          case "h2" if (e.attribute("class") == Some(Text("timestamp"))) => <h2 class="timestamp">Timestamp Remove by Test</h2>
           case _ => e.copy(child = e.child.map(f(_)))
         }
         case a => a

@@ -19,10 +19,8 @@ package processing
 package running
 
 import org.sodatest.api.SodaTestLog
-import data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
-import java.io.{FileWriter, PrintWriter, File}
-import formatting.xhtml.XhtmlFormatter
-import annotation.tailrec
+import data.results.SodaTestResult
+import java.io.File
 import collection.immutable.List
 
 trait SodaTestResultWriter {
@@ -30,42 +28,3 @@ trait SodaTestResultWriter {
   def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit log: SodaTestLog): Unit
 }
 
-object XhtmlSodaTestResultWriter extends SodaTestResultWriter {
-
-  @Override
-  def createOutputDirectories(inputRoot: File, files: scala.List[File], outputRoot: File) {
-    val inputDirectories = files.map(_.getParentFile).toSet
-    val inputRootSize = asList(inputRoot).size
-    for (outputDirectory <- inputDirectories.map(getOutputPath(_, inputRootSize, outputRoot))) {
-      if (!outputDirectory.exists && !outputDirectory.mkdirs)
-        error("Failed to create output directory " + outputDirectory.getAbsolutePath)
-    }
-  }
-
-  @Override
-  def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit log: SodaTestLog): Unit = {
-    val inputRootSize = asList(inputRoot).size
-    for ((file, result) <- filesAndResults) {
-      val writer = new PrintWriter(new FileWriter(getOutputPath(file, inputRootSize, outputRoot, ".html")))
-      try {
-        writer.println(new XhtmlFormatter().format(result))
-      } finally {
-        writer.close
-      }
-    }
-  }
-
-  private def getOutputPath(inputPath: File, inputRootSize: Int, outputRoot: File, newSuffix: String = ""): File = {
-    val relativePathList = asList(inputPath).drop(inputRootSize)
-    new File(outputRoot, relativePathList.mkString(File.separator) + newSuffix)
-  }
-
-  @tailrec
-  private def asList(file: File, list: List[String] = Nil): List[String] = {
-    file.getParentFile match {
-      case null => list
-      case p => asList(p, file.getName :: list)
-    }
-  }
-
-}

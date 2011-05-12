@@ -14,12 +14,6 @@ Errors in parsing the input currently cause exceptions that halt execution.
 Instead, meaningful output should always be generated that makes it easy to locate the source and cause of the failure.
 
 
-SodaFolderRunner output an index page
--------------------------------------
-The SodaFolderRunner should output, at the root of the output directory, an index.html that lists all of the tests
-that were run and a summary of the results.
-
-
 SodaFileRunner should have a main() method
 ------------------------------------------
 It should be possible to use the file runner to execute a single test by name.
