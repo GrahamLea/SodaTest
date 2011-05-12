@@ -53,7 +53,7 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
 
   @Test
   def runFolderRunner() {
-//    cleanOnShutdown()
+    cleanOnShutdown()
 
     var success: Option[Boolean] = None
     SodaFolderRunner.main(Array(fixtureRoot, source, results), (b) => {success = Some(b)})
