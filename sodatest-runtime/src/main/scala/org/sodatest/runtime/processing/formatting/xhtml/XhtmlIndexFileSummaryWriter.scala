@@ -63,7 +63,7 @@ object XhtmlIndexFileSummaryWriter extends SodaTestResultSummaryWriter {
         </head>
       )
       out.println(
-        <body class={"summary " + (if (failed) "failed" else "success")}>
+        <body class={"summary " + (if (failed) "failed" else "passed")}>
           <div class="header">
             <div class="title">
               <h1>SodaTest Results Summary</h1>
