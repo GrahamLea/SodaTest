@@ -53,7 +53,7 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
 
   @Test
   def runFolderRunner() {
-    cleanOnShutdown()
+//    cleanOnShutdown()
 
     var success: Option[Boolean] = None
     SodaFolderRunner.main(Array(fixtureRoot, source, results), (b) => {success = Some(b)})
@@ -74,6 +74,8 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
     checkOutputOf("reportTests/ReportErrorsTest")
     
     checkOutputOf("noteTests/NotesTest")
+
+    checkOutputOf("parseErrorTests/ParseErrorsTest")
   }
 
   def toStringWithExecutionDependentPartsRemoved(document: Node): String = {

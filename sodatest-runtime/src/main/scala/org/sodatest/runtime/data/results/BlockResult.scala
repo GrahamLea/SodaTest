@@ -21,9 +21,13 @@ import blocks.Block
 
 abstract class BlockResult[T <: Block](
   val block: T,
+  val errorOccurred: Boolean,
   val executionErrorOccurred: Boolean,
   val succeeded: Boolean,
-  val error: Option[ExecutionError]) {
+  val blockError: Option[ExecutionError]) {
+
+  def this(block: T, executionErrorOccurred: Boolean, succeeded: Boolean, error: Option[ExecutionError]) =
+    this(block, executionErrorOccurred || error != None, executionErrorOccurred, succeeded, error)
 
   def this(block: T, executionErrorOccurred: Boolean, error: Option[ExecutionError]) =
     this(block, executionErrorOccurred, !executionErrorOccurred, error)

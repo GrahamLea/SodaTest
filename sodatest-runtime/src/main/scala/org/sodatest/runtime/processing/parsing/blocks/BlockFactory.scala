@@ -34,9 +34,13 @@ class BlockFactory(implicit val log: SodaTestLog) {
   }
 
   private def createBlock(source: BlockSource): Block = {
-    factories.get(source.lines(0).cells(0)) match {
-      case Some(factory) => factory.createBlock(source)
-      case None => throw new IllegalStateException("Unknown block type: '" + source.lines(0).cells(0) + "'") // TODO: Commute to output
+    source.lines(0).cells(0).trim match {
+      case "" => new ParseErrorBlock(source, "No Block type specified", (0, 0))
+      case blockType =>
+        factories.get(blockType) match {
+          case Some(factory) => factory.createBlock(source)
+          case None => new ParseErrorBlock(source, "Unknown Block type: '" + blockType + "'", (0, 0))
+        }
     }
   }
 

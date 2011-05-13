@@ -26,6 +26,8 @@ import api.ParameterBindingException
 private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](result: BlockResult[T])
   extends XhtmlBlockFormatter[T](result) {
 
+  import XhtmlBlockFormatter._
+
   def parameterNames: NodeSeq = {
     if (!block.inline) {
       lineToHtml(blockSource.lines(1), "parameterNames")

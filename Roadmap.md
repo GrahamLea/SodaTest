@@ -10,7 +10,7 @@ If you think you'd like to try your hand at helping out with some of this stuff,
 
 Parsing errors commuted to output
 ---------------------------------
-Errors in parsing the input currently cause exceptions that halt execution.
+Some errors in parsing the input currently cause exceptions that halt execution.
 Instead, meaningful output should always be generated that makes it easy to locate the source and cause of the failure.
 
 
@@ -70,6 +70,7 @@ and for Reports it would be
 
 The value of this parameter will be provided to the block implementation using a default name defined in the API.
 The Reflective APIs will need a way to bind this parameter to one particular field. (Annotation?)
+Also think about ParameterisedInlineReport, as documented in BlockFactorySpec
 
 
 Allow processing at the end of a multiple-execution Event

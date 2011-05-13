@@ -32,10 +32,7 @@ private[xhtml] object XhtmlBlockFormatter {
 
 private[xhtml] class XhtmlBlockFormatter[T <: Block](val result: BlockResult[T]) {
 
-  val NEWLINE = Text("\n")
-  val NO_XML = Text("")
-
-  val letters = ('A' to 'Z' toList).map(_.toString)
+  import XhtmlBlockFormatter._
 
   @inline
   def block = result.block
@@ -57,7 +54,7 @@ private[xhtml] class XhtmlBlockFormatter[T <: Block](val result: BlockResult[T])
     <tr>
       <th>{result.block.source.lines(0).lineNumber}</th>
       <td class="instruction">{result.block.source.lines(0).cells(0)}</td>
-      {td("name", result.block.name, "failureSource", extraClassCondition = result.error != None || (result.block.inline && result.executionErrorOccurred))}
+      {td("name", result.block.name, "failureSource", extraClassCondition = result.blockError != None || (result.block.inline && result.executionErrorOccurred))}
       { if (isInlineReport)
             <td class={"reportInvoker " + (if (result.executionErrorOccurred) "failure" else "success")}>!!</td>
         else ""
@@ -74,7 +71,7 @@ private[xhtml] class XhtmlBlockFormatter[T <: Block](val result: BlockResult[T])
   }
 
   def resultError: Node = {
-    result.error match {
+    result.blockError match {
       case None => NO_XML
       case Some(error) =>
         failureDetails(() => {

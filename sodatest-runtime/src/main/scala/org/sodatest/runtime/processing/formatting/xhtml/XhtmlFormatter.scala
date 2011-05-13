@@ -52,20 +52,21 @@ class XhtmlFormatter(val stylesheet: String)(implicit val log: SodaTestLog) exte
         </div>
       </div>
 
-  def format(result: SodaTestResult): String = try {
+  def format(testResult: SodaTestResult): String = try {
     log.info("Formatting...")
     val sb = new StringBuilder()
               .append(preamble)
-              .append(header(result.test.testName, formatPath(result.test.testPath)))
-              .append("<body class=\"").append(if (result.passed) "passed" else "failed").append("\">")
-              .append(bodyTitle(result.passed, result.test.testName, formatPath(result.test.testPath)))
+              .append(header(testResult.test.testName, formatPath(testResult.test.testPath)))
+              .append("<body class=\"").append(if (testResult.passed) "passed" else "failed").append("\">")
+              .append(bodyTitle(testResult.passed, testResult.test.testName, formatPath(testResult.test.testPath)))
               .append('\n')
 
-    result.results.map(_ match {
-      case fbr: FixtureBlockResult => XhtmlFixtureFormatter.format(fbr)
-      case ebr: EventBlockResult => XhtmlEventFormatter.format(ebr)
-      case rbr: ReportBlockResult => XhtmlReportFormatter.format(rbr)
-      case nbr: NoteBlockResult => XhtmlNoteFormatter.format(nbr)
+    testResult.blockResults.map(_ match {
+      case result: FixtureBlockResult => XhtmlFixtureFormatter.format(result)
+      case result: EventBlockResult => XhtmlEventFormatter.format(result)
+      case result: ReportBlockResult => XhtmlReportFormatter.format(result)
+      case result: NoteBlockResult => XhtmlNoteFormatter.format(result)
+      case result: ParseErrorBlockResult => XhtmlParseErrorFormatter.format(result)
       case anything => <p>Don't know how to format {anything.getClass.getName}!</p>
     }).addString(sb, "\n")
       .append('\n')

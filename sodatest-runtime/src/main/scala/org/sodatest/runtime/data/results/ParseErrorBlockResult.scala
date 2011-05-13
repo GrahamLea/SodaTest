@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Belmont Technology Pty Ltd. All rights reserved.
+ * Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package org.sodatest.runtime.data.results
+package org.sodatest.runtime.data
+package results
 
-import org.sodatest.runtime.data.SodaTest
+import blocks.ParseErrorBlock
 
-class SodaTestResult(val test: SodaTest, val blockResults: List[BlockResult[_]], val passed: Boolean)
+class ParseErrorBlockResult(block: ParseErrorBlock)
+  extends BlockResult[ParseErrorBlock](block, true, false, false, None) {
+  
+  override def toString = getClass.getSimpleName + ": " + block.name
+}
+

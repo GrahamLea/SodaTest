@@ -80,17 +80,17 @@ class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummary
     rs.map(r => summarise(r))
 
   private def summarise(r: SodaTestResult): SodaTestResultSummary = {
-    val mismatchedBlocks: Int = r.results.flatMap {_ match {
+    val mismatchedBlocks: Int = r.blockResults.flatMap {_ match {
         case rbr: ReportBlockResult => rbr.executionResults.map {er => if (er.matchResult.passed) 0 else 1}
         case _ => Nil
     }}.sum
 
-    val blockErrors = r.results.map(br => {(if (br.error == None) 0 else 1)}).sum
+    val blockErrors = r.blockResults.filter(r => r.blockError != None || (r.errorOccurred && !r.executionErrorOccurred)).size
 
-    val executionErrors = r.results.flatMap(br => {br match {
-        case rbr: ReportBlockResult => rbr.executionResults.map{er => if (er.error == None) 0 else 1}
-        case ebr: EventBlockResult => ebr.executionResults.map{er => if (er.error == None) 0 else 1}
-        case _ => Nil
+    val executionErrors = r.blockResults.map(br => {br match {
+        case rbr: ReportBlockResult => rbr.executionResults.filter(_.error != None).size
+        case ebr: EventBlockResult => ebr.executionResults.filter(_.error != None).size
+        case _ => 0
       }}).sum
 
     new SodaTestResultSummary(r.test.testName, r.test.testPath, mismatchedBlocks, blockErrors + executionErrors)

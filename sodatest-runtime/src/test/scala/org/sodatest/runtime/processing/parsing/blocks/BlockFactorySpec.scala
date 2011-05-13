@@ -37,11 +37,6 @@ class BlockFactorySpec extends SpecificationWithJUnit {
         Line(4, List("", "Some more text"))
       ))
 
-      val junkBlockSource = BlockSource(List(
-        Line(6, List("Junk", "What's this?")),
-        Line(7, List("", "Who knows - still a blocks!"))
-      ))
-
       val basicEventBlockSource = BlockSource(List(
         Line(9, List("Event", "Basic Event"))
       ))
@@ -187,14 +182,6 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       blockIndex += 1
 
     }
-
-    // TODO: Extra cases:
-    // Event with no parameters and no !!
-    // Event with parameters but no values
-    // Report with no parameters and no !!
-    // Report with parameters but no values
-    // Report with no output okay?
-
   }
 
 }

@@ -37,7 +37,7 @@ object XhtmlEventFormatter {
         <tbody>
           {formatter.blockHeader}
           {formatter.resultError}
-          {if (result.error == None) formatter.parameterNames else NO_XML }
+          {if (result.blockError == None) formatter.parameterNames else NO_XML }
           {
             for (val executionResult <- result.executionResults) yield {
               formatter.parameterValuesRow(executionResult) ++

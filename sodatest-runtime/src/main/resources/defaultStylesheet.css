@@ -262,6 +262,18 @@ div.blockResult.note td {
     background-color: #FFF;
 }
 
+div.parseError p.errorMessage {
+    font-size: 130%;
+    margin: 0.5em 0 1em;
+}
+
+div.parseError .parseErrorLabel {
+    font-size: 100%;
+    font-weight: bold;
+    color: #C00;
+    padding-right: 0.5em;
+}
+
 body.summary div.directoryResult {
     margin-bottom: 3em;
 }
