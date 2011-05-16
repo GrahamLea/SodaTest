@@ -18,6 +18,7 @@ package org.sodatest.runtime.processing.parsing.blocks
 
 import org.sodatest.api.SodaTestLog
 import org.sodatest.runtime.data.blocks._
+import java.lang.Short
 
 class BlockFactory(implicit val log: SodaTestLog) {
 
@@ -47,53 +48,147 @@ class BlockFactory(implicit val log: SodaTestLog) {
   private trait Factory { def createBlock(source: BlockSource): Block }
 
   private object FixtureFactory extends Factory {
-    def createBlock(source: BlockSource): FixtureBlock = {
-      // TODO: deal with fail cases: multiple lines, no td #1, more than #1 td
-      new FixtureBlock(source, source.lines(0).cells(1))
+    def createBlock(source: BlockSource): Block = {
+      source match {
+        case ParseError(errorBlock) => errorBlock
+        case _ => new FixtureBlock(source, source.lines(0).cells(1))
+      }
+    }
+
+    private object ParseError {
+      def unapply(implicit source: BlockSource): Option[ParseErrorBlock] = {
+        source match {
+          case NoName(errorCell) => parseError("No Fixture name specified", (0, errorCell))
+          case MoreThanOneLine() => parseError("Fixture blocks only have a single line", (1, 0))
+          case ExtraCellsAfterName() => parseError( "Extra cells after Fixture name", (0, 2))
+          case _ => None
+        }
+      }
+
+      private object MoreThanOneLine {
+        def unapply(source: BlockSource):Boolean = source.lines.size > 1
+      }
     }
   }
 
   private object NoteFactory extends Factory {
-    // TODO: Parsing errors: text in cell(0); empty note
-    def createBlock(source: BlockSource): NoteBlock = new NoteBlock(source)
-  }
-
-  private object EventFactory extends Factory {
-    def createBlock(source: BlockSource): EventBlock = {
-      // TODO: deal with non-simple cases, and error cases, e.g. un-named parameter, parameter name gap, !! in wrong places
-      val inline = source.lines.length == 1
-      val (parameters, executions) = source.lines match {
-        case eventLine :: parameterLine :: tail => (parameterLine.cells.tail, tail.map(line => new EventExecution(Some(line))))
-        case _ => (List.empty, List(new EventExecution(None)))
+    def createBlock(source: BlockSource): Block = {
+      source match {
+        case ParseError(errorBlock) => errorBlock
+        case _ => new NoteBlock(source)
       }
-      // TODO: Check for parameters on inline execution
-      // TODO: Check for no parameters on non-inline execution
-      // TODO: Check for parameters without arguments
-      // TODO: Check for arguments extending past parameter list
-      // TODO: Check for noise in column A on parameter and argument lines
-      // TODO: Check for empty parameter names in middle of list
-      new EventBlock(source, source.lines(0).cells(1), inline, parameters, executions)
+    }
+
+    private object ParseError {
+      def unapply(implicit source: BlockSource): Option[ParseErrorBlock] = {
+        source match {
+          case TextInFirstColumn(firstLine) => parseError("The first column of a Note block should always be blank after the first line", (firstLine, 0))
+          case NoText() => parseError("No Note text specified", (0, 0))
+          case _ => None
+        }
+      }
+
+      private object NoText {
+        def unapply(source: BlockSource): Boolean = {
+          // If the list of all non-empty cells is empty, that's an error (=> true)
+          source.lines.map(_.cells.tail).flatMap(_.filter(!_.isEmpty)).isEmpty
+        }
+      }
     }
   }
 
-  private object ReportFactory extends Factory {
-    def createBlock(source: BlockSource): ReportBlock = {
-      // TODO: deal with non-simple cases, and error cases, e.g. un-named parameter, parameter name gap, !! in wrong places
-      val inline = source.lines(0).cells match {
-        case List(_, _, "!!") => true
-        case List(_, _) => false
-        case _ => throw new RuntimeException("TODO: This should be a parse error. Something other than !! after Report name")
-      }
-      val (parameterList, executions) =
-        if (inline)
-          (List(), List(new ReportExecution(None, source.lines.tail)))
-        else
-          source.lines match {
-            // TODO: Handle parameter list that has no cells or starts with something other than blank
-            case reportLine :: parameterListCells :: tail => (parameterListCells.cells.tail, executionsFrom(tail))
-            case _ => (Nil, Nil)
+  private object EventFactory extends Factory {
+    def createBlock(source: BlockSource): Block = {
+      source match {
+        case ParseError(errorBlock) => errorBlock
+        case _ => {
+          val inline = source.lines.length == 1
+          val (parameters, executions) = source.lines match {
+            case eventLine :: parameterLine :: tail => (parameterLine.cells.tail, tail.map(line => new EventExecution(Some(line))))
+            case _ => (List.empty, List(new EventExecution(None)))
           }
-      new ReportBlock(source, source.lines(0).cells(1), inline, parameterList, executions)
+          new EventBlock(source, source.lines(0).cells(1), inline, parameters, executions)
+        }
+      }
+    }
+
+    private object ParseError {
+      def unapply(implicit source: BlockSource): Option[ParseErrorBlock] = {
+        source match {
+          case NoName(errorCell) => parseError("No Event name specified", (0, errorCell))
+          case ReportInvokerPresent() => parseError("Events do not use the '!!' invoker", (0, 2))
+          case ExtraCellsAfterName() => parseError("Extra cells after Event name", (0, 2))
+          case TextInFirstColumn(firstLine) => parseError("The first column of an Event block should always be blank after the first line", (firstLine, 0))
+          case ParamtersNamesButNoValues() => parseError("Event has parameters names but no values", (1, 1))
+          case BlankParameterName(firstCell) => parseError("Parameter Names cannot be blank space", (1, firstCell))
+          case MoreParameterValuesThanNames(firstLine, firstCell) => parseError("Parameter Value specified without a Parameter Name", (firstLine, firstCell))
+          case _ => None
+        }
+      }
+    }
+
+    private object ReportInvokerPresent {
+      def unapply(source: BlockSource): Boolean = source.lines(0).cells.size > 2 && source.lines(0).cells(2).trim == "!!"
+    }
+
+    private object MoreParameterValuesThanNames {
+      def unapply(source: BlockSource): Option[(Int, Int)] = {
+        if (source.lines.size > 1) {
+          val parameterNameLineWidth = source.lines(1).cells.size
+          source.lines.tail.tail
+            .zip(2 to Short.MAX_VALUE)
+            .filter(_._1.cells.size > parameterNameLineWidth)
+            .headOption
+            .map(p => (p._2, parameterNameLineWidth))
+        } else {
+          None
+        }
+      }
+    }
+
+  }
+
+  private object ReportFactory extends Factory {
+    def createBlock(source: BlockSource): Block = {
+      source match {
+        case ParseError(errorBlock) => errorBlock
+      // TODO: deal with non-simple cases, and error cases, e.g. un-named parameter, parameter name gap, !! in wrong places
+        case _ => {
+          val inline = source.lines(0).cells match {
+            case List(_, _, "!!") => true
+            case List(_, _) => false
+            case _ => throw new RuntimeException("TODO: This should be a parse error. Something other than !! after Report name")
+          }
+          val (parameterList, executions) =
+            if (inline)
+              (List(), List(new ReportExecution(None, source.lines.tail)))
+            else
+              source.lines match {
+                // TODO: Handle parameter list that has no cells or starts with something other than blank
+                case reportLine :: parameterListCells :: tail => (parameterListCells.cells.tail, executionsFrom(tail))
+                case _ => (Nil, Nil)
+              }
+          new ReportBlock(source, source.lines(0).cells(1), inline, parameterList, executions)
+        }
+      }
+    }
+
+    private object ParseError {
+      def unapply(implicit source: BlockSource): Option[ParseErrorBlock] = {
+        source match {
+          case NoName(errorCell) => parseError("No Report name specified", (0, errorCell))
+//          case ReportInvokerPresent() => parseError("Events do not use the '!!' invoker", (0, 2))
+          case ExtraCellsAfterReportName() => parseError( "Extra cells after Report name", (0, 2))
+          case TextInFirstColumnOfReport(firstLine) => parseError("The first column of a Report block should either contain the Report Invoker (!!) or be empty", (firstLine, 0))
+          case ParamtersNamesButNoValues() => parseError("Report has parameters names but no values", (1, 1))
+          case BlankParameterName(firstCell) => parseError("Parameter Names cannot be blank space", (1, firstCell))
+          case MoreParameterValuesThanNames(firstLine, firstCell) => parseError("Parameter Value specified without a Parameter Name", (firstLine, firstCell))
+          case ReportInvokerOnParameterNamesLine() => parseError("The second line of a Report must be a Parameter name list, not an execution", (1, 0))
+          case OutputLineBeforeExecution() => parseError("Report Parameter names must be followed by an execution (!!)", (2, 0))
+          case InlineAndInBlockExecutions() => parseError("Reports cannot have an inline execution and block executions", (2, 0))
+          case _ => None
+        }
+      }
     }
 
     private def executionsFrom(lines: List[Line]): List[ReportExecution] = {
@@ -104,11 +199,111 @@ class BlockFactory(implicit val log: SodaTestLog) {
           case "!!" :: parameterList => (nextLine, Nil) :: listOfExecutionsAndResults
           case "" :: reportResultLine => listOfExecutionsAndResults match {
             case (lastExecutionLine, resultsLines) :: earlierExecutions => (lastExecutionLine, resultsLines :+ nextLine) :: earlierExecutions
-            case _ => throw new RuntimeException("TODO: Empty line before parameter values list")
+            case _ => throw new RuntimeException("Should get a ParseError before reaching here")
           }
-          case _ => throw new RuntimeException("TODO: Handle non-!! or empty line under report")
+          case _ => throw new RuntimeException("Should get a ParseError before reaching here")
         }
       }).reverse.map(p => {new ReportExecution(Some(p._1), p._2)})
     }
+
+    private object ExtraCellsAfterReportName {
+      def unapply(source: BlockSource): Boolean =
+        source.lines(0).cells.size > 2 && source.lines(0).cells(2) != "!!"
+    }
+
+    private object ExtraCellsAfterInlineReportInvoker {
+      def unapply(source: BlockSource): Boolean =
+        source.lines(0).cells.size > 3 && source.lines(0).cells(2) == "!!"
+    }
+
+    private object TextInFirstColumnOfReport {
+      private val stringsAllowedInFirstColumn = Set("", "!!")
+
+      def unapply(source: BlockSource): Option[Int] = {
+        source.lines.tail
+          .zip(1 to Short.MAX_VALUE)
+          .filter(p => !stringsAllowedInFirstColumn.contains(p._1.cells(0)))
+          .headOption
+          .map(_._2)
+      }
+    }
+
+    private object MoreParameterValuesThanNames {
+      def unapply(source: BlockSource): Option[(Int, Int)] = {
+        if (source.lines.size > 1) {
+          val parameterNameLineWidth = source.lines(1).cells.size
+          source.lines.tail.tail
+            .zip(2 to Short.MAX_VALUE)
+            .filter(_._1.cells(0) == "!!")
+            .filter(_._1.cells.size > parameterNameLineWidth)
+            .headOption
+            .map(p => (p._2, parameterNameLineWidth))
+        } else {
+          None
+        }
+      }
+    }
+
+    private object OutputLineBeforeExecution {
+      def unapply(source: BlockSource): Boolean =
+        !inlineReportInvokerPresent(source) &&
+          (source.lines.map(_.cells(0)) match {
+            case instruction :: parameterGap :: "" :: otherFirstCells => true
+            case _ => false
+          })
+    }
+
+    private object InlineAndInBlockExecutions {
+      def unapply(source: BlockSource): Boolean =
+        inlineReportInvokerPresent(source) && source.lines.size > 2 && source.lines(2).cells(0) == "!!"
+    }
+
+    private object ReportInvokerOnParameterNamesLine {
+      def unapply(source: BlockSource): Boolean = source.lines.size > 1 && source.lines(1).cells(0) == "!!"
+    }
+
+    private def inlineReportInvokerPresent(source: BlockSource): Boolean =
+      source.lines(0).cells.size > 2 && source.lines(0).cells(2) == "!!"
   }
+
+  private object ParamtersNamesButNoValues {
+    def unapply(source: BlockSource): Boolean =
+      source.lines.size == 2 && (source.lines(0).cells.size < 3 || source.lines(0).cells(2) != "!!")
+  }
+
+  private object NoName {
+    def unapply(source: BlockSource): Option[Int] = {
+      source.lines(0).cells match {
+        case blockType :: Nil => Some(0)
+        case blockType :: "" :: tail => Some(1)
+        case _ => None
+      }
+    }
+  }
+
+  private object BlankParameterName {
+    def unapply(source: BlockSource): Option[Int] = {
+      if (source.lines.size > 1)
+        source.lines(1).cells.tail.zip(1 to Short.MAX_VALUE).filter(_._1.trim == "").headOption.map(_._2)
+      else
+        None
+    }
+  }
+
+  private object TextInFirstColumn {
+    def unapply(source: BlockSource): Option[Int] = {
+      source.lines.tail
+        .zip(1 to Short.MAX_VALUE)
+        .filter(_._1.cells(0).trim != "")
+        .headOption
+        .map(_._2)
+    }
+  }
+
+  private object ExtraCellsAfterName {
+    def unapply(source: BlockSource): Boolean = source.lines(0).cells.size > 2
+  }
+
+  private def parseError(message: String, location: (Int, Int))(implicit source: BlockSource): Option[ParseErrorBlock] =
+    Some(new ParseErrorBlock(source, message, location))
 }

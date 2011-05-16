@@ -41,9 +41,10 @@ class BlockFactorySpec extends SpecificationWithJUnit {
         Line(9, List("Event", "Basic Event"))
       ))
 
-      val basicReportBlockSource = BlockSource(List(
+      val basicInlineReportBlockSource = BlockSource(List(
         Line(11, List("Report", "Basic Report", "!!")),
-        Line(12, List("", "Text"))
+        Line(12, List("", "Text", "More Text")),
+        Line(13, List("", "Another Line", "Of expteced text", "Event More Text"))
       ))
 
       val parameterisedEventsBlockSource = BlockSource(List(
@@ -76,16 +77,22 @@ class BlockFactorySpec extends SpecificationWithJUnit {
         Line(34, List("", "argument one", ""))
       ))
 
+      val noteStartingOnSecondLineBlockSource = BlockSource(List(
+        Line(36, List("Note")),
+        Line(37, List("", "Start of Note text"))
+      ))
+
       val blocks = blockFactory.create(List(
           fixtureBlockSource,
            noteBlockSource,
 //           junkBlockSource,
           basicEventBlockSource,
-          basicReportBlockSource,
+          basicInlineReportBlockSource,
           parameterisedEventsBlockSource,
 //           parameterisedInlineReportBlockSource,
           parameterisedReportsBlockSource,
-          parameterisedEventWithBlankValueBlockSource
+          parameterisedEventWithBlankValueBlockSource,
+          noteStartingOnSecondLineBlockSource
       ))
 
       var blockIndex = 0;
@@ -125,12 +132,14 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       blockIndex += 1
 
       {
+        println("blocks(blockIndex) = " + blocks(blockIndex));
         val basicReportBlock = blocks(blockIndex).asInstanceOf[ReportBlock]
-        basicReportBlock.source must_== basicReportBlockSource
+        basicReportBlock.source must_== basicInlineReportBlockSource
         basicReportBlock.reportName must_== "Basic Report"
         basicReportBlock.inline must_== true
         basicReportBlock.executions must beLike {
-          case List(r) => r.parameterValues == None && r.expectedResult == List(Line(12, List("", "Text")))
+          case List(r) => r.parameterValues == None &&
+            r.expectedResult == List(Line(12, List("", "Text", "More Text")), Line(13, List("", "Another Line", "Of expteced text", "Event More Text")))
         }
       }
       blockIndex += 1
@@ -180,6 +189,12 @@ class BlockFactorySpec extends SpecificationWithJUnit {
         }
       }
       blockIndex += 1
+
+      {
+        val noteBlock = blocks(blockIndex).asInstanceOf[NoteBlock]
+        noteBlock.source must_== noteStartingOnSecondLineBlockSource
+        noteBlock.name must_== ""
+      }
 
     }
   }

@@ -18,6 +18,5 @@ package org.sodatest
 
 object TestingObject {
   def main(args: Array[String]) {
-    
   }
 }

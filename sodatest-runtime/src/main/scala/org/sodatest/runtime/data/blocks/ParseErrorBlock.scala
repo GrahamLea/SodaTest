@@ -22,12 +22,12 @@ import StringExtension._
 import data.results.ParseErrorBlockResult
 
 class ParseErrorBlock(source: BlockSource, val error: String, val errorSource: (Int, Int))
-  extends Block(source, source.lines(0).cells(1).truncate(20), inline = true) {
-
-  val isValidInstruction = errorSource != (0, 0)
+  extends Block(source,
+                source.lines(0).cells match {case blockType :: name :: tail => name.truncate(20); case _ => "" },
+                inline = true) {
 
   def execute(context: SodaTestExecutionContext) = new ParseErrorBlockResult(this)
 
-  override def toString = "NoteBlock: " + name
+  override def toString = "ParseErrorBlock: " + name + " (" + error + " @ " + errorSource + ")"
 }
 }}

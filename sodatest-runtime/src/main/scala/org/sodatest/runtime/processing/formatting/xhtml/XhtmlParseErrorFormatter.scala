@@ -22,6 +22,7 @@ import api.SodaTestLog
 import data.blocks.Line
 import data.results.ParseErrorBlockResult
 import xml.{NodeSeq, Elem}
+import java.lang.Short
 
 object XhtmlParseErrorFormatter {
 
@@ -45,7 +46,7 @@ object XhtmlParseErrorFormatter {
           <tr>
             <th>{result.block.source.lines(0).lineNumber}</th>
             <td class={"instruction" + (if (errorSource == (0, 0)) " failureSource" else "")}>{result.block.source.lines(0).cells(0)}</td>
-            {tds(result.block.source.lines(0).cells.tail, errorSource, formatter.sourceBlockWidth, 0)}
+            {tds(result.block.source.lines(0).cells.tail, (errorSource._1, errorSource._2 - 1), formatter.sourceBlockWidth, 0)}
             {formatter.emptyCellsFrom(2) }
           </tr>
           { for (line <- result.block.source.lines.tail) yield {
@@ -62,7 +63,7 @@ object XhtmlParseErrorFormatter {
   }
 
   private def tds(cells: List[String], errorSource: (Int, Int), sourceBlockWidth: Int, lineOffset: Int): NodeSeq = {
-    (for ((cell, cellIndex) <- (cells zip (1 to Integer.MAX_VALUE))) yield {
+    (for ((cell, cellIndex) <- (cells zip (0 to Short.MAX_VALUE))) yield {
       if ((lineOffset, cellIndex) == errorSource) {
         <td class="failureSource">{cell}</td>
       } else {

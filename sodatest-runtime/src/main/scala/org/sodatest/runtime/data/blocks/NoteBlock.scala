@@ -21,9 +21,12 @@ import processing.execution.SodaTestExecutionContext
 import StringExtension._
 import data.results.NoteBlockResult
 
-class NoteBlock(source: BlockSource) extends Block(source, source.lines(0).cells(1).truncate(20), inline = true) {
+class NoteBlock(source: BlockSource)
+  extends Block(source,
+                name = source.lines(0).cells.tail match { case firstCell :: tail => firstCell.truncate(20); case _ => ""},
+                inline = true) {
 
-  def execute(context: SodaTestExecutionContext) = new NoteBlockResult(this)
+  def execute(context: SodaTestExecutionContext): NoteBlockResult = new NoteBlockResult(this)
 
   override def toString = "NoteBlock: " + name
 }
