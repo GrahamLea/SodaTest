@@ -125,7 +125,7 @@ class BlockFactory(implicit val log: SodaTestLog) {
       }
 
       private def hasValidFirstLine(source: BlockSource): Boolean = {
-        source.lines(0).cells.size == 2 && !source.lines(0).cells(1).isEmpty
+        source.lines(0).cells.size == 2 && !source.lines(0).cells(1).trim.isEmpty
       }
 
       private def hasValidParameterNames(parameterNamesLine: Line): Boolean = {
@@ -134,10 +134,7 @@ class BlockFactory(implicit val log: SodaTestLog) {
       }
 
       private def hasValidExecutions(executionLines: List[Line], maxLength: Int): Boolean = {
-        executionLines.filterNot(line => {
-          line.cells(0) == "" &&
-            line.cells.size <= maxLength
-        }).isEmpty
+        executionLines.filterNot(line => {line.cells(0) == "" && line.cells.size <= maxLength}).isEmpty
       }
     }
 
@@ -199,6 +196,45 @@ class BlockFactory(implicit val log: SodaTestLog) {
               }
           new ReportBlock(source, source.lines(0).cells(1), inline, parameterList, executions)
         }
+      }
+    }
+
+
+    private object ValidReportBlock {
+      def unapply(implicit source: BlockSource): Boolean = {
+        (hasValidInlineFirstLine(source) && hasOnlyReportOutputInBody(source.lines.tail)) ||
+          (hasValidNonInlineFirstLine(source) &&
+            (source.lines.size match {
+              case 1 => false
+              case 2 => false
+              case _ => hasValidParameterNames(source.lines(1)) &&
+                          source.lines(2).cells(0) == "!!" &&
+                          hasValidExecutions(source.lines.tail.tail, maxLength = source.lines(1).cells.size)
+            })
+          )
+      }
+
+      private def hasValidInlineFirstLine(source: BlockSource): Boolean = {
+        source.lines(0).cells.size == 3 &&
+          !source.lines(0).cells(1).trim.isEmpty &&
+          source.lines(0).cells(2) == ""
+      }
+
+      private def hasValidNonInlineFirstLine(source: BlockSource): Boolean = {
+        source.lines(0).cells.size == 2 && !source.lines(0).cells(1).trim.isEmpty
+      }
+
+      private def hasValidParameterNames(parameterNamesLine: Line): Boolean = {
+        parameterNamesLine.cells(0) == "" &&
+          parameterNamesLine.cells.tail.filter(_.trim.isEmpty).isEmpty
+      }
+
+      private def hasOnlyReportOutputInBody(executionLines: List[Line]): Boolean = {
+        executionLines.filterNot(_.cells(0) == "").isEmpty
+      }
+
+      private def hasValidExecutions(executionLines: List[Line], maxLength: Int): Boolean = {
+        executionLines.filter(line => {line.cells(0) == "!!" && line.cells.size > maxLength}).isEmpty
       }
     }
 
