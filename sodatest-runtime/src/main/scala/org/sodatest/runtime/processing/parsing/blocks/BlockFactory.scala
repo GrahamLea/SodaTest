@@ -100,8 +100,7 @@ class BlockFactory(implicit val log: SodaTestLog) {
   private object EventFactory extends Factory {
     def createBlock(source: BlockSource): Block = {
       source match {
-        case ParseError(errorBlock) => errorBlock
-        case _ => {
+        case ValidEventBlock() => {
           val inline = source.lines.length == 1
           val (parameters, executions) = source.lines match {
             case eventLine :: parameterLine :: tail => (parameterLine.cells.tail, tail.map(line => new EventExecution(Some(line))))
@@ -109,6 +108,36 @@ class BlockFactory(implicit val log: SodaTestLog) {
           }
           new EventBlock(source, source.lines(0).cells(1), inline, parameters, executions)
         }
+        case ParseError(errorBlock) => errorBlock
+        case _ => new ParseErrorBlock(source, "Uncategorised Parse Error. Please report this as a bug.", (0, 0))
+      }
+    }
+
+    private object ValidEventBlock {
+      def unapply(implicit source: BlockSource): Boolean = {
+        hasValidFirstLine(source) &&
+          (source.lines.size match {
+            case 1 => true
+            case 2 => false
+            case _ => hasValidParameterNames(source.lines(1)) &&
+                        hasValidExecutions(source.lines.tail.tail, maxLength = source.lines(1).cells.size)
+          })
+      }
+
+      private def hasValidFirstLine(source: BlockSource): Boolean = {
+        source.lines(0).cells.size == 2 && !source.lines(0).cells(1).isEmpty
+      }
+
+      private def hasValidParameterNames(parameterNamesLine: Line): Boolean = {
+        parameterNamesLine.cells(0) == "" &&
+          parameterNamesLine.cells.tail.filter(_.trim.isEmpty).isEmpty
+      }
+
+      private def hasValidExecutions(executionLines: List[Line], maxLength: Int): Boolean = {
+        executionLines.filterNot(line => {
+          line.cells(0) == "" &&
+            line.cells.size <= maxLength
+        }).isEmpty
       }
     }
 
@@ -304,6 +333,6 @@ class BlockFactory(implicit val log: SodaTestLog) {
     def unapply(source: BlockSource): Boolean = source.lines(0).cells.size > 2
   }
 
-  private def parseError(message: String, location: (Int, Int))(implicit source: BlockSource): Option[ParseErrorBlock] =
+  private def parseError(message: String, location: (Int, Int))(implicit source: BlockSource): Some[ParseErrorBlock] =
     Some(new ParseErrorBlock(source, message, location))
 }
