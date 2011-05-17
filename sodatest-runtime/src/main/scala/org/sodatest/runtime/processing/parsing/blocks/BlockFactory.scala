@@ -50,9 +50,17 @@ class BlockFactory(implicit val log: SodaTestLog) {
   private object FixtureFactory extends Factory {
     def createBlock(source: BlockSource): Block = {
       source match {
+        case ValidFixtureBlock() => new FixtureBlock(source, source.lines(0).cells(1))
         case ParseError(errorBlock) => errorBlock
-        case _ => new FixtureBlock(source, source.lines(0).cells(1))
+        case _ => new ParseErrorBlock(source, "Uncategorised Parse Error. Please report this as a bug.", (0, 0))
       }
+    }
+
+    private object ValidFixtureBlock {
+      def unapply(source: BlockSource): Boolean =
+        source.lines.size == 1 &&
+          source.lines(0).cells.size == 2 &&
+          source.lines(0).cells(1).trim != ""
     }
 
     private object ParseError {
