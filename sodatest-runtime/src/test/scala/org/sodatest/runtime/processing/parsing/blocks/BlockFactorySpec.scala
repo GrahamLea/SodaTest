@@ -132,7 +132,6 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       blockIndex += 1
 
       {
-        println("blocks(blockIndex) = " + blocks(blockIndex));
         val basicReportBlock = blocks(blockIndex).asInstanceOf[ReportBlock]
         basicReportBlock.source must_== basicInlineReportBlockSource
         basicReportBlock.reportName must_== "Basic Report"

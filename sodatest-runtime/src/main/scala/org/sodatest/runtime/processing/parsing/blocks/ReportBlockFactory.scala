@@ -25,9 +25,7 @@ private[blocks] object ReportBlockFactory extends BlockFactory {
 
   def createBlock(source: BlockSource): Block = {
     source match {
-      case ParseError(errorBlock) => errorBlock
-    // TODO: deal with non-simple cases, and error cases, e.g. un-named parameter, parameter name gap, !! in wrong places
-      case _ => {
+      case ValidReportBlock() => {
         val inline = source.lines(0).cells match {
           case List(_, _, "!!") => true
           case List(_, _) => false
@@ -44,13 +42,15 @@ private[blocks] object ReportBlockFactory extends BlockFactory {
             }
         new ReportBlock(source, source.lines(0).cells(1), inline, parameterList, executions)
       }
+      case ParseError(errorBlock) => errorBlock
+      case _ => new ParseErrorBlock(source, "Uncategorised Parse Error. Please report this as a bug.", (0, 0))
     }
   }
 
 
   private object ValidReportBlock {
     def unapply(implicit source: BlockSource): Boolean = {
-      (hasValidInlineFirstLine(source) && hasOnlyReportOutputInBody(source.lines.tail)) ||
+      (hasValidInlineInvocation(source) && onlyHasReportOutputInBody(source.lines.tail)) ||
         (hasValidNonInlineFirstLine(source) &&
           (source.lines.size match {
             case 1 => false
@@ -62,10 +62,10 @@ private[blocks] object ReportBlockFactory extends BlockFactory {
         )
     }
 
-    private def hasValidInlineFirstLine(source: BlockSource): Boolean = {
+    private def hasValidInlineInvocation(source: BlockSource): Boolean = {
       source.lines(0).cells.size == 3 &&
         !source.lines(0).cells(1).trim.isEmpty &&
-        source.lines(0).cells(2) == ""
+        source.lines(0).cells(2) == "!!"
     }
 
     private def hasValidNonInlineFirstLine(source: BlockSource): Boolean = {
@@ -77,7 +77,7 @@ private[blocks] object ReportBlockFactory extends BlockFactory {
         parameterNamesLine.cells.tail.filter(_.trim.isEmpty).isEmpty
     }
 
-    private def hasOnlyReportOutputInBody(executionLines: List[Line]): Boolean = {
+    private def onlyHasReportOutputInBody(executionLines: List[Line]): Boolean = {
       executionLines.filterNot(_.cells(0) == "").isEmpty
     }
 
