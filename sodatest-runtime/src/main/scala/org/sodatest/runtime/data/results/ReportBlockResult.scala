@@ -61,6 +61,6 @@ extends BlockResult[ReportBlock](
   def this(error: ExecutionError)(implicit block: ReportBlock) = this(Nil, Some(error))
 
   override def toString =
-    getClass.getSimpleName + ": " + block.reportName +
+    getClass.getSimpleName + ": " + block.name +
       (error match {case Some(e) => " [Error: " + e.message + "]"; case _ => ""})
 }

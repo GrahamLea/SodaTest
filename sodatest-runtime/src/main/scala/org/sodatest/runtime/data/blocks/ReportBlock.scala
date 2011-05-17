@@ -27,10 +27,9 @@ extends ParameterValuesContainer(parameterValues) {
   override def toString = "ReportExecution(parameterValues: " + parameterValues + ", expectedResult: " + expectedResult + ")"
 }
 
-// TODO: Make reportName and inline not 'val' s ?
 class ReportBlock(
         source: BlockSource,
-        val reportName: String,
+        reportName: String,
         inline: Boolean,
         parameterNames: List[String],
         val executions: List[ReportExecution]
@@ -38,5 +37,5 @@ class ReportBlock(
 
   def execute(context: SodaTestExecutionContext): ReportBlockResult = ReportBlockExecutor.execute(this, context)
 
-  override def toString = "ReportBlock: " + reportName
+  override def toString = "ReportBlock: " + name
 }

@@ -134,7 +134,7 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       {
         val basicReportBlock = blocks(blockIndex).asInstanceOf[ReportBlock]
         basicReportBlock.source must_== basicInlineReportBlockSource
-        basicReportBlock.reportName must_== "Basic Report"
+        basicReportBlock.name must_== "Basic Report"
         basicReportBlock.inline must_== true
         basicReportBlock.executions must beLike {
           case List(r) => r.parameterValues == None &&
@@ -161,7 +161,7 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       {
         val parameterisedReportsBlock = blocks(blockIndex).asInstanceOf[ReportBlock]
         parameterisedReportsBlock.source must_== parameterisedReportsBlockSource
-        parameterisedReportsBlock.reportName must_== "Parameterised Report"
+        parameterisedReportsBlock.name must_== "Parameterised Report"
         parameterisedReportsBlock.inline must_== false
         parameterisedReportsBlock.parameterNames must_== List("Parameter 1", "Parameter 2")
         parameterisedReportsBlock.executions must beLike {

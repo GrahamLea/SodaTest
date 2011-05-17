@@ -24,8 +24,8 @@ object ReportBlockExecutor {
     // TODO: Deal with report in test before fixture declared
     // TODO: Should be a new report for each execution
     val fixture = context.currentFixture.get
-    fixture.createReport(block.reportName) match {
-      case None => new ReportBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create a report for '" + block.reportName + "'")))
+    fixture.createReport(block.name) match {
+      case None => new ReportBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create a report for '" + block.name + "'")))
       case Some(report) => {
         new ReportBlockResult(
           for (val execution <- block.executions) yield {
