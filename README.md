@@ -7,8 +7,8 @@ SodaTest allows the creation of executable test cases as spreadsheets in a forma
 readable by non-programmers, with the goal of being easily understood, edited or even authored by the
 non-technical Customers of the software under test.
 
-The [input format is CSV files](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png Screenshot of SodaTest input spreadsheet),
-the [output format is pretty HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png Screenshot of SodaTest output HTML),
+The [input format is CSV files](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png "Screenshot of SodaTest input spreadsheet"),
+the [output format is pretty HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png "Screenshot of SodaTest output HTML"),
 and the programming model in between for creating [fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software)
 is kept as simple as possible.
 
