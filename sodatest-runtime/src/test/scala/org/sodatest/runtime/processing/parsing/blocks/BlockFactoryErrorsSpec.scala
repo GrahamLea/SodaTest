@@ -48,7 +48,7 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
       val noReportNameBlockSource = BlockSource(List(
         Line(11, List("Report", "")),
         Line(12, List("", "Some Parameter")),
-        Line(13, List("", "Some Value"))
+        Line(13, List("!!", "Some Value"))
       ))
 
       val eventWithExtraCellsOnFirstLineBlockSource = BlockSource(List(
@@ -81,13 +81,13 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
       val eventWithTextInFirstColumn = BlockSource(List(
         Line(32, List("Event", "Some Event")),
         Line(33, List("", "Some Parameter", "Some Other Parameter")),
-        Line(34, List("Report", "Value One", "Value Two"))
+        Line(34, List("Text", "Value One", "Value Two"))
       ))
 
       val reportWithExtraCellsOnFirstLineBlockSource = BlockSource(List(
         Line(36, List("Report", "Report Name", "Extra Cell")),
-        Line(37, List("!!", "Some Parameter")),
-        Line(38, List("", "Some Value"))
+        Line(37, List("", "Some Parameter")),
+        Line(38, List("!!", "Some Value"))
       ))
 
       val reportWithParametersButNoValuesBlockSource = BlockSource(List(
@@ -110,7 +110,7 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
       val reportWithTextInFirstColumnBlockSource = BlockSource(List(
         Line(50, List("Report", "Some Report")),
         Line(51, List("", "Some Parameter", "Some Other Parameter")),
-        Line(52, List("Report", "Value One", "Value Two"))
+        Line(52, List("Text", "Value One", "Value Two"))
       ))
 
       val fixtureWithMoreThanOneLineBlockSource = BlockSource(List(
@@ -175,6 +175,30 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
         Line(90, List("", "And some output to match"))
       ))
 
+      val reportWithTextAfterInlineInvokerBlockSource = BlockSource(List(
+        Line(92, List("Report", "Some Report", "!!", "Something else")),
+        Line(93, List("", "Exected Output", "not an execution")),
+        Line(94, List("", "More text"))
+      ))
+
+      val reportWithNoInvokerBlockSource = BlockSource(List(
+        Line(96, List("Report", "Some Report")),
+        Line(97, List("", "Param 1", "Param 2")),
+        Line(98, List("", "Value 1", "Value 2")),
+        Line(99, List("", "Expected", "output"))
+      ))
+
+      val reportWithNoParameterNamesBlockSource = BlockSource(List(
+        Line(101, List("Report", "Some Report")),
+        Line(102, List("")),
+        Line(103, List("!!")),
+        Line(104, List("", "Expected", "output"))
+      ))
+
+      val inlineReportWithoutInvokerBlockSource = BlockSource(List(
+        Line(106, List("Report", "Some Report"))
+      ))
+
       // TODO: Extra cells after report invoker in inline report
 
       val blocks = blockFactory.create(List(
@@ -204,7 +228,11 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
         noteWithNoTextCellsBlockSource,
         reportWithOutputBeforeExecutionBlockSource,
         reportWithInlineAndInBlockExecutionBlockSource,
-        reportWithExecutionOnParameterNamesLineBlockSource
+        reportWithExecutionOnParameterNamesLineBlockSource,
+        reportWithTextAfterInlineInvokerBlockSource,
+        reportWithNoInvokerBlockSource,
+        reportWithNoParameterNamesBlockSource,
+        inlineReportWithoutInvokerBlockSource
       ))
 
       var blockIndex = 0;
@@ -257,7 +285,7 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
         val parseErrorBlock = blocks(blockIndex).asInstanceOf[ParseErrorBlock]
         parseErrorBlock.source must_== eventWithInlineReportInvokerBlockSource
         parseErrorBlock.name must_== "Event Name"
-        parseErrorBlock.error must_== "Events do not use the '!!' invoker"
+        parseErrorBlock.error must_== "Events do not use the Report Invoker (!!)"
         parseErrorBlock.errorSource must_== (0, 2)
       }
        blockIndex += 1
@@ -302,7 +330,7 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
         val parseErrorBlock = blocks(blockIndex).asInstanceOf[ParseErrorBlock]
         parseErrorBlock.source must_== reportWithExtraCellsOnFirstLineBlockSource
         parseErrorBlock.name must_== "Report Name"
-        parseErrorBlock.error must_== "Extra cells after Report name"
+        parseErrorBlock.error must_== "Only the Report Invoker (!!) can appear after the Report name"
         parseErrorBlock.errorSource must_== (0, 2)
       }
        blockIndex += 1
@@ -428,7 +456,7 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
         val parseErrorBlock = blocks(blockIndex).asInstanceOf[ParseErrorBlock]
         parseErrorBlock.source must_== reportWithOutputBeforeExecutionBlockSource
         parseErrorBlock.name must_== "Some Report"
-        parseErrorBlock.error must_== "Report Parameter names must be followed by an execution (!!)"
+        parseErrorBlock.error must_== "The Report's Parameter Names line must be followed by an execution line (starting with !!)"
         parseErrorBlock.errorSource must_== (2, 0)
       }
       blockIndex += 1
@@ -449,13 +477,43 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
         parseErrorBlock.error must_== "The second line of a Report must be a Parameter name list, not an execution"
         parseErrorBlock.errorSource must_== (1, 0)
       }
+      blockIndex += 1
+
+      {
+        val parseErrorBlock = blocks(blockIndex).asInstanceOf[ParseErrorBlock]
+        parseErrorBlock.source must_== reportWithTextAfterInlineInvokerBlockSource
+        parseErrorBlock.name must_== "Some Report"
+        parseErrorBlock.error must_== "Only the Report Invoker (!!) can appear after the Report name"
+        parseErrorBlock.errorSource must_== (0, 3)
+      }
+      blockIndex += 1
+
+      {
+        val parseErrorBlock = blocks(blockIndex).asInstanceOf[ParseErrorBlock]
+        parseErrorBlock.source must_== reportWithNoInvokerBlockSource
+        parseErrorBlock.name must_== "Some Report"
+        parseErrorBlock.error must_== "The Report's Parameter Names line must be followed by an execution line (starting with !!)"
+        parseErrorBlock.errorSource must_== (2, 0)
+      }
+      blockIndex += 1
+
+      {
+        val parseErrorBlock = blocks(blockIndex).asInstanceOf[ParseErrorBlock]
+        parseErrorBlock.source must_== reportWithNoParameterNamesBlockSource
+        parseErrorBlock.name must_== "Some Report"
+        parseErrorBlock.error must_== "A non-inline Report must specify a list of Parameter Names"
+        parseErrorBlock.errorSource must_== (1, 0)
+      }
+      blockIndex += 1
+
+      {
+        val parseErrorBlock = blocks(blockIndex).asInstanceOf[ParseErrorBlock]
+        parseErrorBlock.source must_== inlineReportWithoutInvokerBlockSource
+        parseErrorBlock.name must_== "Some Report"
+        parseErrorBlock.error must_== "The name of an inline Report must be followed by the Report Invoker (!!)"
+        parseErrorBlock.errorSource must_== (0, 1)
+      }
     }
-
-
-    // TODO: Extra cases:
-    // Report with no parameters and no !!
-    // Report with parameters but no values
-    // Report with no output okay?
 
   }
 
