@@ -82,10 +82,18 @@ class BlockFactory(implicit val log: SodaTestLog) {
   private object NoteFactory extends Factory {
     def createBlock(source: BlockSource): Block = {
       source match {
+        case ValidNoteBlock() => new NoteBlock(source)
         case ParseError(errorBlock) => errorBlock
-        case _ => new NoteBlock(source)
+        case _ => new ParseErrorBlock(source, "Uncategorised Parse Error. Please report this as a bug.", (0, 0))
       }
     }
+
+    private object ValidNoteBlock {
+      def unapply(source: BlockSource): Boolean =
+        source.lines.tail.filter(_.cells(0).trim != "").isEmpty &&
+          !source.lines.flatMap(_.cells.tail).filterNot(_.trim.isEmpty).isEmpty
+    }
+
 
     private object ParseError {
       def unapply(implicit source: BlockSource): Option[ParseErrorBlock] = {
