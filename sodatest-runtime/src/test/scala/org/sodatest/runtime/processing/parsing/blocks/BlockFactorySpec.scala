@@ -23,7 +23,7 @@ import data.blocks._
 class BlockFactorySpec extends SpecificationWithJUnit {
 
   implicit val log = NoOpLog
-  val blockFactory = new BlockFactory
+  val blockFactory = BlockFactory
 
   "BlockFactory" should {
 

@@ -31,7 +31,7 @@ object SodaFileRunner {
 
   def run(inputFile: File)(implicit properties: SodaTestProperties, log: SodaTestLog): SodaTestResult = {
     new SodaTestExecutor().execute(
-      new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, new BlockFactory().create(
+      new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, BlockFactory.create(
         new BlockSourceSplitter().parseBlocks(
           new CsvCellSplitter().split(
             new BufferedInputStream(new FileInputStream(inputFile))
