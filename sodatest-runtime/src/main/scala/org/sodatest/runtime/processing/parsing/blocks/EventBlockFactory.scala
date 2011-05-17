@@ -50,12 +50,12 @@ private[blocks] object EventBlockFactory extends BlockFactory {
     }
 
     private def hasValidFirstLine(source: BlockSource): Boolean = {
-      source.lines(0).cells.size == 2 && !source.lines(0).cells(1).trim.isEmpty
+      source.lines(0).cells.size == 2 && source.lines(0).cells(1).trim != ""
     }
 
     private def hasValidParameterNames(parameterNamesLine: Line): Boolean = {
       parameterNamesLine.cells(0) == "" &&
-        parameterNamesLine.cells.tail.filter(_.trim.isEmpty).isEmpty
+        parameterNamesLine.cells.tail.filter(_.trim == "").isEmpty
     }
 
     private def hasValidExecutions(executionLines: List[Line], maxLength: Int): Boolean = {
