@@ -8,12 +8,6 @@ These are the things that make the most sense to achieve in the near future, lis
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
-Parsing errors commuted to output
----------------------------------
-Some errors in parsing the input currently cause exceptions that halt execution.
-Instead, meaningful output should always be generated that makes it easy to locate the source and cause of the failure.
-
-
 SodaFileRunner should have a main() method
 ------------------------------------------
 It should be possible to use the file runner to execute a single test by name.
