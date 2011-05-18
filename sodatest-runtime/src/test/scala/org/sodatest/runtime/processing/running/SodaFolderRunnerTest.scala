@@ -30,7 +30,7 @@ class SodaFolderRunnerTest extends XMLLoader[Elem] {
   tempFile.deleteOnExit()
 
   implicit val properties = new SodaTestProperties()
-  implicit val log = new ConsoleLog()
+  implicit val log = ConsoleLog()
 
   @Test(expected = classOf[InvalidDirectoryException])
   def nonExistentInputDirectory() {

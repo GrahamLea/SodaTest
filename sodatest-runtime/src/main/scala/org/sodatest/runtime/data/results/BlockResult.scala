@@ -31,4 +31,8 @@ abstract class BlockResult[T <: Block](
 
   def this(block: T, executionErrorOccurred: Boolean, error: Option[ExecutionError]) =
     this(block, executionErrorOccurred, !executionErrorOccurred, error)
+
+  override def toString =
+    "Result for " + block.toString +
+      (blockError match {case Some(e) => " [Error: " + e.message + "]"; case _ => ""})
 }

@@ -19,8 +19,5 @@ package results
 
 import blocks.NoteBlock
 
-class NoteBlockResult(block: NoteBlock) extends BlockResult(block, false, None) {
-  
-  override def toString = getClass.getSimpleName + ": " + block.name
-}
+class NoteBlockResult(block: NoteBlock) extends BlockResult(block, false, None)
 

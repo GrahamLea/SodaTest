@@ -20,8 +20,5 @@ package results
 import blocks.ParseErrorBlock
 
 class ParseErrorBlockResult(block: ParseErrorBlock)
-  extends BlockResult[ParseErrorBlock](block, true, false, false, None) {
-  
-  override def toString = getClass.getSimpleName + ": " + block.name
-}
+  extends BlockResult[ParseErrorBlock](block, true, false, false, None)
 

@@ -111,7 +111,7 @@ object SodaFolderRunner {
       val fixtureRoot = args(0)
       val inputDirectory = new File(args(1))
       val outputDirectory = new File(args(2))
-      implicit val log = new ConsoleLog()
+      implicit val log = ConsoleLog()
       implicit val properties = new SodaTestProperties(fixtureRoot)
 
       try {

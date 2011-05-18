@@ -24,17 +24,18 @@ object ConsoleLog {
     type Level = Value
     val Error, Info, Debug, Verbose = Value
   }
+
+  def apply(): ConsoleLog =
+    new ConsoleLog(Level.withName(System.getProperty("sodatest.log.level", "Info")))
 }
 
 class ConsoleLog(val level: ConsoleLog.Level.Level) extends SodaTestLog {
 
   import ConsoleLog.Level._
 
-  def this() = this(ConsoleLog.Level.Info)
-
-  def error(message: String) = if (level >= Error) println("Error: " + message)
-  def info(message: String) = if (level >= Info) println("Info:  " + message)
-  def debug(message: String) = if (level >= Debug) println("Debug: " + message)
-  def verbose(message: String) = if (level >= Verbose) println("Verbose: " + message)
+  def error(message: String) = if (level >= Error) println("ERROR: " + message)
+  def info(message: String) = if (level >= Info) println(message)
+  def debug(message: String) = if (level >= Debug) println(message)
+  def verbose(message: String) = if (level >= Verbose) println(message)
 
 }
