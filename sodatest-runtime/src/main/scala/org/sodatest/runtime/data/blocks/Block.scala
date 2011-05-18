@@ -21,6 +21,8 @@ import processing.execution.SodaTestExecutionContext
 import data.results.BlockResult
 abstract class Block(val source: BlockSource, val name: String, val inline: Boolean) {
   def execute(context: SodaTestExecutionContext): BlockResult[_]
+
+  override def toString = String.format("%-15s [Line %s] %s", getClass.getSimpleName, source.lines(0).lineNumber.toString, name)
 }
 
 abstract class ParamterisedBlock(source: BlockSource, name: String, inline: Boolean, val parameterNames: List[String])

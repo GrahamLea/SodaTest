@@ -19,12 +19,12 @@ package org.sodatest.runtime.processing.parsing.csv
 import org.sodatest.api.SodaTestLog
 
 trait CellSplitter {
-  def split(in: java.io.InputStream): List[List[String]]
+  def split(in: java.io.InputStream)(implicit log: SodaTestLog): List[List[String]]
 }
 
-class CsvCellSplitter(implicit val log: SodaTestLog) extends CellSplitter {
+object CsvCellSplitter extends CellSplitter {
   //TODO: Use Reader rather than InputStream
-  def split(in: java.io.InputStream): List[List[String]] = {
+  def split(in: java.io.InputStream)(implicit log: SodaTestLog): List[List[String]] = {
 
     @scala.annotation.tailrec
     def split(in: java.io.InputStream, inQuotes: Boolean, escaped: Boolean,
@@ -44,7 +44,7 @@ class CsvCellSplitter(implicit val log: SodaTestLog) extends CellSplitter {
         case _ => split(in, inQuotes, false, currentValue.append(c.toChar), currentRow, result)
       }
     }
-    log.info("Splitting CSV...")
+    log.debug("   Splitting CSV...")
     split(in, false, false, new StringBuilder(), List(), List())
   }
 }

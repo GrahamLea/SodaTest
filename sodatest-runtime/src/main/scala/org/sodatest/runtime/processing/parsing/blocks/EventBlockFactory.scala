@@ -50,12 +50,12 @@ private[blocks] object EventBlockFactory extends BlockFactory {
     }
 
     private def hasValidFirstLine(source: BlockSource): Boolean = {
-      source.lines(0).cells.size == 2 && !source.lines(0).cells(1).trim.isEmpty
+      source.lines(0).cells.size == 2 && source.lines(0).cells(1).trim != ""
     }
 
     private def hasValidParameterNames(parameterNamesLine: Line): Boolean = {
       parameterNamesLine.cells(0) == "" &&
-        parameterNamesLine.cells.tail.filter(_.trim.isEmpty).isEmpty
+        parameterNamesLine.cells.tail.filter(_.trim == "").isEmpty
     }
 
     private def hasValidExecutions(executionLines: List[Line], maxLength: Int): Boolean = {
@@ -67,7 +67,7 @@ private[blocks] object EventBlockFactory extends BlockFactory {
     def unapply(implicit source: BlockSource): Option[ParseErrorBlock] = {
       source match {
         case NoName(errorCell) => parseError("No Event name specified", (0, errorCell))
-        case ReportInvokerPresent() => parseError("Events do not use the '!!' invoker", (0, 2))
+        case ReportInvokerPresent() => parseError("Events do not use the Report Invoker (!!)", (0, 2))
         case ExtraCellsAfterName() => parseError("Extra cells after Event name", (0, 2))
         case TextInFirstColumn(firstLine) => parseError("The first column of an Event block should always be blank after the first line", (firstLine, 0))
         case ParamtersNamesButNoValues() => parseError("Event has parameters names but no values", (1, 1))

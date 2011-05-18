@@ -53,7 +53,7 @@ class XhtmlFormatter(val stylesheet: String)(implicit val log: SodaTestLog) exte
       </div>
 
   def format(testResult: SodaTestResult): String = try {
-    log.info("Formatting...")
+    log.debug("   Formatting...")
     val sb = new StringBuilder()
               .append(preamble)
               .append(header(testResult.test.testName, formatPath(testResult.test.testPath)))

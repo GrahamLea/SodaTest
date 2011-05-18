@@ -27,7 +27,7 @@ object XhtmlNoteFormatter {
   import XhtmlBlockFormatter._
 
   def format(result: NoteBlockResult)(implicit log: SodaTestLog): Elem = {
-    log.debug("   Formatting: " + result)
+    log.verbose("      " + result)
     val lines: List[Line] = result.block.source.lines
     val requiresTable = lines.map({_.cells.size > 2}).contains(true)
     val formatter = new XhtmlBlockFormatter(result)

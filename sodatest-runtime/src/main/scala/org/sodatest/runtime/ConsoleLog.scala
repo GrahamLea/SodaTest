@@ -18,8 +18,24 @@ package org.sodatest.runtime
 
 import org.sodatest.api.SodaTestLog
 
-class ConsoleLog extends SodaTestLog {
-  def error(message: String) = println("Error: " + message)
-  def info(message: String) = println("Info:  " + message)
-  def debug(message: String) = println("Debug: " + message)
+
+object ConsoleLog {
+  object Level extends Enumeration {
+    type Level = Value
+    val Error, Info, Debug, Verbose = Value
+  }
+
+  def apply(): ConsoleLog =
+    new ConsoleLog(Level.withName(System.getProperty("sodatest.log.level", "Info")))
+}
+
+class ConsoleLog(val level: ConsoleLog.Level.Level) extends SodaTestLog {
+
+  import ConsoleLog.Level._
+
+  def error(message: String) = if (level >= Error) println("ERROR: " + message)
+  def info(message: String) = if (level >= Info) println(message)
+  def debug(message: String) = if (level >= Debug) println(message)
+  def verbose(message: String) = if (level >= Verbose) println(message)
+
 }

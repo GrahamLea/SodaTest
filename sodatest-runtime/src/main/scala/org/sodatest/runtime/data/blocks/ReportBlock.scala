@@ -34,8 +34,5 @@ class ReportBlock(
         parameterNames: List[String],
         val executions: List[ReportExecution]
 ) extends ParamterisedBlock(source, reportName, inline, parameterNames) {
-
   def execute(context: SodaTestExecutionContext): ReportBlockResult = ReportBlockExecutor.execute(this, context)
-
-  override def toString = "ReportBlock: " + name
 }

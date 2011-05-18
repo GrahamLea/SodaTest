@@ -28,6 +28,7 @@ class EventExecution(parameterValues: Option[Line])
   }
 }
 
+// TODO: Make eventName not a val (use name val instead)
 class EventBlock (
     source: BlockSource,
     val eventName: String,
@@ -38,5 +39,4 @@ class EventBlock (
 
   def execute(context: SodaTestExecutionContext): EventBlockResult = EventBlockExecutor.execute(this, context)
 
-  override def toString = "EventBlock: " + eventName
 }

@@ -22,11 +22,11 @@ import processing.SodaTestContext
 import data.results.{BlockResult, SodaTestResult}
 import annotation.tailrec
 
-class SodaTestExecutor() {
+object SodaTestExecutor {
   def execute(test: SodaTest, context: SodaTestContext): SodaTestResult = {
-    context.log.info("Executing...")
+    context.log.debug("   Executing...")
     val executionContext = new SodaTestExecutionContext(context)
-    val blockResults = test.blocks.map(b => {context.log.info("   Executing " + b); b.execute(executionContext) } )
+    val blockResults = test.blocks.map(b => {context.log.verbose("      " + b); b.execute(executionContext) } )
     new SodaTestResult(test, blockResults, allSucceeded(blockResults))
   }
 

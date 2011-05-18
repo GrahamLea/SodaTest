@@ -8,12 +8,6 @@ These are the things that make the most sense to achieve in the near future, lis
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
-Parsing errors commuted to output
----------------------------------
-Some errors in parsing the input currently cause exceptions that halt execution.
-Instead, meaningful output should always be generated that makes it easy to locate the source and cause of the failure.
-
-
 SodaFileRunner should have a main() method
 ------------------------------------------
 It should be possible to use the file runner to execute a single test by name.
@@ -49,12 +43,6 @@ The Java example is 95% done, however the InterestFormulaJavaCoercion is written
 Need to figure out how to create a Manifest from Java in order to be able to implement the
 Coercion in Java instead.
 It would probalby be wise to solve the Coercion limitation before fixing this.
-
-
-More appropriate logging level out of the box
----------------------------------------------
-At them moment, there is a lot of output even for a single file. This is good for development but should change
-for the long term such that only the name of the file being processed and its result be output at Info level.
 
 
 Shortcut for single-parameter blocks

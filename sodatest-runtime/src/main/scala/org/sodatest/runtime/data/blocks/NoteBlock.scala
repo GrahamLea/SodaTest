@@ -27,7 +27,5 @@ class NoteBlock(source: BlockSource)
                 inline = true) {
 
   def execute(context: SodaTestExecutionContext): NoteBlockResult = new NoteBlockResult(this)
-
-  override def toString = "NoteBlock: " + name
 }
 }}

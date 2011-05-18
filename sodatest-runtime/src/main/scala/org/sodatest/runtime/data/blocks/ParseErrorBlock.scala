@@ -28,6 +28,6 @@ class ParseErrorBlock(source: BlockSource, val error: String, val errorSource: (
 
   def execute(context: SodaTestExecutionContext) = new ParseErrorBlockResult(this)
 
-  override def toString = "ParseErrorBlock: " + name + " (" + error + " @ " + errorSource + ")"
+  override def toString = super.toString + " (" + error + " @ " + errorSource + ")"
 }
 }}

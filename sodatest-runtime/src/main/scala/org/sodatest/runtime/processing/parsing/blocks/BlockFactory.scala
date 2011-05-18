@@ -27,7 +27,7 @@ private[blocks] trait BlockFactory {
 object BlockFactory {
 
   def create(blocks: List[BlockSource])(implicit log: SodaTestLog): List[Block] = {
-    log.info("Creating blocks...")
+    log.verbose("Creating blocks...")
     blocks.map(createBlock)
   }
 

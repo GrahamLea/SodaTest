@@ -25,12 +25,6 @@ class EventBlockResult(
   val executionResults: List[EventExecutionResult],
   error: Option[ExecutionError] = None)
   (implicit block: EventBlock)
-extends BlockResult[EventBlock](
-  block,
-  executionErrorOccurred = error != None || !executionResults.filter(_.error != None).isEmpty,
-  error = error) {
-
-  override def toString =
-    getClass.getSimpleName + ": " + block.eventName +
-      (error match {case Some(e) => " [Error: " + e.message + "]"; case _ => ""})
-}
+extends BlockResult[EventBlock](block,
+                                executionErrorOccurred = error != None || !executionResults.filter(_.error != None).isEmpty,
+                                error = error)

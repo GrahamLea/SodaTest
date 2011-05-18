@@ -23,7 +23,7 @@ import org.specs.SpecificationWithJUnit
 class CsvCellSplitterSpec extends SpecificationWithJUnit {
 
   implicit val log = NoOpLog
-  val splitter = new CsvCellSplitter
+  val splitter = CsvCellSplitter
 
   implicit def string2InputStream(s: String) = new ByteArrayInputStream(s.getBytes("UTF-8"))
 
