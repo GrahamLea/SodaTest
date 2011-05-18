@@ -23,8 +23,17 @@ Motivation
 
 SodaTest was begun as an exercise to create a test framework that improves on Ward Cunningham's
 [Framework for Integration Testing, "FIT"](http://fit.c2.com/).
+As an 'Executable Requirements' tool, it can also be considered as an alternative to
+[Fitnesse](http://fitnesse.org/),
+[Concordion](http://www.concordion.org/),
+[RSpec](http://rspec.info/),
+[Cucumber](http://cukes.info/),
+[JDave](http://jdave.org/),
+[JBehave](http://jbehave.org/),
+[SpecFlow](http://www.specflow.org/),
+and [Thoughtworks' Twist](http://www.thoughtworks-studios.com/agile-test-automation).
 
-The core design of SodaTest focusses around resolving a number of niggles experienced with FIT over
+The core design of SodaTest is focused around resolving a number of niggles experienced with FIT over
 the years, namely:
 
 * HTML as an input format is annoying for developers to manage
@@ -42,7 +51,7 @@ in the form of CSV files, for these reasons:
 3. Spreadsheets (especially in CSV format) are extremely portable across platforms;
 4. CSV files are very easy to edit in source format.
 
-Good ideas from FIT which are maintained in SodaTest are:
+Some great ideas from FIT which are maintained in SodaTest are:
 
 * Tables for giving format and structure to large amounts of information
 * Reflection for automating a lot of string-conversion boilerplate for the fixture author
@@ -52,9 +61,8 @@ Other things that SodaTest tries to achieve are:
 
 * [Command-Query Separation](http://en.wikipedia.org/wiki/Command-query_separation) is built into the
   API by making the distinction between Events, which cause side-effects within the System, and Reports,
-  which merely query the state of the System.
-* Powerful and flexible (yet simple!) coercion of strings to strong types, including support for
-  co-located [PropertyEditor](http://download.oracle.com/javase/6/docs/api/java/beans/PropertyEditor.html) implementations
+  which only query the state of the System.
+* Powerful and flexible (yet simple!) coercion of strings to strong types
 * Simple and localised control of Report formatting from strong types to strings (**Not done yet**)
 * Less strictness when binding input strings to programmattic symbols, e.g. case-agnosticism
 
