@@ -33,7 +33,10 @@ object EventBlockExecutor {
             event(block.parameterMap(execution))
             new EventExecutionResult(execution)
           } catch {
-            case e => new EventExecutionResult(execution, Some(new ExecutionError("An exception occurred while executing the event", e)))
+            case e => {
+              context.testContext.log.error("Exception while executing Event (" + block + "): " + e)
+              new EventExecutionResult(execution, Some(new ExecutionError("An exception occurred while executing the event", e)))
+            }
           }
         }
       )

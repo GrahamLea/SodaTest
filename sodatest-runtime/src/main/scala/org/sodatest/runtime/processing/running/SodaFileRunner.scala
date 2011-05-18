@@ -25,21 +25,30 @@ import parsing.blocks.{BlockSourceSplitter, BlockFactory}
 import parsing.csv.CsvCellSplitter
 import java.io.{FileInputStream, BufferedInputStream, File}
 import org.sodatest.api.SodaTestLog
-import data.results.SodaTestResult
+import data.results.{NoteBlockResult, SodaTestResult}
+import data.blocks.{Line, BlockSource, NoteBlock}
 
 object SodaFileRunner {
 
   def run(inputFile: File)(implicit properties: SodaTestProperties, log: SodaTestLog): SodaTestResult = {
-    new SodaTestExecutor().execute(
-      new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, BlockFactory.create(
-        new BlockSourceSplitter().parseBlocks(
-          new CsvCellSplitter().split(
-            new BufferedInputStream(new FileInputStream(inputFile))
-          )
-        ))
-      ),
-      new SodaTestContext(properties = properties)
+    log.info("Running " + inputFile)
+    val test = new SodaTest(SodaFileUtils.getTestName(inputFile), inputFile.toString, BlockFactory.create(
+      BlockSourceSplitter.parseBlocks(
+        CsvCellSplitter.split(
+          new BufferedInputStream(new FileInputStream(inputFile))
+        )
+      ))
     )
+    try {
+      SodaTestExecutor.execute(test, new SodaTestContext(properties))
+    }
+    catch {
+      case t: Throwable => log.error("Error executing " + inputFile.getName + " :" + t)
+      new SodaTestResult(test, List(new NoteBlockResult(new NoteBlock(BlockSource(List(
+        Line(0, List("", "An uncaught error occurred while running this test")),
+        Line(0, List("", t.toString))
+      ))))), false)
+    }
   }
 
   def main(args: Array[String]) {

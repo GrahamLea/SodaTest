@@ -24,7 +24,7 @@ import xml.Elem
 
 object XhtmlFixtureFormatter {
   def format(result: FixtureBlockResult)(implicit log: SodaTestLog): Elem = {
-    log.debug("   Formatting: " + result)
+    log.verbose("      " + result)
     val formatter = new XhtmlBlockFormatter(result)
     <div class={"blockResult fixture " + (if (result.succeeded) "success" else "failure")}>
       <table>

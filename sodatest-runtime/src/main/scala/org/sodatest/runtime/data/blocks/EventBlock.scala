@@ -38,5 +38,5 @@ class EventBlock (
 
   def execute(context: SodaTestExecutionContext): EventBlockResult = EventBlockExecutor.execute(this, context)
 
-  override def toString = "EventBlock: " + eventName
+  override def toString = "EventBlock: " + eventName + " at line " + source.lines(0).lineNumber
 }

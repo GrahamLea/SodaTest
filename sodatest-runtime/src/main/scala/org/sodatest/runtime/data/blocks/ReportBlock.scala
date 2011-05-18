@@ -38,5 +38,5 @@ class ReportBlock(
 
   def execute(context: SodaTestExecutionContext): ReportBlockResult = ReportBlockExecutor.execute(this, context)
 
-  override def toString = "ReportBlock: " + reportName
+  override def toString = "ReportBlock: " + reportName + " at line " + source.lines(0).lineNumber
 }

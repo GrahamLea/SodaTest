@@ -23,4 +23,5 @@ trait SodaTestLog {
   def error(message: String): Unit
   def info(message: String): Unit
   def debug(message: String): Unit
+  def verbose(message: String): Unit
 }

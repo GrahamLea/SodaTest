@@ -24,7 +24,7 @@ import org.specs.{Specification, SpecificationWithJUnit}
 class BlockSourceSplitterSpec extends SpecificationWithJUnit {
 
   implicit val log = NoOpLog
-  val blockParser = new BlockSourceSplitter
+  val blockParser = BlockSourceSplitter
 
   def C(c: String, v: String): String = v
 

@@ -45,12 +45,6 @@ Coercion in Java instead.
 It would probalby be wise to solve the Coercion limitation before fixing this.
 
 
-More appropriate logging level out of the box
----------------------------------------------
-At them moment, there is a lot of output even for a single file. This is good for development but should change
-for the long term such that only the name of the file being processed and its result be output at Info level.
-
-
 Shortcut for single-parameter blocks
 ------------------------------------
 Because of the prevalence of single-parameter Events and Reports, it would be nice to have a succinct way to

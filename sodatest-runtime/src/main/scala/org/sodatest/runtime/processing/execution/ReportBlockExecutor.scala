@@ -35,7 +35,10 @@ object ReportBlockExecutor {
               // TODO: Don't call diff() if the output and result are ==
               new ReportExecutionResult(execution, new ReportMatchResult(diff(expectedResult, reportOutput)))
             } catch {
-              case e => new ReportExecutionResult(execution, new ExecutionError("An exception occurred while executing the report", e))
+              case e => {
+                context.testContext.log.error("Exception while executing Report (" + block + "): " + e)
+                new ReportExecutionResult(execution, new ExecutionError("An exception occurred while executing the report", e))
+              }
             }
           }
         )
