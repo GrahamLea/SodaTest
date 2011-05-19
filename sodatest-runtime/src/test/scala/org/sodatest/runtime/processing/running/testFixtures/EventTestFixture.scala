@@ -29,10 +29,7 @@ class EventTestFixture extends SodaFixture {
   def createEvent(name: String): Option[SodaEvent] = {
     if (name startsWith "Non-existent") {
       None
-    }
-    else {
-      lastExecutedEventName = None
-      executedParameters = Nil
+    } else {
       new SodaEvent {
         def apply(parameters: Map[String, String]): Unit = {
           if (name endsWith "bind exception") {
@@ -77,6 +74,8 @@ class EventTestFixture extends SodaFixture {
             val b: List[List[String]] = (for (val execution <- sortedMaps) yield {
               "Execution #" + {i += 1; i - 1} + ":" :: execution.values.toList
             })
+            lastExecutedEventName = None
+            executedParameters = Nil
             a ::: b
           }
           case _ => List(List("NO EVENT EXECUTION"))

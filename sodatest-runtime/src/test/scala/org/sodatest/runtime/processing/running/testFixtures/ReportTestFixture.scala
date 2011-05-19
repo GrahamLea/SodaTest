@@ -28,9 +28,16 @@ class ReportTestFixture extends SodaFixture {
   private var executedParameters: List[List[String]] = Nil
 
   def createEvent(name: String): Option[SodaEvent] = name match {
+    case "Clear data" => {
+      new SodaEvent {
+        @throws(classOf[ParameterBindingException])
+        def apply(parameters: Map[String, String]) {
+          lastExecutedEventName = None
+          executedParameters = Nil
+        }
+      }
+    }
     case "Record data for report" => {
-      lastExecutedEventName = None
-      executedParameters = Nil
       new SodaEvent {
         def apply(parameters: Map[String, String]): Unit = {
           lastExecutedEventName = Some(name)

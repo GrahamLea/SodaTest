@@ -43,6 +43,8 @@ Report,Data lines collected from Events
 !!,3,3
 ,Line 3,Uno,Dos,Tres
 
+Event,Clear data
+
 Event,Record data for report
 ,1,2,3
 ,One,Two,Three
