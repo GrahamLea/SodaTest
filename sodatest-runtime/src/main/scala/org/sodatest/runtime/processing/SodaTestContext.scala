@@ -17,5 +17,8 @@
 package org.sodatest.runtime.processing
 
 import org.sodatest.api.SodaTestLog
+import org.sodatest.runtime.ConsoleLog
 
-class SodaTestContext(val properties: SodaTestProperties)(implicit val log: SodaTestLog)
+class SodaTestContext(
+  val fixtureRoot: String = "",
+  val log: SodaTestLog = ConsoleLog())

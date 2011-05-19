@@ -20,10 +20,11 @@ package processing.parsing.blocks
 import data.blocks.BlockSource
 import data.blocks.Line
 import org.specs.{Specification, SpecificationWithJUnit}
+import processing.SodaTestContext
 
 class BlockSourceSplitterSpec extends SpecificationWithJUnit {
 
-  implicit val log = NoOpLog
+  implicit val context = new SodaTestContext
   val blockParser = BlockSourceSplitter
 
   def C(c: String, v: String): String = v

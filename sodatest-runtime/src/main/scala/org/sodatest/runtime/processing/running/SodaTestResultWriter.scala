@@ -18,13 +18,12 @@ package org.sodatest.runtime
 package processing
 package running
 
-import org.sodatest.api.SodaTestLog
 import data.results.SodaTestResult
 import java.io.File
 import collection.immutable.List
 
 trait SodaTestResultWriter {
   def createOutputDirectories(inputRoot: File, files: scala.List[File], outputRoot: File): Unit
-  def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit log: SodaTestLog): Unit
+  def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit context: SodaTestContext): Unit
 }
 

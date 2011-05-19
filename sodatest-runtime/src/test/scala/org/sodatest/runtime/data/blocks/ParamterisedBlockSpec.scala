@@ -19,6 +19,7 @@ package data.blocks
 
 import processing.execution.SodaTestExecutionContext
 import org.specs.SpecificationWithJUnit
+
 class ParamterisedBlockSpec extends SpecificationWithJUnit {
   "ParametersedBlock" should {
     "provide a blank value for unspecified parameters" in {

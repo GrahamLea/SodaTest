@@ -17,9 +17,9 @@ package org.sodatest.runtime.processing.formatting.xhtml
  */
 
 import org.sodatest.runtime.data.results.SodaTestResult
-import org.sodatest.api.SodaTestLog
 import java.io.{File, FileWriter, PrintWriter}
 import org.sodatest.runtime.processing.running.{SodaTestResultWriter, PathUtils}
+import org.sodatest.runtime.processing.SodaTestContext
 
 object XhtmlSodaTestResultWriter extends SodaTestResultWriter {
 
@@ -35,7 +35,7 @@ object XhtmlSodaTestResultWriter extends SodaTestResultWriter {
   }
 
   @Override
-  def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit log: SodaTestLog): Unit = {
+  def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit context: SodaTestContext): Unit = {
     for ((file, result) <- filesAndResults) {
       val writer = new PrintWriter(new FileWriter(getOutputPath(file, inputRoot, outputRoot, ".html")))
       try {

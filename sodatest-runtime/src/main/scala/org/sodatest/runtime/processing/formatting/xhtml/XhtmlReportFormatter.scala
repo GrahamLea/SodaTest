@@ -25,8 +25,7 @@ object XhtmlReportFormatter {
 
   import XhtmlBlockFormatter._
 
-  def format(result: ReportBlockResult)(implicit log: SodaTestLog): Elem = {
-    log.verbose("      " + result)
+  def format(result: ReportBlockResult): Elem = {
     implicit val formatter = new XhtmlParameterisedBlockFormatter(result)
     <div class={"blockResult report " + (if (result.block.inline) "inline " else "") + (if (result.succeeded) "success" else "failure")}>
       <table>

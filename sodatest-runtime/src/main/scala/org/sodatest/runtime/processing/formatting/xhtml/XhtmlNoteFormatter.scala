@@ -26,8 +26,7 @@ import xml.{NodeSeq, Text, Elem}
 object XhtmlNoteFormatter {
   import XhtmlBlockFormatter._
 
-  def format(result: NoteBlockResult)(implicit log: SodaTestLog): Elem = {
-    log.verbose("      " + result)
+  def format(result: NoteBlockResult): Elem = {
     val lines: List[Line] = result.block.source.lines
     val requiresTable = lines.map({_.cells.size > 2}).contains(true)
     val formatter = new XhtmlBlockFormatter(result)

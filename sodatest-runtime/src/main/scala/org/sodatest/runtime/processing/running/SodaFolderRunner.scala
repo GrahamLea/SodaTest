@@ -18,7 +18,6 @@ package org.sodatest.runtime
 package processing
 package running
 
-import org.sodatest.api.SodaTestLog
 import data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
 import java.io.File
 import collection.immutable.List
@@ -34,7 +33,7 @@ class SodaTestResultSummary(val testName: String, val testPath: String, val mism
 class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummaryWriters: Seq[SodaTestResultSummaryWriter]) {
 
   @throws(classOf[InvalidDirectoryException])
-  def run(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit properties: SodaTestProperties, log: SodaTestLog): Unit = {
+  def run(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit context: SodaTestContext): Unit = {
     checkDirectories(inputRoot, outputRoot)
 
     val files = getFilesRecursive(inputRoot, _.getName.toLowerCase.endsWith(".csv"))
@@ -111,8 +110,7 @@ object SodaFolderRunner {
       val fixtureRoot = args(0)
       val inputDirectory = new File(args(1))
       val outputDirectory = new File(args(2))
-      implicit val log = ConsoleLog()
-      implicit val properties = new SodaTestProperties(fixtureRoot)
+      implicit val context = new SodaTestContext(fixtureRoot)
 
       try {
         new SodaFolderRunner(XhtmlSodaTestResultWriter, List(ConsoleResultSummaryWriter,  XhtmlIndexFileSummaryWriter))

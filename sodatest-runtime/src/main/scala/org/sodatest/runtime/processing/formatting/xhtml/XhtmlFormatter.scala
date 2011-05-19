@@ -19,13 +19,12 @@ package org.sodatest
 package runtime.processing.formatting.xhtml
 
 import java.io.{StringWriter, PrintWriter}
-import runtime.processing.ResultFormatter
-import org.sodatest.api.SodaTestLog
 import runtime.data.results._
+import runtime.processing.{SodaTestContext, ResultFormatter}
 
-class XhtmlFormatter(val stylesheet: String)(implicit val log: SodaTestLog) extends ResultFormatter {
+class XhtmlFormatter(val stylesheet: String)(implicit val context: SodaTestContext) extends ResultFormatter {
 
-  def this()(implicit log: SodaTestLog) = this(DefaultStylesheet.load())(log)
+  def this()(implicit context: SodaTestContext) = this(DefaultStylesheet.load())(context)
 
   private val preamble =
 """<?xml version="1.0" encoding="UTF-8"?>
@@ -53,7 +52,7 @@ class XhtmlFormatter(val stylesheet: String)(implicit val log: SodaTestLog) exte
       </div>
 
   def format(testResult: SodaTestResult): String = try {
-    log.debug("   Formatting...")
+    context.log.debug("   Formatting...")
     val sb = new StringBuilder()
               .append(preamble)
               .append(header(testResult.test.testName, formatPath(testResult.test.testPath)))
@@ -61,20 +60,21 @@ class XhtmlFormatter(val stylesheet: String)(implicit val log: SodaTestLog) exte
               .append(bodyTitle(testResult.passed, testResult.test.testName, formatPath(testResult.test.testPath)))
               .append('\n')
 
-    testResult.blockResults.map(_ match {
-      case result: FixtureBlockResult => XhtmlFixtureFormatter.format(result)
-      case result: EventBlockResult => XhtmlEventFormatter.format(result)
-      case result: ReportBlockResult => XhtmlReportFormatter.format(result)
-      case result: NoteBlockResult => XhtmlNoteFormatter.format(result)
-      case result: ParseErrorBlockResult => XhtmlParseErrorFormatter.format(result)
-      case anything => <p>Don't know how to format {anything.getClass.getName}!</p>
-    }).addString(sb, "\n")
-      .append('\n')
-      .append("</body>")
-      .append('\n')
-      .append("</html>")
-      .toString
-    
+    testResult.blockResults.map(result => {
+      context.log.verbose("      " + result)
+      result match {
+        case result: FixtureBlockResult => XhtmlFixtureFormatter.format(result)
+        case result: EventBlockResult => XhtmlEventFormatter.format(result)
+        case result: ReportBlockResult => XhtmlReportFormatter.format(result)
+        case result: NoteBlockResult => XhtmlNoteFormatter.format(result)
+        case result: ParseErrorBlockResult => XhtmlParseErrorFormatter.format(result)
+        case anything => <p>Don't know how to format {anything.getClass.getName}!</p>
+      }}).addString(sb, "\n")
+        .append('\n')
+        .append("</body>")
+        .append('\n')
+        .append("</html>")
+        .toString
   } catch {
     case e => e.printStackTrace; throw e
   }

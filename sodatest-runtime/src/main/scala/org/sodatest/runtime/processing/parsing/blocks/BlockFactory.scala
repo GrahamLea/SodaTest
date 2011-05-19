@@ -19,6 +19,7 @@ package org.sodatest.runtime.processing.parsing.blocks
 import org.sodatest.api.SodaTestLog
 import org.sodatest.runtime.data.blocks._
 import java.lang.Short
+import org.sodatest.runtime.processing.SodaTestContext
 
 private[blocks] trait BlockFactory {
   def createBlock(source: BlockSource): Block
@@ -26,8 +27,8 @@ private[blocks] trait BlockFactory {
 
 object BlockFactory {
 
-  def create(blocks: List[BlockSource])(implicit log: SodaTestLog): List[Block] = {
-    log.verbose("Creating blocks...")
+  def create(blocks: List[BlockSource])(implicit context: SodaTestContext): List[Block] = {
+    context.log.verbose("Creating blocks...")
     blocks.map(createBlock)
   }
 

@@ -28,8 +28,7 @@ object XhtmlParseErrorFormatter {
 
   import XhtmlBlockFormatter._
 
-  def format(result: ParseErrorBlockResult)(implicit log: SodaTestLog): Elem = {
-    log.verbose("      " + result)
+  def format(result: ParseErrorBlockResult): Elem = {
     val lines: List[Line] = result.block.source.lines
     val formatter = new XhtmlBlockFormatter(result)
     val errorSource: (Int, Int) = result.block.errorSource

@@ -19,9 +19,8 @@ package org.sodatest.runtime.processing.running
 import java.io.File
 import xml.factory.XMLLoader
 import xml.Elem
-import org.sodatest.runtime.processing.SodaTestProperties
-import org.sodatest.runtime.ConsoleLog
 import org.junit.{After, Test}
+import org.sodatest.runtime.processing.SodaTestContext
 
 class SodaFolderRunnerTest extends XMLLoader[Elem] {
 
@@ -29,8 +28,7 @@ class SodaFolderRunnerTest extends XMLLoader[Elem] {
   val tempFile = File.createTempFile("SodaFolderRunnerTest.", ".tmp", systemTempDir)
   tempFile.deleteOnExit()
 
-  implicit val properties = new SodaTestProperties()
-  implicit val log = ConsoleLog()
+  implicit val context = new SodaTestContext
 
   @Test(expected = classOf[InvalidDirectoryException])
   def nonExistentInputDirectory() {

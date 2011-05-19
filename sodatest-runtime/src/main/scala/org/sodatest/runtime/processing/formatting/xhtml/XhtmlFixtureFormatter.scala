@@ -23,8 +23,7 @@ import data.results.FixtureBlockResult
 import xml.Elem
 
 object XhtmlFixtureFormatter {
-  def format(result: FixtureBlockResult)(implicit log: SodaTestLog): Elem = {
-    log.verbose("      " + result)
+  def format(result: FixtureBlockResult): Elem = {
     val formatter = new XhtmlBlockFormatter(result)
     <div class={"blockResult fixture " + (if (result.succeeded) "success" else "failure")}>
       <table>

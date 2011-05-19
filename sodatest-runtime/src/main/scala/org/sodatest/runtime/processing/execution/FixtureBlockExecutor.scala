@@ -28,7 +28,7 @@ object FixtureBlockExecutor {
 
   def execute(context: SodaTestExecutionContext, fixtureBlock: FixtureBlock) : FixtureBlockResult = {
     implicit val f = fixtureBlock
-    val fixtureRoot = context.testContext.properties.fixtureRoot
+    val fixtureRoot = context.testContext.fixtureRoot
     val fixtureName = fixtureBlock.fixtureName
     val qualifiedFixtureName = if (fixtureRoot == "") fixtureName else fixtureRoot + "." + fixtureName
 

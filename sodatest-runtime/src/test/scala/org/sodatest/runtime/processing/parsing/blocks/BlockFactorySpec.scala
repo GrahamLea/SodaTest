@@ -19,10 +19,11 @@ package processing.parsing.blocks
 
 import org.specs.SpecificationWithJUnit
 import data.blocks._
+import processing.SodaTestContext
 
 class BlockFactorySpec extends SpecificationWithJUnit {
 
-  implicit val log = NoOpLog
+  implicit val context = new SodaTestContext
   val blockFactory = BlockFactory
 
   "BlockFactory" should {

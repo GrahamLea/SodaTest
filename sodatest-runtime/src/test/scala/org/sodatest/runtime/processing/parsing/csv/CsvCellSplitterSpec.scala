@@ -19,10 +19,11 @@ package org.sodatest.runtime.processing.parsing.csv
 import java.io.ByteArrayInputStream
 import org.sodatest.runtime.NoOpLog
 import org.specs.SpecificationWithJUnit
+import org.sodatest.runtime.processing.SodaTestContext
 
 class CsvCellSplitterSpec extends SpecificationWithJUnit {
 
-  implicit val log = NoOpLog
+  implicit val context  = new SodaTestContext
   val splitter = CsvCellSplitter
 
   implicit def string2InputStream(s: String) = new ByteArrayInputStream(s.getBytes("UTF-8"))
