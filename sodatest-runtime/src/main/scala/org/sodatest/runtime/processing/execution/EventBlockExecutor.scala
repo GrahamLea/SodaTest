@@ -22,24 +22,26 @@ import runtime.data.results.{EventExecutionResult, ExecutionError, EventBlockRes
 
 object EventBlockExecutor {
   def execute(implicit block: EventBlock, context: SodaTestExecutionContext): EventBlockResult = {
-    // TODO: Deal with event in test before fixture declared
     // TODO: Should be a new event for each execution
-    val fixture = context.currentFixture.get
-    fixture.createEvent(block.name) match {
-      case None => new EventBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create an event for '" + block.name + "'")))
-      case Some(event) => new EventBlockResult(
-        for (val execution <- block.executions) yield {
-          try {
-            event(block.parameterMap(execution))
-            new EventExecutionResult(execution)
-          } catch {
-            case e => {
-              context.testContext.log.error("Exception while executing Event (" + block + "): " + e)
-              new EventExecutionResult(execution, Some(new ExecutionError("An exception occurred while executing the event", e)))
+    context.currentFixture match {
+      case None => new EventBlockResult(Nil, Some(new ExecutionError("No Fixture has been declared before this Event")))
+      case Some(fixture) =>
+        fixture.createEvent(block.name) match {
+          case None => new EventBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create an event for '" + block.name + "'")))
+          case Some(event) => new EventBlockResult(
+            for (val execution <- block.executions) yield {
+              try {
+                event(block.parameterMap(execution))
+                new EventExecutionResult(execution)
+              } catch {
+                case e => {
+                  context.testContext.log.error("Exception while executing Event (" + block + "): " + e)
+                  new EventExecutionResult(execution, Some(new ExecutionError("An exception occurred while executing the event", e)))
+                }
+              }
             }
-          }
+          )
         }
-      )
     }
   }
 }
