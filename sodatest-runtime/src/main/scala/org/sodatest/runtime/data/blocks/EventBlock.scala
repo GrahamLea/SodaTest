@@ -28,10 +28,9 @@ class EventExecution(parameterValues: Option[Line])
   }
 }
 
-// TODO: Make eventName not a val (use name val instead)
 class EventBlock (
     source: BlockSource,
-    val eventName: String,
+    eventName: String,
     inline: Boolean,
     parameterNames: List[String],
     val executions: List[EventExecution]

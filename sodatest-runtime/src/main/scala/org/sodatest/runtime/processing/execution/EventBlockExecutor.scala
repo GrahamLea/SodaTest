@@ -25,8 +25,8 @@ object EventBlockExecutor {
     // TODO: Deal with event in test before fixture declared
     // TODO: Should be a new event for each execution
     val fixture = context.currentFixture.get
-    fixture.createEvent(block.eventName) match {
-      case None => new EventBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create an event for '" + block.eventName + "'")))
+    fixture.createEvent(block.name) match {
+      case None => new EventBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create an event for '" + block.name + "'")))
       case Some(event) => new EventBlockResult(
         for (val execution <- block.executions) yield {
           try {

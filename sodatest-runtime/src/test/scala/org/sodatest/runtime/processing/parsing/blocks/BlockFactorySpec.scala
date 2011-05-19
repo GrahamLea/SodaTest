@@ -123,7 +123,7 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       {
         val basicEventBlock = blocks(blockIndex).asInstanceOf[EventBlock]
         basicEventBlock.source must_== basicEventBlockSource
-        basicEventBlock.eventName must_== "Basic Event"
+        basicEventBlock.name must_== "Basic Event"
         basicEventBlock.inline must_== true
         basicEventBlock.parameterNames must_== List.empty
         basicEventBlock.executions must beLike {
@@ -147,7 +147,7 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       {
         val parameterisedEventsBlock = blocks(blockIndex).asInstanceOf[EventBlock]
         parameterisedEventsBlock.source must_== parameterisedEventsBlockSource
-        parameterisedEventsBlock.eventName must_== "Parameterised Events"
+        parameterisedEventsBlock.name must_== "Parameterised Events"
         parameterisedEventsBlock.inline must_== false
         parameterisedEventsBlock.parameterNames must_== List("Parameter 1", "Parameter 2")
         parameterisedEventsBlock.executions must beLike {
@@ -179,7 +179,7 @@ class BlockFactorySpec extends SpecificationWithJUnit {
       {
         val parameterisedEventWithBlankValueBlock = blocks(blockIndex).asInstanceOf[EventBlock]
         parameterisedEventWithBlankValueBlock.source must_== parameterisedEventWithBlankValueBlockSource
-        parameterisedEventWithBlankValueBlock.eventName must_== "Parameterised Event With Blank Value"
+        parameterisedEventWithBlankValueBlock.name must_== "Parameterised Event With Blank Value"
         parameterisedEventWithBlankValueBlock.inline must_== false
         parameterisedEventWithBlankValueBlock.parameterNames must_== List("Parameter 1", "Parameter 2")
         parameterisedEventWithBlankValueBlock.executions must beLike {
