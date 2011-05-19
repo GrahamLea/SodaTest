@@ -19,34 +19,41 @@ package runtime.processing.execution
 
 import runtime.data.results._
 import runtime.data.blocks.{Line, ReportBlock}
+import api.SodaFixture
+
 object ReportBlockExecutor {
+
   def execute(implicit block: ReportBlock, context: SodaTestExecutionContext): ReportBlockResult = {
-    // TODO: Should be a new report for each execution
     context.currentFixture match {
       case None => new ReportBlockResult(Nil, Some(new ExecutionError("No Fixture has been declared before this Report")))
-      case Some(fixture) =>
+      case Some(fixture) => fixture.createReport(block.name) match {
+        case Some(_) => runReport(fixture, block, context)
+        case None => new ReportBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create a report for '" + block.name + "'")))
+      }
+    }
+  }
+
+  private def runReport(implicit fixture: SodaFixture, block: ReportBlock, context: SodaTestExecutionContext): ReportBlockResult = {
+    new ReportBlockResult(
+      for (val execution <- block.executions) yield {
         fixture.createReport(block.name) match {
-          case None => new ReportBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create a report for '" + block.name + "'")))
+          case None => throw new RuntimeException("Fixture '" + fixture.getClass.getSimpleName + "' created one Report for '" + block.name + "' but subsequently refused to create more.")
           case Some(report) => {
-            new ReportBlockResult(
-              for (val execution <- block.executions) yield {
-                try {
-                  val reportOutput = report(block.parameterMap(execution))
-                  val expectedResult = execution.expectedResult
-                  // TODO: Don't call diff() if the output and result are ==
-                  new ReportExecutionResult(execution, new ReportMatchResult(diff(expectedResult, reportOutput)))
-                } catch {
-                  case e => {
-                    context.testContext.log.error("Exception while executing Report (" + block + "): " + e)
-                    new ReportExecutionResult(execution, new ExecutionError("An exception occurred while executing the report", e))
-                  }
-                }
+            try {
+              val reportOutput = report(block.parameterMap(execution))
+              val expectedResult = execution.expectedResult
+              // TODO: Don't call diff() if the output and result are ==
+              new ReportExecutionResult(execution, new ReportMatchResult(diff(expectedResult, reportOutput)))
+            } catch {
+              case e => {
+                context.testContext.log.error("Exception while executing Report (" + block + "): " + e)
+                new ReportExecutionResult(execution, new ExecutionError("An exception occurred while executing the report", e))
               }
-            )
+            }
           }
         }
-
-    }
+      }
+    )
   }
 
   @inline

@@ -38,7 +38,7 @@ object EventBlockExecutor {
       for (val execution <- block.executions) yield {
         try {
           fixture.createEvent(block.name) match {
-            case None => throw new RuntimeException("Fixture '" + fixture.getClass.getSimpleName + "' created one event for '" + block.name + "' but subsequently refused.")
+            case None => throw new RuntimeException("Fixture '" + fixture.getClass.getSimpleName + "' created one Event for '" + block.name + "' but subsequently refused to create more.")
             case Some(event) => {
               event(block.parameterMap(execution))
               new EventExecutionResult(execution)
