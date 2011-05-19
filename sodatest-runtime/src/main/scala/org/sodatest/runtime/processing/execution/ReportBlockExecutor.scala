@@ -43,7 +43,7 @@ object ReportBlockExecutor {
               val reportOutput = report(block.parameterMap(execution))
               val expectedResult = execution.expectedResult
               if (reportOutput == expectedResult.map(_.cells.tail))
-                new ReportExecutionResult(execution, ReportMatchResult.allGood(execution.expectedResult))
+                new ReportExecutionResult(execution, ReportMatchResult.allGood(expectedResult))
               else
                 new ReportExecutionResult(execution, new ReportMatchResult(diff(expectedResult, reportOutput)))
             } catch {
