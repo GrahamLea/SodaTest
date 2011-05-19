@@ -39,6 +39,12 @@ class ReportMatchResult(val lineResults: List[ReportMatchLineResult]) {
   val passed: Boolean = lineResults.foldLeft(true)((allMatch, line) => {allMatch && line.isInstanceOf[ReportLineMatch]})
 }
 
+object ReportMatchResult {
+  def allGood(lines: List[Line]): ReportMatchResult = {
+    new ReportMatchResult(lines.map(line => new ReportLineMatch(line, line.cells)))
+  }
+}
+
 abstract sealed class ReportMatchLineResult
 class ReportLineMatch(val sourceLine: Line, val cells: List[String]) extends ReportMatchLineResult
 class ReportLineMismatch(val sourceLine: Line, val cellResults: List[ReportMatchCellResult]) extends ReportMatchLineResult

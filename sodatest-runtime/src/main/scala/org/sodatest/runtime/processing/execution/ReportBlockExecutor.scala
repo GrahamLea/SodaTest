@@ -42,8 +42,10 @@ object ReportBlockExecutor {
             try {
               val reportOutput = report(block.parameterMap(execution))
               val expectedResult = execution.expectedResult
-              // TODO: Don't call diff() if the output and result are ==
-              new ReportExecutionResult(execution, new ReportMatchResult(diff(expectedResult, reportOutput)))
+              if (reportOutput == expectedResult.map(_.cells.tail))
+                new ReportExecutionResult(execution, ReportMatchResult.allGood(execution.expectedResult))
+              else
+                new ReportExecutionResult(execution, new ReportMatchResult(diff(expectedResult, reportOutput)))
             } catch {
               case e => {
                 context.testContext.log.error("Exception while executing Report (" + block + "): " + e)
