@@ -36,7 +36,8 @@ class ReflectiveSodaEventForJavaTest {
       "Big Decimal" -> "12.345",
       "String Option One" -> "Foo",
       "String Option Two" -> "",
-      "String On Superclass" -> "Super"
+      "String On Superclass" -> "Super",
+      "String needing coercion" -> "Coerced string"
     ))
 
     assertThat(event.amount.getValue, is(7))
@@ -45,7 +46,7 @@ class ReflectiveSodaEventForJavaTest {
     assertThat(event.stringOptionOne.get, is("Foo"))
     assertThat(event.stringOptionTwo, is(None.asInstanceOf[Option[String]]))
     assertThat(event.stringOnSuperclass, is("Super"))
-    // TODO: Test Coercion?
+    assertThat(event.stringNeedingCoercion.getString, is("Coerced string"))
   }
 
   @Test
@@ -107,7 +108,8 @@ class ReflectiveSodaEventForJavaTest {
       "Big Decimal" -> "12.345",
       "String Option One" -> "Foo",
       "String Option Two" -> "",
-      "String On Superclass" -> "Super"
+      "String On Superclass" -> "Super",
+      "String needing coercion" -> "Coerced string"
     ))
 
     assertThat(event.amount.getValue, is(7))
@@ -116,7 +118,7 @@ class ReflectiveSodaEventForJavaTest {
     assertThat(event.stringOptionOne.get, is("Foo"))
     assertThat(event.stringOptionTwo, is(None.asInstanceOf[Option[String]]))
     assertThat(event.stringOnSuperclass, is("Super"))
-    // TODO: Test Coercion?
+    assertThat(event.stringNeedingCoercion.getString, is("Coerced string"))
   }
 
   @Test

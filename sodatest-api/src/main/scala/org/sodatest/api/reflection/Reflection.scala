@@ -251,14 +251,15 @@ private[reflection] object ReflectionUtil {
   }
 
   private def coercionRegisterIn(target: Object) : Option[CoercionRegister] = {
-    val coercionRegisterField = target.getClass.getDeclaredFields.toList.filter(_.getType == classOf[CoercionRegister]).headOption
-    coercionRegisterField match {
-      case None => None
-      case Some(f) => {
-        f.setAccessible(true)
-        Some(f.get(target).asInstanceOf[CoercionRegister])
+    target.getClass.getDeclaredFields.toList
+      .filter(field => classOf[CoercionRegister].isAssignableFrom(field.getType))
+      .headOption match {
+        case None => None
+        case Some(f) => {
+          f.setAccessible(true)
+          Some(f.get(target).asInstanceOf[CoercionRegister])
+        }
       }
-    }
   }
 
   def canonizedName(s: String) = s.toLowerCase.replaceAll("[^a-z0-9]", "")

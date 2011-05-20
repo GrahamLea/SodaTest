@@ -16,25 +16,16 @@
 
 package org.sodatest.api.java.reflection.test;
 
-import org.sodatest.coercion.Coercion;
-import org.sodatest.coercion.java.CoercionRegisterForJava;
-import scala.Option;
-import scala.reflect.Manifest;
+public class CustomString {
+    private final int number;
+    private final String string;
 
-import java.math.BigDecimal;
+    public CustomString(int number, String string) {
+        this.number = number;
+        this.string = string;
+    }
 
-public class EventWithPublicFields extends EventWithPublicFieldsSuperclass {
-
-    private final CoercionRegisterForJava coercionRegister = new CoercionRegisterForJava(new CustomStringCoercion());
-
-    public Amount amount;
-    public Amount anotherAmount;
-    public BigDecimal bigDecimal;
-    public Option<String> stringOptionOne;
-    public Option<String> stringOptionTwo;
-    public CustomString stringNeedingCoercion;
-
-    @Override
-    protected void executeEvent() {
+    public String getString() {
+        return string;
     }
 }

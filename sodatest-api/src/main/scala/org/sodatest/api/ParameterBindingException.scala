@@ -34,7 +34,8 @@ class ParameterBindFailure(
  * attempt to bind all parameters and then report all failures at once in a single ParameterBindingException.
  */
 class ParameterBindingException(val bindFailures: List[ParameterBindFailure]) extends RuntimeException {
-  override def toString = "ParameterBindingException: " + bindFailures.map(f => f.parameterName + ": " + f.parameterValue).mkString(", ")
+  override def toString = "ParameterBindingException: " + bindFailures.map(
+    f => f.parameterName + ": " + f.parameterValue + "(" + f.errorMessage + ")").mkString(", ")
 }
 
 
