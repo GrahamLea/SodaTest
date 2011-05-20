@@ -17,34 +17,39 @@
 package org.sodatest.runtime.processing.parsing.csv
 
 import org.sodatest.runtime.processing.SodaTestContext
+import java.nio.charset.Charset
+import java.nio.ByteBuffer
+import java.io.{Reader, InputStreamReader, InputStream}
 
 trait CellSplitter {
   def split(in: java.io.InputStream)(implicit context: SodaTestContext): List[List[String]]
 }
 
 object CsvCellSplitter extends CellSplitter {
-  //TODO: Use Reader rather than InputStream
   def split(in: java.io.InputStream)(implicit context: SodaTestContext): List[List[String]] = {
+    val charBuffer: Array[Char] = Array.ofDim(1);
 
     @scala.annotation.tailrec
-    def split(in: java.io.InputStream, inQuotes: Boolean, escaped: Boolean,
-              currentValue: StringBuilder, currentRow: List[String], result: List[List[String]]) : List[List[String]] = {
-      val c: Int = in.read()
-      if (c == -1) {
-        ((currentValue.toString :: currentRow).reverse :: result).reverse
-      } else if (escaped) {
-        split(in, inQuotes, false, currentValue.append(c.toChar), currentRow, result)
-      } else c match {
-        case '"' => split(in, !inQuotes, false, currentValue, currentRow, result)
-        case '\\' => split(in, inQuotes, true, currentValue, currentRow, result)
-        case ',' if !inQuotes =>
-          split(in, inQuotes, false, new StringBuilder(), currentValue.toString :: currentRow, result)
-        case '\n' if !inQuotes =>
-          split(in, inQuotes, false, new StringBuilder(), List(), (currentValue.toString :: currentRow).reverse :: result)
-        case _ => split(in, inQuotes, false, currentValue.append(c.toChar), currentRow, result)
+    def split(in: Reader, inQuotes: Boolean, escaped: Boolean,
+              currentCell: StringBuilder, currentRow: List[String], result: List[List[String]]): List[List[String]] = {
+      in.read(charBuffer) match {
+        case -1 => ((currentCell.toString :: currentRow).reverse :: result).reverse
+        case _ => charBuffer(0) match {
+          case c if escaped =>      split(in, inQuotes, false, currentCell.append(c), currentRow, result)
+          case '"' =>               split(in, !inQuotes, false, currentCell, currentRow, result)
+          case '\\' =>              split(in, inQuotes, true, currentCell, currentRow, result)
+          case ',' if !inQuotes =>  split(in, inQuotes, false, new StringBuilder(), currentCell.toString :: currentRow, result)
+          case '\n' if !inQuotes => split(in, inQuotes, false, new StringBuilder(), List(), (currentCell.toString :: currentRow).reverse :: result)
+          case c =>                 split(in, inQuotes, false, currentCell.append(c), currentRow, result)
+        }
       }
     }
+    
     context.log.debug("   Splitting CSV...")
-    split(in, false, false, new StringBuilder(), List(), List())
+    val charset = System.getProperty("sodatest.charset", "default") match {
+      case "Default" => Charset.defaultCharset()
+      case charsetName => Charset.forName(charsetName)
+    }
+    split(new InputStreamReader(in, charset), false, false, new StringBuilder(), List(), List())
   }
 }
