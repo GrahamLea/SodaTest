@@ -82,7 +82,7 @@ class ReflectiveSodaFixtureTest {
       fixture.createReport("Some Report")
       fail("Expected Exception")
     } catch {
-      case e: IllegalStateException => // OK
+      case e: ReflectionTargetReturnsTheWrongTypeException => // OK
     }
   }
 
@@ -154,7 +154,7 @@ class ReflectiveSodaFixtureTest {
       fixture.createEvent("Some Event")
       fail("Expected Exception")
     } catch {
-      case e: IllegalStateException => // OK
+      case e: ReflectionTargetReturnsTheWrongTypeException => // OK
     }
   }
 

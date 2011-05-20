@@ -181,6 +181,9 @@ trait ReflectiveSodaReport extends SodaReport {
   }
 }
 
+class ReflectionTargetReturnsTheWrongTypeException(message: String) extends RuntimeException(message)
+class NameMatchesMoreThanOneMethodException(message: String) extends RuntimeException(message)
+
 private[reflection] object ReflectionUtil {
 
   def invokeNoParamFunctionReturning[A](requiredClass: Class[A], name: String, target: Object) = {
@@ -192,12 +195,16 @@ private[reflection] object ReflectionUtil {
         if (requiredClass.isAssignableFrom(method.getReturnType)) {
           Some(method.invoke(target).asInstanceOf[A])
         } else {
-          throw new IllegalStateException(method.getName + " does not return a " + requiredClass.getSimpleName) // TODO: Throw something more specific, catch above and handle
+          throw new ReflectionTargetReturnsTheWrongTypeException("Function '" + method.getName + "' does not return a " + requiredClass.getSimpleName)
         }
       }
-      case _ => throw new IllegalArgumentException(requiredClass.getSimpleName + " name '" + name + "' (canonized to '" + searchName + "') matches more than one method: " + candidateMethods) // TODO: Throw something more specific, catch above and handle
+      case _ => {
+        // Inline this if you'd like to crash the compiler...
+        val methodListString = candidateMethods.map(method => {method.getDeclaringClass.getSimpleName + "." +  method.getName})
+        throw new NameMatchesMoreThanOneMethodException(
+          requiredClass.getSimpleName + " name '" + name + "' (canonized to '" + searchName + "') matches more than one method: " + methodListString)
+      }
     }
-
   }
 
   @throws(classOf[ParameterBindingException])

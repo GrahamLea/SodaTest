@@ -18,5 +18,9 @@ package org.sodatest
 
 object TestingObject {
   def main(args: Array[String]) {
+    println((if (true) Left("a") else Right("b")) match {
+      case Right(s) => s
+      case Left(s) => s
+    })
   }
 }

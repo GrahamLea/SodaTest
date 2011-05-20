@@ -22,6 +22,7 @@ import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
 import org.sodatest.runtime.data.blocks._
 import org.sodatest.runtime.data.results.ReportBlockResult
+import org.sodatest.api.reflection._
 
 class ReportBlockExecutorTest {
   @Test
@@ -39,4 +40,59 @@ class ReportBlockExecutorTest {
       }
     }
   }
+
+  @Test
+  def shouldReturnABlockErrorForAReflectiveReportReturningAnEvent {
+    val source = new BlockSource(List(Line(1, List("Report", "Report Name Returning Event", "!!"))))
+    val reportBlock = new ReportBlock(source, "Report Name Returning Event", true, Nil, List(new ReportExecution(None, Nil)))
+    val executionContext: SodaTestExecutionContext = new SodaTestExecutionContext(new SodaTestContext)
+    executionContext.currentFixture = Some(new FixtureThatCausesErrorsWhenCreatingStuff())
+    val result: ReportBlockResult = ReportBlockExecutor.execute(reportBlock, executionContext)
+    assertThat(result.block, is(sameInstance(reportBlock)))
+    result.blockError match {
+      case None => fail("Expecting Block Error")
+      case Some(error) => {
+        assertThat(error.message, is("The function that matches this name does not return a Report"))
+        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.ReflectionTargetReturnsTheWrongTypeException: Function 'reportNameReturningEvent' does not return a SodaReport").asInstanceOf[Option[String]]))
+        assertThat(error.cause.get, is(instanceOf(classOf[ReflectionTargetReturnsTheWrongTypeException])))
+      }
+    }
+  }
+
+  @Test
+  def shouldReturnABlockErrorForAReflectiveReportWithAmbiguousNames {
+    val source = new BlockSource(List(Line(1, List("Report", "Report Name Different By Case", "!!"))))
+    val reportBlock = new ReportBlock(source, "Report Name Different By Case", true, Nil, List(new ReportExecution(None, Nil)))
+    val executionContext: SodaTestExecutionContext = new SodaTestExecutionContext(new SodaTestContext)
+    executionContext.currentFixture = Some(new FixtureThatCausesErrorsWhenCreatingStuff())
+    val result: ReportBlockResult = ReportBlockExecutor.execute(reportBlock, executionContext)
+    assertThat(result.block, is(sameInstance(reportBlock)))
+    result.blockError match {
+      case None => fail("Expecting Block Error")
+      case Some(error) => {
+        assertThat(error.message, is("The Report name is ambiguous in the current Fixture"))
+        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.NameMatchesMoreThanOneMethodException: SodaReport name 'Report Name Different By Case' (canonized to 'reportnamedifferentbycase') matches more than one method: List(FixtureThatCausesErrorsWhenCreatingStuff.reportNameDifferentByCase, FixtureThatCausesErrorsWhenCreatingStuff.reportNameDifferentByCASE)").asInstanceOf[Option[String]]))
+        assertThat(error.cause.get, is(instanceOf(classOf[NameMatchesMoreThanOneMethodException])))
+      }
+    }
+  }
+
+  @Test
+  def shouldReturnABlockErrorForAnErrorWhileCreatingAnyReport {
+    val source = new BlockSource(List(Line(1, List("Report", "Creating This Report Throws An Error", "!!"))))
+    val reportBlock = new ReportBlock(source, "Creating This Report Throws An Error", true, Nil, List(new ReportExecution(None, Nil)))
+    val executionContext: SodaTestExecutionContext = new SodaTestExecutionContext(new SodaTestContext)
+    executionContext.currentFixture = Some(new FixtureThatCausesErrorsWhenCreatingStuff())
+    val result: ReportBlockResult = ReportBlockExecutor.execute(reportBlock, executionContext)
+    assertThat(result.block, is(sameInstance(reportBlock)))
+    result.blockError match {
+      case None => fail("Expecting Block Error")
+      case Some(error) => {
+        assertThat(error.message, is("An error occurred while creating the Report"))
+        assertThat(error.causeString, is(Some("java.lang.RuntimeException: I refuse to be initisliased").asInstanceOf[Option[String]]))
+        assertThat(error.cause.get, is(instanceOf(classOf[RuntimeException])))
+      }
+    }
+  }
 }
+

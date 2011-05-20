@@ -20,18 +20,32 @@ package runtime.processing.execution
 import runtime.data.results._
 import runtime.data.blocks.{Line, ReportBlock}
 import api.SodaFixture
+import api.reflection.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
+import java.lang.reflect.InvocationTargetException
 
 object ReportBlockExecutor {
 
   def execute(implicit block: ReportBlock, context: SodaTestExecutionContext): ReportBlockResult = {
     context.currentFixture match {
       case None => new ReportBlockResult(Nil, Some(new ExecutionError("No Fixture has been declared before this Report")))
-      case Some(fixture) => fixture.createReport(block.name) match {
-        case Some(_) => runReport(fixture, block, context)
-        case None => new ReportBlockResult(Nil, Some(new ExecutionError("Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create a report for '" + block.name + "'")))
+      case Some(fixture) => {
+        (try { Right(fixture.createReport(block.name)) }
+         catch {
+           case e: ReflectionTargetReturnsTheWrongTypeException => Left(blockError(fixture, "The function that matches this name does not return a Report", Some(e)))
+           case e: NameMatchesMoreThanOneMethodException => Left(blockError(fixture, "The Report name is ambiguous in the current Fixture", Some(e)))
+           case e: InvocationTargetException => Left(blockError(fixture, "An error occurred while creating the Report", Some(e.getCause)))
+           case e: Throwable => Left(blockError(fixture, "An error occurred while creating the Report", Some(e)))
+        }) match {
+          case Left(blockError) => blockError
+          case Right(Some(_)) => runReport(fixture, block, context)
+          case _ => blockError(fixture, "Fixture '" + fixture.getClass.getSimpleName + "' doesn't know how to create a Report for '" + block.name + "'")
+        }
       }
     }
   }
+
+  private def blockError(fixture: SodaFixture, message: String, cause: Option[Throwable] = None)(implicit block: ReportBlock) =
+    new ReportBlockResult(Nil, Some(new ExecutionError(message, cause)))
 
   private def runReport(implicit fixture: SodaFixture, block: ReportBlock, context: SodaTestExecutionContext): ReportBlockResult = {
     new ReportBlockResult(

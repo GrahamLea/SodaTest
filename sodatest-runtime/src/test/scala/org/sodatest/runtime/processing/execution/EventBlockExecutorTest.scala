@@ -16,12 +16,13 @@
 
 package org.sodatest.runtime.processing.execution
 
-import org.sodatest.runtime.data.blocks.{Line, BlockSource, EventExecution, EventBlock}
 import org.sodatest.runtime.processing.SodaTestContext
-import org.sodatest.runtime.data.results.EventBlockResult
 import org.junit.Test
 import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
+import org.sodatest.runtime.data.results.EventBlockResult
+import org.sodatest.api.reflection.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
+import org.sodatest.runtime.data.blocks._
 
 class EventBlockExecutorTest {
   @Test
@@ -36,6 +37,60 @@ class EventBlockExecutorTest {
         assertThat(error.message, is("No Fixture has been declared before this Event"))
         assertThat(error.causeString, is(None.asInstanceOf[Option[String]]))
         assertThat(error.cause, is(None.asInstanceOf[Option[Throwable]]))
+      }
+    }
+  }
+
+  @Test
+  def shouldReturnABlockErrorForAReflectiveReportReturningAnEvent {
+    val source = new BlockSource(List(Line(1, List("Event", "Event Name Returning Report"))))
+    val eventBlock = new EventBlock(source, "Event Name Returning Report", true, Nil, List(new EventExecution(None)))
+    val executionContext: SodaTestExecutionContext = new SodaTestExecutionContext(new SodaTestContext)
+    executionContext.currentFixture = Some(new FixtureThatCausesErrorsWhenCreatingStuff())
+    val result: EventBlockResult = EventBlockExecutor.execute(eventBlock, executionContext)
+    assertThat(result.block, is(sameInstance(eventBlock)))
+    result.blockError match {
+      case None => fail("Expecting Block Error")
+      case Some(error) => {
+        assertThat(error.message, is("The function that matches this name does not return an Event"))
+        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.ReflectionTargetReturnsTheWrongTypeException: Function 'eventNameReturningReport' does not return a SodaEvent").asInstanceOf[Option[String]]))
+        assertThat(error.cause.get, is(instanceOf(classOf[ReflectionTargetReturnsTheWrongTypeException])))
+      }
+    }
+  }
+
+  @Test
+  def shouldReturnABlockErrorForAReflectiveReportWithAmbiguousNames {
+    val source = new BlockSource(List(Line(1, List("Event", "Event Name Different By Case", "!!"))))
+    val EventBlock = new EventBlock(source, "Event Name Different By Case", true, Nil, List(new EventExecution(None)))
+    val executionContext: SodaTestExecutionContext = new SodaTestExecutionContext(new SodaTestContext)
+    executionContext.currentFixture = Some(new FixtureThatCausesErrorsWhenCreatingStuff())
+    val result: EventBlockResult = EventBlockExecutor.execute(EventBlock, executionContext)
+    assertThat(result.block, is(sameInstance(EventBlock)))
+    result.blockError match {
+      case None => fail("Expecting Block Error")
+      case Some(error) => {
+        assertThat(error.message, is("The Event name is ambiguous in the current Fixture"))
+        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.NameMatchesMoreThanOneMethodException: SodaEvent name 'Event Name Different By Case' (canonized to 'eventnamedifferentbycase') matches more than one method: List(FixtureThatCausesErrorsWhenCreatingStuff.eventNameDifferentByCase, FixtureThatCausesErrorsWhenCreatingStuff.eventNameDifferentByCASE)").asInstanceOf[Option[String]]))
+        assertThat(error.cause.get, is(instanceOf(classOf[NameMatchesMoreThanOneMethodException])))
+      }
+    }
+  }
+
+  @Test
+  def shouldReturnABlockErrorForAnErrorWhileCreatingAnyEvent {
+    val source = new BlockSource(List(Line(1, List("Event", "Creating This Event Throws An Error", "!!"))))
+    val EventBlock = new EventBlock(source, "Creating This Event Throws An Error", true, Nil, List(new EventExecution(None)))
+    val executionContext: SodaTestExecutionContext = new SodaTestExecutionContext(new SodaTestContext)
+    executionContext.currentFixture = Some(new FixtureThatCausesErrorsWhenCreatingStuff())
+    val result: EventBlockResult = EventBlockExecutor.execute(EventBlock, executionContext)
+    assertThat(result.block, is(sameInstance(EventBlock)))
+    result.blockError match {
+      case None => fail("Expecting Block Error")
+      case Some(error) => {
+        assertThat(error.message, is("An error occurred while creating the Event"))
+        assertThat(error.causeString, is(Some("java.lang.RuntimeException: I refuse to be initisliased").asInstanceOf[Option[String]]))
+        assertThat(error.cause.get, is(instanceOf(classOf[RuntimeException])))
       }
     }
   }
