@@ -200,8 +200,6 @@ class BlockFactoryErrorsSpec extends SpecificationWithJUnit {
         Line(106, List("Report", "Some Report"))
       ))
 
-      // TODO: Extra cells after report invoker in inline report
-
       val blocks = blockFactory.create(List(
         unknownBlockTypeBlockSource,
         emptyBlockTypeBlockSource,
