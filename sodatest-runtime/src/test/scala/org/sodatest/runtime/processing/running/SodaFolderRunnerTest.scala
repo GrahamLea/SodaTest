@@ -40,28 +40,10 @@ class SodaFolderRunnerTest extends XMLLoader[Elem] {
     new SodaFolderRunner(null, null).run(tempFile, systemTempDir, (b) => {})
   }
 
-    // TODO: Does this work on Unix?
-//  @Test(expected = classOf[InvalidDirectoryException])
-//  def unreadableInputDirectory() {
-//    changeTempFileToDirectory()
-//    tempFile.setReadable(false)
-//    Assert.assertFalse(tempFile.canRead)
-//    new SodaFolderRunner(null, null).run(tempFile, systemTempDir, (b) => {})
-//  }
-
   @Test(expected = classOf[InvalidDirectoryException])
   def nonDirectoryOutputFolder() {
     new SodaFolderRunner(null, null).run(systemTempDir, tempFile, (b) => {})
   }
-
-    // TODO: Does this work on Unix?
-//  @Test(expected = classOf[InvalidDirectoryException])
-//  def nonCreatableOutputFolder() {
-//    changeTempFileToDirectory()
-//    Assert.assertTrue(tempFile.setWritable(false))
-//    Assert.assertFalse(tempFile.canWrite)
-//    new SodaFolderRunner(null, null).run(systemTempDir, new File(tempFile, "subdir"), (b) => {})
-//  }
 
   private def changeTempFileToDirectory(): Unit = {
     tempFile.delete
