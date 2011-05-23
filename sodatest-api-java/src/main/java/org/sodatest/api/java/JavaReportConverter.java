@@ -19,10 +19,7 @@ package org.sodatest.api.java;
 import scala.collection.JavaConversions;
 import scala.collection.Seq;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Abstract class for Java-based {@link org.sodatest.api.SodaReport}s that provides helper methods for
@@ -42,5 +39,37 @@ public abstract class JavaReportConverter extends JavaParameterConverter {
             convertedRows.add(JavaConversions.asScalaBuffer(row));
         }
         return JavaConversions.asScalaBuffer(convertedRows);
+    }
+
+    protected List<List<String>> toSingleCellReport(Object value) {
+        return list(list(String.valueOf(value)));
+    }
+
+    protected List<List<String>> toSingleRowReport(Iterable<?> values) {
+        List<String> row = new ArrayList<String>();
+        for (Object value : values) {
+            row.add(String.valueOf(value));
+        }
+        return list(row);
+    }
+
+    protected List<List<String>> toSingleColumnReport(Iterable<?> values) {
+        List<List<String>> column = new ArrayList<List<String>>();
+        for (Object value : values) {
+            column.add(list(String.valueOf(value)));
+        }
+        return column;
+    }
+
+    protected List<List<String>> toReport(Iterable<Iterable<?>> table) {
+        List<List<String>> result = new ArrayList<List<String>>();
+        for (Iterable<?> rowValues : table) {
+            ArrayList<String> rowResult = new ArrayList<String>();
+            result.add(rowResult);
+            for (Object value : rowValues) {
+                rowResult.add(String.valueOf(value));
+            }
+        }
+        return result;
     }
 }
