@@ -17,15 +17,10 @@
 package org.sodatest.examples.basic.java.fixtures;
 
 import org.sodatest.api.java.SodaReportForJava;
-import org.sodatest.examples.basic.java.AccountNameJava;
 import org.sodatest.examples.basic.java.BankAccountServiceJava;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Arrays.asList;
 
 public class CustomersReportJava extends SodaReportForJava {
     private BankAccountServiceJava service;
@@ -36,10 +31,6 @@ public class CustomersReportJava extends SodaReportForJava {
 
     @Override
     public List<List<String>> getReport(Map<String, String> parameters) {
-        ArrayList<List<String>> report = new ArrayList<List<String>>();
-        for (AccountNameJava accountName : service.getAccountsByName().keySet()) {
-            report.add(asList(accountName.toString()));
-        }
-        return report;
+        return toSingleColumnReport(service.getAccountsByName().keySet());
     }
 }

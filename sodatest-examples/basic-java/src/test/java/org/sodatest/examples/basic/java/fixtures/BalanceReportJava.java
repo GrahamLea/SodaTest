@@ -29,6 +29,6 @@ public class BalanceReportJava extends AbstractCustomerReportJava {
 
     @Override
     public List<List<String>> getReport(BankAccountJava account) {
-        return list(list(account.getBalance().toString()));
+        return toSingleCellReport(account.getBalance());
     }
 }

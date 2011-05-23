@@ -30,10 +30,6 @@ public class TagsReportJava extends AbstractCustomerReportJava {
 
     @Override
     public List<List<String>> getReport(BankAccountJava account) {
-        ArrayList<List<String>> tags = new ArrayList<List<String>>();
-        for (String tag : account.getTags()) {
-            tags.add(list(tag));
-        }
-        return tags;
+        return toSingleColumnReport(account.getTags());
     }
 }
