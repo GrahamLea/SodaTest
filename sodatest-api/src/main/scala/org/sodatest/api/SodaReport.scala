@@ -47,3 +47,62 @@ trait SodaReport {
   @throws(classOf[ParameterBindingException])
   def apply(parameters: Map[String, String]): Seq[Seq[String]]
 }
+
+/**
+ * Provides helper methods for converting objects, and collections of objects into the
+ * <code>Seq[Seq[String]]</code> type expected to be returned from [[org.sodatest.api.SodaReport.apply]]
+ */
+object SodaReport {
+
+  /** Converts a single object of any type to List[List[String]] using String.valueOf() */
+  def toSingleCellReport(item: Any): List[List[String]] = List(List(String.valueOf(item)))
+
+  /**
+   * Converts a collection of objects of any type to a List[List[String]] using String.valueOf()
+   * such that all the values appears as a single row.
+   */
+  def toSingleRowReport(items: Iterable[Any]): List[List[String]] = List(items.toList.map(item => String.valueOf(item)))
+
+  /**
+   * Converts a collection of objects of any type to a List[List[String]] using String.valueOf()
+   * such that all the values appears as a single column.
+   */
+  def toSingleColumnReport(items: Iterable[Any]): List[List[String]] = items.toList.map(item => List(String.valueOf(item)))
+
+  /**
+   * Converts a colleciton of collections of objects of any type to a List[List[String]] using String.valueOf().
+   * The outer colleciton of the input represents rows in the output table, while the inner collections
+   * of the input correspond to cells within each of the rows.
+   */
+  def toReport(table: Iterable[_ <: Iterable[Any]]): List[List[String]] = table.toList.map(row => row.toList.map(cell => String.valueOf(cell)))
+
+  /**
+   * A pimping object which, in conjunction with the implicit def <code>any2ItemWrapper</code>,
+   * allows <code>toSingleCellReport</code> to be called on any value.
+    */
+  class ItemWrapper(val item: Any) {
+    def toSingleCellReport: List[List[String]] = SodaReport.toSingleCellReport(item)
+  }
+
+  /**
+   * A pimping object which, in conjunction with the implicit def <code>anyList2ItemListWrapper</code>,
+   * allows <code>toSingleRowReport</code> or <code>toSingleColumnReport</code> to be called on any collection.
+    */
+  class ItemListWrapper(val items: Iterable[Any]) {
+    def toSingleRowReport: List[List[String]] = SodaReport.toSingleRowReport(items)
+    def toSingleColumnReport: List[List[String]] = SodaReport.toSingleColumnReport(items)
+  }
+
+  /**
+   * A pimping object which, in conjunction with the implicit def <code>anyListList2ItemTableWrapper</code>,
+   * allows <code>toReport</code> to be called on any collection of collections.
+    */
+  class ItemTableWrapper(val table: Iterable[_ <: Iterable[Any]]) {
+    def toReport: List[List[String]] = SodaReport.toReport(table)
+  }
+
+  implicit def any2ItemWrapper(item: Any): ItemWrapper = new ItemWrapper(item)
+  implicit def anyList2ItemListWrapper(items: Iterable[Any]): ItemListWrapper = new ItemListWrapper(items)
+  implicit def anyListList2ItemTableWrapper(table: Iterable[_ <: Iterable[Any]]): ItemTableWrapper = new ItemTableWrapper(table)
+
+}
