@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package org.sodatest.examples.basic.fixtures
+package org.sodatest
+package examples.basic.fixtures
+
+import api.reflection._
+import api.SodaReport
+import api.SodaReport._
+import examples.basic._
+import coercion.{Coercion, CoercionRegister}
 
 import _root_.java.lang.String
-import org.sodatest.api.reflection._
-import org.sodatest.api.SodaReport
 import collection.immutable.Map
-import org.sodatest.coercion.{Coercion, CoercionRegister}
-import org.sodatest.examples.basic._
+import collection.immutable.List._
 
 class BankAccountFixture extends ReflectiveSodaFixture {
   val service = new BankAccountService()
@@ -45,27 +49,32 @@ abstract class AbstractCustomerReport(val service: BankAccountService) extends R
   def apply(): Seq[Seq[String]] = {
     service.accountsByName.get(accountName) match {
       case Some(a: BankAccount) => apply(a)
-      case None => List(List("Unknown Account"))
+      case None => "Unknown Account".toSingleCellReport
     }
   }
 }
 
 class BalanceReport(service: BankAccountService) extends AbstractCustomerReport(service) {
-  def apply(account: BankAccount) = List(List(account.balance.toString)) // TODO: Auto-format List[List[Any]] -> Seq[Seq[String]]
+  def apply(account: BankAccount) = account.balance.toSingleCellReport
 }
 
 class TagsReport(service: BankAccountService) extends AbstractCustomerReport(service) {
-  def apply(account: BankAccount) = account.tags map (List(_))
+  def apply(account: BankAccount) = account.tags.toSingleColumnReport
 }
 
 class CustomersReport(val service: BankAccountService) extends SodaReport {
   def apply(parameters: Map[String, String]): Seq[Seq[String]] = {
-    service.accountsByName.keys.toList.map(accountName => List(accountName.name))
+    service.accountsByName.keys.toSingleColumnReport
   }
 }
 
 class StatementReport(service: BankAccountService) extends AbstractCustomerReport(service) {
-  def apply(account: BankAccount) = account.statement
+  def apply(account: BankAccount) =
+    (List("Ref", "Description", "Credit", "Debit", "Balance") ::
+    account.transactions.map(t => t match {
+      case t if t.amount > "0" => List(t.ref.toString, t.description, t.amount.toString, "", t.balance.toString)
+      case t                   => List(t.ref.toString, t.description, "", t.amount.negate.toString, t.balance.toString)
+    })).toReport
 }
 
 class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {

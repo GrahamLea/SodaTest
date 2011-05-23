@@ -54,7 +54,9 @@ class MoneyEditor extends PropertyEditorSupport {
   override def getAsText = "$" + getValue.asInstanceOf[Money].amount.toPlainString
 }
 
-case class AccountName(name: String)
+case class AccountName(name: String) {
+  override def toString = name
+}
 
 class BankAccount(val name: AccountName, val tags: List[String], val interestFormula: InterestFormula) {
   private var _transactions: List[Transaction] = Nil
@@ -74,20 +76,9 @@ class BankAccount(val name: AccountName, val tags: List[String], val interestFor
     val interest = interestFormula.interestOn(balance)
     _transactions :+= new Transaction(_transactions.size + 1, "Interest", interest, balance + interest)
   }
-
-  def statement: List[List[String]] = {
-    List("Ref", "Description", "Credit", "Debit", "Balance") ::
-    _transactions.map(t => {
-      if (t.amount > "0") {
-        List(t.ref.toString, t.description, t.amount.toString, "", t.balance.toString)
-      } else {
-        List(t.ref.toString, t.description, "", t.amount.negate.toString, t.balance.toString)
-      }
-    })
-  }
 }
 
-class Transaction(val ref: Int, val description: String, val amount: Money, val balance: Money)
+case class Transaction(val ref: Int, val description: String, val amount: Money, val balance: Money)
 
 class BankAccountService {
   var accountsByName: Map[AccountName, BankAccount] = Map()
