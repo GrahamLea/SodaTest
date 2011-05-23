@@ -15,10 +15,12 @@ It should be possible to use the file runner to execute a single test by name.
 
 Support for automatic formatting of report output to strings
 ------------------------------------------------------------
-The interface for SodaReports requires apply() to return a List[List[String]]
-While this shouldn't change, it should be possible to return a List[List[Any]] and have SodaTest sensibly convert
-the value to a List[List[String]], primarily using convention but also allowing configuration. Thinking is that a
-val of type Map[Class[_], Formatter] could be provided in the Report and/or in the Fixture.
+Helper methods in SodaReport and JavaReportConverter now aid fixture authors in getting from
+Objects to two-dimensional String collections, though these are pretty rudimentary.
+Some things that could be done to extend the usefulness would be:
+* Interpret things like None and null as empty string instead of literally
+* When handling Some(object), use the toString on object
+* Allow the (implicit) provision of a list or Map of formatters
 
 
 Required Parameters
