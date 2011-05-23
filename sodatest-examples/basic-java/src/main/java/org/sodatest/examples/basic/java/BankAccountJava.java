@@ -61,19 +61,6 @@ public class BankAccountJava {
         transactions.add(new TransactionJava(transactions.size() + 1, "Interest", interest, getBalance().add(interest)));
     }
 
-    public List<List<String>> getStatement() {
-        ArrayList<List<String>> lines = new ArrayList<List<String>>();
-        lines.add(asList("Ref", "Description", "Credit", "Debit", "Balance"));
-        for (TransactionJava t : transactions) {
-            if (t.getAmount().greaterThan(MoneyJava.ZERO)) {
-                lines.add(asList(String.valueOf(t.getRef()), t.getDescription(), t.getAmount().toString(), "", t.getBalance().toString()));
-            } else {
-                lines.add(asList(String.valueOf(t.getRef()), t.getDescription(), "", t.getAmount().negate().toString(), t.getBalance().toString()));
-            }
-        }
-        return lines;
-    }
-
     public AccountNameJava getName() {
         return name;
     }

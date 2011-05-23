@@ -18,8 +18,13 @@ package org.sodatest.examples.basic.java.fixtures;
 
 import org.sodatest.examples.basic.java.BankAccountJava;
 import org.sodatest.examples.basic.java.BankAccountServiceJava;
+import org.sodatest.examples.basic.java.MoneyJava;
+import org.sodatest.examples.basic.java.TransactionJava;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class StatementReportJava extends AbstractCustomerReportJava {
 
@@ -29,6 +34,17 @@ public class StatementReportJava extends AbstractCustomerReportJava {
 
     @Override
     public List<List<String>> getReport(BankAccountJava account) {
-        return account.getStatement();
+        ArrayList<List<String>> lines = new ArrayList<List<String>>();
+        lines.add(asList("Ref", "Description", "Credit", "Debit", "Balance"));
+        for (TransactionJava t : account.getTransactions()) {
+            if (t.getAmount().greaterThan(MoneyJava.ZERO)) {
+                lines.add(asList(String.valueOf(t.getRef()), t.getDescription(), t.getAmount().toString(), "", t.getBalance().toString()));
+            } else {
+                lines.add(asList(String.valueOf(t.getRef()), t.getDescription(), "", t.getAmount().negate().toString(), t.getBalance().toString()));
+            }
+        }
+        return lines;
     }
+
+
 }
