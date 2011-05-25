@@ -36,7 +36,7 @@ class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummary
   def run(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit context: SodaTestContext): Unit = {
     checkDirectories(inputRoot, outputRoot)
 
-    val files = getFilesRecursive(inputRoot, _.getName.toLowerCase.endsWith(".csv"))
+    val files = PathUtils.collectFilesRecursive(inputRoot, _.getName.toLowerCase.endsWith(".csv"))
 
     resultWriter.createOutputDirectories(inputRoot, files, outputRoot)
 
@@ -50,11 +50,6 @@ class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummary
 
     val succeeded = !resultsSummaries.map(r => r.mismatchCount == 0 && r.errorCount == 0).contains(false)
     successCallback(succeeded)
-  }
-
-  private def getFilesRecursive(inputDirectory: File, fileFilter: File => Boolean): List[File] = {
-    inputDirectory.listFiles.filter(fileFilter).toList ++
-      inputDirectory.listFiles.filter(_.isDirectory).map(getFilesRecursive(_, fileFilter)).toList.flatten
   }
 
   @throws(classOf[InvalidDirectoryException])
