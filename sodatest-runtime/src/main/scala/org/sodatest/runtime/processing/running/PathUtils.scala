@@ -20,6 +20,11 @@ import java.io.File
 import annotation.tailrec
 
 object PathUtils {
+  def collectFilesRecursive(inputDirectory: File, fileFilter: File => Boolean): List[File] = {
+    inputDirectory.listFiles.filter(fileFilter).toList ++
+      inputDirectory.listFiles.filter(_.isDirectory).map(collectFilesRecursive(_, fileFilter)).toList.flatten
+  }
+
   def getOutputPath(inputPath: File, inputRoot: File, outputRoot: File, newSuffix: String = ""): File = {
     new File(outputRoot, relativeToInputPath(inputPath, inputRoot) + newSuffix)
   }
