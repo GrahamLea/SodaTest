@@ -1,0 +1,8 @@
+Fixture,SimpleFixture
+
+Event,Record
+,Value
+,JUnit Test
+
+Report,Last Recorded Value,!!
+,JUnit Test

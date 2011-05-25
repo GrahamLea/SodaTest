@@ -20,6 +20,7 @@
     <modules>
         <module>basic</module>
         <module>basic-java</module>
+        <module>junit</module>
     </modules>
 
 </project>
