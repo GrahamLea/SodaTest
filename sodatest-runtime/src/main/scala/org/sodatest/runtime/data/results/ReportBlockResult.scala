@@ -62,7 +62,8 @@ extends BlockResult[ReportBlock](
   block,
   succeeded = (error == None && !(executionResults.map(r => r.matchResult.passed && r.error == None).contains(false))),
   executionErrorOccurred = error != None || !executionResults.filter(_.error != None).isEmpty,
-  error = error) with ExecutionResultContainer[ReportExecution, ReportExecutionResult] {
+  error = error)
+with ExecutionResultContainer[ReportExecution, ReportExecutionResult] {
 
   def this(error: ExecutionError)(implicit block: ReportBlock) = this(Nil, Some(error))
 }
