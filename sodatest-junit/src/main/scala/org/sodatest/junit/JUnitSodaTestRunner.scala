@@ -30,17 +30,12 @@ import org.junit.internal.runners.model.{MultipleFailureException, EachTestNotif
 import java.lang.RuntimeException
 import org.sodatest.runtime.data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
 
-class SodaJUnitLauncherRunner(testClass: Class[_ <: SodaJUnitLauncherTestBase]) extends ParentRunner[File](testClass) {
+class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) extends ParentRunner[File](testClass) {
 
   def getChildren: java.util.List[File] = {
-    val baseDirName = testClass.getAnnotation(classOf[SodaJUnitLauncherBaseDir]) match {
-      case null => throw new TestClassMissingAnnotationException("Tests to be run using SodaTestJUnit4Runner must be annotated with @SodaTestJunit4BaseDir");
-      case annotation: SodaJUnitLauncherBaseDir => annotation.value
-    }
-    val filePattern = testClass.getAnnotation(classOf[SodaJUnitLauncherFilePattern]) match {
-      case null => throw new TestClassMissingAnnotationException("Tests to be run using SodaTestJUnit4Runner must be annotated with @SodaTestJunit4FilePattern");
-      case annotation: SodaJUnitLauncherFilePattern => annotation.value
-    }
+    val baseDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherBaseDir]).value
+    val filePattern = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFilePattern]).value
+    val outputDir = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFilePattern]).value
 
     val baseDir: File = new File(baseDirName)
     if (!baseDir.exists())

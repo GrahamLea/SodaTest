@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.sodatest.junit;
+package org.sodatest.junit
 
-import java.lang.annotation.*;
+import org.junit.runner.RunWith
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface SodaJUnitLauncherFilePattern {
-    public String value() default ".*\\.csv";
-}
+@RunWith(classOf[JUnitSodaTestRunner])
+@JUnitSodaTestLauncherBaseDir
+@JUnitSodaTestLauncherFilePattern
+abstract class JUnitSodaTestLauncherTestBase
+

@@ -32,6 +32,6 @@ package org.sodatest.examples.junit.mainTreeTwo.subTreeTwoOne
  * limitations under the License.
  */
 
-import org.sodatest.junit.SodaJUnitLauncherTestBase
+import org.sodatest.junit.JUnitSodaTestLauncherTestBase
 
-class SodaJUnitLauncherTest extends SodaJUnitLauncherTestBase
+class JUnitSodaTestLauncherTest extends JUnitSodaTestLauncherTestBase

@@ -1,3 +1,5 @@
+package org.sodatest.examples.junit.mainTreeOne.subTreeOneOne
+
 /*
  * Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
  *
@@ -14,13 +16,6 @@
  * limitations under the License.
  */
 
-package org.sodatest.junit;
+import org.sodatest.junit.JUnitSodaTestLauncherTestBase
 
-import java.lang.annotation.*;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface SodaJUnitLauncherBaseDir {
-    public String value() default "src/test/sodatest";
-}
+class JUnitSodaTestLauncherTest extends JUnitSodaTestLauncherTestBase

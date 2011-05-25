@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.sodatest.junit
+package org.sodatest.junit;
 
-import org.junit.runner.RunWith
+import java.lang.annotation.*;
 
-@RunWith(classOf[SodaJUnitLauncherRunner])
-@SodaJUnitLauncherBaseDir
-@SodaJUnitLauncherFilePattern
-abstract class SodaJUnitLauncherTestBase 
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+public @interface JUnitSodaTestLauncherBaseDir {
+    public String value() default "src/test/sodatest";
+}

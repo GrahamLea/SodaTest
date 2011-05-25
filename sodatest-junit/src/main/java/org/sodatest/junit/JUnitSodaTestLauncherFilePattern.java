@@ -1,5 +1,3 @@
-package org.sodatest.examples.junit.mainTreeOne.subTreeOneOne
-
 /*
  * Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
  *
@@ -16,6 +14,13 @@ package org.sodatest.examples.junit.mainTreeOne.subTreeOneOne
  * limitations under the License.
  */
 
-import org.sodatest.junit.SodaJUnitLauncherTestBase
+package org.sodatest.junit;
 
-class SodaJUnitLauncherTest extends SodaJUnitLauncherTestBase
+import java.lang.annotation.*;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+public @interface JUnitSodaTestLauncherFilePattern {
+    public String value() default ".*\\.csv";
+}
