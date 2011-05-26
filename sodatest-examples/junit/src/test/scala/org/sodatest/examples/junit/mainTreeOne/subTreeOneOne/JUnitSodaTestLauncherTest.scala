@@ -1,5 +1,3 @@
-package org.sodatest.examples.junit.mainTreeOne.subTreeOneOne
-
 /*
  * Copyright (c) 2011 Belmont Technology Pty Ltd. All rights reserved.
  *
@@ -15,6 +13,8 @@ package org.sodatest.examples.junit.mainTreeOne.subTreeOneOne
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.sodatest.examples.junit.mainTreeOne.subTreeOneOne
 
 import org.sodatest.junit.JUnitSodaTestLauncherTestBase
 
