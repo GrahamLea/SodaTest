@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import xml.Text
 import org.sodatest.runtime.processing.running.{SodaTestResultSummary, PathUtils, SodaTestResultSummaryWriter}
+import org.sodatest.runtime.processing.SodaTestContext
 
 object XhtmlIndexFileSummaryWriter extends SodaTestResultSummaryWriter {
 
@@ -36,8 +37,10 @@ object XhtmlIndexFileSummaryWriter extends SodaTestResultSummaryWriter {
 
   val stylesheet = DefaultStylesheet.load()
 
-  def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File): Unit = {
-    val out = new PrintWriter(new FileWriter(new File(outputRoot, "index.html")))
+  def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File)(implicit context: SodaTestContext): Unit = {
+    val indexFile: File = new File(outputRoot, "index.html")
+    context.log.debug("Writing result summary to " + indexFile.getAbsolutePath)
+    val out = new PrintWriter(new FileWriter(indexFile))
 
     val totalFailedTests = results.filter(_.failed).size
     val failed = totalFailedTests != 0

@@ -17,7 +17,8 @@
 package org.sodatest.runtime.processing.running
 
 import java.io.File
+import org.sodatest.runtime.processing.SodaTestContext
 
 trait SodaTestResultSummaryWriter {
-  def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File): Unit
+  def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File)(implicit context: SodaTestContext): Unit
 }

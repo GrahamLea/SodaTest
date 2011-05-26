@@ -18,9 +18,10 @@ package org.sodatest.runtime.processing.formatting.console
 
 import java.io.File
 import org.sodatest.runtime.processing.running.{SodaTestResultSummary, SodaTestResultSummaryWriter}
+import org.sodatest.runtime.processing.SodaTestContext
 
 object ConsoleResultSummaryWriter extends SodaTestResultSummaryWriter {
-  def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File) {
+  def writeSummaries(results: Seq[SodaTestResultSummary], inputRoot: File, outputRoot: File)(implicit context: SodaTestContext): Unit = {
     val totalFailedTests = results.filter(_.failed).size
     val totalErrors = results.map(_.errorCount).sum
     val totalMismatches = results.map(_.mismatchCount).sum
