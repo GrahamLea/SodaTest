@@ -17,37 +17,50 @@
 package org.sodatest.junit
 
 import org.junit.runners.ParentRunner
-import org.junit.runners.model.InitializationError
 import java.io.{FileNotFoundException, File}
 import collection.JavaConversions
 import org.junit.runner.Description
 import org.junit.runner.notification.RunNotifier
 import org.junit.internal.AssumptionViolatedException
-import org.sodatest.runtime.processing.running.{SodaFileRunner, PathUtils}
 import org.sodatest.runtime.processing.SodaTestContext
 import java.util.Collections._
 import org.junit.internal.runners.model.{MultipleFailureException, EachTestNotifier}
 import java.lang.RuntimeException
 import org.sodatest.runtime.data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
+import org.junit.runners.model.{Statement, InitializationError}
+import org.sodatest.runtime.processing.formatting.xhtml.{XhtmlIndexFileSummaryWriter, XhtmlSodaTestResultWriter}
+import org.sodatest.runtime.processing.running.{SodaTestResultSummary, SodaFileRunner, PathUtils}
+import org.sodatest.runtime.ConsoleLog
 
 class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) extends ParentRunner[File](testClass) {
 
+  private val baseDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherBaseDir]).value
+  private val filePattern = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFilePattern]).value
+  private val outputDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherOutputDirectory]).value
+
+  private val baseDir = new File(baseDirName)
+  if (!baseDir.exists())
+    throw new FileNotFoundException(baseDir.getAbsolutePath)
+
+  private val outputDir = new File(outputDirName)
+  if (!outputDir.exists() && !outputDir.mkdirs())
+    throw new InitializationError("Failed to create output directory " + outputDir.getAbsolutePath)
+
+  private val testSearchDir: File = new File(baseDir, testClass.getPackage.getName.replaceAll("\\.", "/"))
+  if (!testSearchDir.exists())
+    new FileNotFoundException(baseDir.getAbsolutePath)
+
+  private val filePatternRegex = filePattern.r
+
+  private var results: List[(File, SodaTestResult)] = Nil
+
+  // TODO: Annotation for the fixture root
+  private implicit val context = new SodaTestContext(fixtureRoot = "org.sodatest.examples.junit.fixtures", log = new ConsoleLog(ConsoleLog.Level.Debug))
+
   def getChildren: java.util.List[File] = {
-    val baseDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherBaseDir]).value
-    val filePattern = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFilePattern]).value
-    val outputDir = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFilePattern]).value
-
-    val baseDir: File = new File(baseDirName)
-    if (!baseDir.exists())
-      throw new FileNotFoundException(baseDir.getAbsolutePath)
-
-    val testSearchDir: File = new File(baseDir, testClass.getPackage.getName.replaceAll("\\.", "/"))
-    if (!testSearchDir.exists())
-      new FileNotFoundException(baseDir.getAbsolutePath)
-
-    val filePatternRegex = filePattern.r
-    JavaConversions.asJavaList(
-      PathUtils.collectFilesRecursive(testSearchDir, file => {filePatternRegex.unapplySeq(file.getName) != None}))
+    val files = PathUtils.collectFilesRecursive(testSearchDir, file => {filePatternRegex.unapplySeq(file.getName) != None})
+    XhtmlSodaTestResultWriter.createOutputDirectories(baseDir, files, outputDir)
+    JavaConversions.asJavaList(files)
   }
 
   private implicit def throwable2ThrowableList(t: Throwable): java.util.List[Throwable] = singletonList(t)
@@ -56,11 +69,22 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
     Description.createTestDescription(testClass,
       child.getParent match { case null => child.getName; case parent => child.getName + " (" + parent + ")"})
 
+  override protected def childrenInvoker(notifier: RunNotifier): Statement = {
+    val superInvoker: Statement = super.childrenInvoker(notifier)
+    new Statement {
+      def evaluate(): Unit = {
+        superInvoker.evaluate()
+        XhtmlSodaTestResultWriter.writeResultsFiles(results, baseDir, outputDir)
+      }
+    }
+  }
+
   def runChild(testFile: File, notifier: RunNotifier) {
     val eachNotifier: EachTestNotifier = new EachTestNotifier(notifier, describeChild(testFile))
     eachNotifier.fireTestStarted()
     try {
       val result: SodaTestResult = runTest(testFile)
+      results = results :+ (testFile, result)
       if (!result.passed) {
         val errors: List[Option[List[Throwable]]] = result.blockResults.map(r => {
           if (r.succeeded) None.asInstanceOf[Option[List[Throwable]]]
@@ -84,9 +108,7 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
   }
 
   private def runTest(testFile: File): SodaTestResult = {
-    // TODO: Annotation for the fixture root
     // TODO: Hook into JUnit logging?
-    implicit val context = new SodaTestContext(fixtureRoot = "org.sodatest.examples.junit.fixtures")
     SodaFileRunner.run(testFile)
   }
 
