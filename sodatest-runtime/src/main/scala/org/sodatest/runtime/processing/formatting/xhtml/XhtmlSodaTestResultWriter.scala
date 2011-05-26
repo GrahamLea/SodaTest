@@ -37,7 +37,9 @@ object XhtmlSodaTestResultWriter extends SodaTestResultWriter {
   @Override
   def writeResultsFiles(filesAndResults: List[(File, SodaTestResult)], inputRoot: File, outputRoot: File)(implicit context: SodaTestContext): Unit = {
     for ((file, result) <- filesAndResults) {
-      val writer = new PrintWriter(new FileWriter(getOutputPath(file, inputRoot, outputRoot, ".html")))
+      val target: File = getOutputPath(file, inputRoot, outputRoot, ".html")
+      context.log.debug("Writing result to " + target.getAbsolutePath)
+      val writer = new PrintWriter(new FileWriter(target))
       try {
         writer.println(new XhtmlFormatter().format(result))
       } finally {
