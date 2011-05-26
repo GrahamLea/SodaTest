@@ -26,10 +26,6 @@ import formatting.console.ConsoleResultSummaryWriter
 
 class InvalidDirectoryException(message: String) extends IllegalArgumentException(message)
 
-class SodaTestResultSummary(val testName: String, val testPath: String, val mismatchCount: Int, val errorCount: Int) {
-  val failed = mismatchCount != 0 || errorCount != 0
-}
-
 class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummaryWriters: Seq[SodaTestResultSummaryWriter]) {
 
   @throws(classOf[InvalidDirectoryException])
@@ -44,7 +40,7 @@ class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummary
 
     resultWriter.writeResultsFiles(filesAndResults, inputRoot, outputRoot)
 
-    val resultsSummaries = summariseList(filesAndResults.map(_._2))
+    val resultsSummaries = SodaTestResultSummary.summariseList(filesAndResults.map(_._2))
 
     resultSummaryWriters.map(_.writeSummaries(resultsSummaries, inputRoot, outputRoot))
 
@@ -68,26 +64,6 @@ class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummary
 
     if (!outputDirectory.isDirectory)
       throw new InvalidDirectoryException("Output directory " + inputDirectory.getAbsolutePath + " is not a directory")
-  }
-
-  private def summariseList(rs: List[SodaTestResult]): List[SodaTestResultSummary] =
-    rs.map(r => summarise(r))
-
-  private def summarise(r: SodaTestResult): SodaTestResultSummary = {
-    val mismatchedBlocks: Int = r.blockResults.flatMap {_ match {
-        case rbr: ReportBlockResult => rbr.executionResults.map {er => if (er.matchResult.passed) 0 else 1}
-        case _ => Nil
-    }}.sum
-
-    val blockErrors = r.blockResults.filter(r => r.blockError != None || (r.errorOccurred && !r.executionErrorOccurred)).size
-
-    val executionErrors = r.blockResults.map(br => {br match {
-        case rbr: ReportBlockResult => rbr.executionResults.filter(_.error != None).size
-        case ebr: EventBlockResult => ebr.executionResults.filter(_.error != None).size
-        case _ => 0
-      }}).sum
-
-    new SodaTestResultSummary(r.test.testName, r.test.testPath, mismatchedBlocks, blockErrors + executionErrors)
   }
 }
 
