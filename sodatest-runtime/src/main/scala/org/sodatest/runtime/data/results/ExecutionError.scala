@@ -23,5 +23,5 @@ class ExecutionError(val message: String, val causeString: Option[String] = None
 
   val causeTrace: Option[Array[StackTraceElement]] = cause.map(_.getStackTrace)
 
-  override def toString = "ExecutionError: " + message + causeString.getOrElse("")
+  override def toString = "ExecutionError: " + message + causeString.map(": " + _).getOrElse("")
 }
