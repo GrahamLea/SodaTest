@@ -18,6 +18,9 @@ package org.sodatest.junit;
 
 import java.lang.annotation.*;
 
+/**
+ * Specifies the directory which the {@link JUnitSodaTestRunner} should search for test input files.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited

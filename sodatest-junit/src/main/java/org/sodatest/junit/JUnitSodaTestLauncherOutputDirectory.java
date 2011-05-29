@@ -18,6 +18,10 @@ package org.sodatest.junit;
 
 import java.lang.annotation.*;
 
+/**
+ * Specifies the directory to which the resulting output HTML from a subclass of
+ * {@link JUnitSodaTestLauncherTestBase} will be written.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited

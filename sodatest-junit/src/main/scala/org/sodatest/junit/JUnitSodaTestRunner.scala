@@ -32,6 +32,10 @@ import org.sodatest.runtime.processing.formatting.xhtml.XhtmlSodaTestResultWrite
 import org.sodatest.runtime.processing.running.{SodaFileRunner, PathUtils}
 import org.sodatest.runtime.ConsoleLog
 
+/**
+ * A JUnit runner for executing SodaTests. You should not use this Runner directly, but should
+ * instead create a subclass of {org.sodatest.junit.JUnitSodaTestLauncherTestBase}.
+ */
 class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) extends ParentRunner[File](testClass) {
 
   private val log = new ConsoleLog(ConsoleLog.Level.Debug)

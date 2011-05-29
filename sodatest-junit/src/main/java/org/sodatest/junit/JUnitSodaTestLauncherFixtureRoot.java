@@ -18,6 +18,14 @@ package org.sodatest.junit;
 
 import java.lang.annotation.*;
 
+/**
+ * Specifies the root package name that will be used by the {@link JUnitSodaTestRunner} to resolve
+ * Fixture class names.
+ *
+ * If your {@link JUnitSodaTestLauncherTestBase} subclasses are not annotated with this annotation,
+ * the package name of the subclass will be used as the fixture root for tests collected and run
+ * by that subclass.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
