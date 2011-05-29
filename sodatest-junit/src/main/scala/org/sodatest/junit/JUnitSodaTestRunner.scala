@@ -28,15 +28,23 @@ import org.junit.internal.runners.model.{MultipleFailureException, EachTestNotif
 import java.lang.RuntimeException
 import org.sodatest.runtime.data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
 import org.junit.runners.model.{Statement, InitializationError}
-import org.sodatest.runtime.processing.formatting.xhtml.{XhtmlIndexFileSummaryWriter, XhtmlSodaTestResultWriter}
-import org.sodatest.runtime.processing.running.{SodaTestResultSummary, SodaFileRunner, PathUtils}
+import org.sodatest.runtime.processing.formatting.xhtml.XhtmlSodaTestResultWriter
+import org.sodatest.runtime.processing.running.{SodaFileRunner, PathUtils}
 import org.sodatest.runtime.ConsoleLog
 
 class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) extends ParentRunner[File](testClass) {
 
+  private val log = new ConsoleLog(ConsoleLog.Level.Debug)
   private val baseDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherBaseDir]).value
   private val filePattern = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFilePattern]).value
   private val outputDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherOutputDirectory]).value
+  private val fixtureRoot = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFixtureRoot]) match {
+    case null => {
+      log.debug("No JUnitSodaTestLauncherFixtureRoot annotation found. Using the test class' package of '" + testClass.getPackage.getName + "' as the fixture root.")
+      testClass.getPackage.getName
+    }
+    case a: JUnitSodaTestLauncherFixtureRoot => a.value
+  }
 
   private val baseDir = new File(baseDirName)
   if (!baseDir.exists())
@@ -55,7 +63,7 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
   private var results: List[(File, SodaTestResult)] = Nil
 
   // TODO: Annotation for the fixture root
-  private implicit val context = new SodaTestContext(fixtureRoot = "org.sodatest.examples.junit.fixtures", log = new ConsoleLog(ConsoleLog.Level.Debug))
+  private implicit val context = new SodaTestContext(fixtureRoot, log)
 
   def getChildren: java.util.List[File] = {
     val files = PathUtils.collectFilesRecursive(testSearchDir, file => {filePatternRegex.unapplySeq(file.getName) != None})
@@ -108,7 +116,6 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
   }
 
   private def runTest(testFile: File): SodaTestResult = {
-    // TODO: Hook into JUnit logging?
     SodaFileRunner.run(testFile)
   }
 

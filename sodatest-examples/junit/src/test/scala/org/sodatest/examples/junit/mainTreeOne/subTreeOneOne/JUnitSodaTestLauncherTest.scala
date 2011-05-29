@@ -16,6 +16,6 @@
 
 package org.sodatest.examples.junit.mainTreeOne.subTreeOneOne
 
-import org.sodatest.junit.JUnitSodaTestLauncherTestBase
+import org.sodatest.examples.junit.JUnitSodaTestLauncherExampleTestBase
 
-class JUnitSodaTestLauncherTest extends JUnitSodaTestLauncherTestBase
+class JUnitSodaTestLauncherTest extends JUnitSodaTestLauncherExampleTestBase

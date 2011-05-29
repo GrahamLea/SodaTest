@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package org.sodatest.examples.junit.mainTreeOne.subTreeOneTwo
+package org.sodatest.junit;
 
-import org.sodatest.examples.junit.JUnitSodaTestLauncherExampleTestBase
+import java.lang.annotation.*;
 
-class JUnitSodaTestLauncherTest extends JUnitSodaTestLauncherExampleTestBase
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+public @interface JUnitSodaTestLauncherFixtureRoot {
+    public String value();
+}
