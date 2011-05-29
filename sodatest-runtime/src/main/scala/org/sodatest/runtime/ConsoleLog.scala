@@ -33,9 +33,9 @@ class ConsoleLog(val level: ConsoleLog.Level.Level) extends SodaTestLog {
 
   import ConsoleLog.Level._
 
-  def error(message: String) = if (level >= Error) println("ERROR: " + message)
-  def info(message: String) = if (level >= Info) println(message)
-  def debug(message: String) = if (level >= Debug) println(message)
-  def verbose(message: String) = if (level >= Verbose) println(message)
+  def error(message: String) = if (level >= Error)     println("SodaTest: ERROR: " + message)
+  def info(message: String) = if (level >= Info)       println("SodaTest: " + message)
+  def debug(message: String) = if (level >= Debug)     println("SodaTest: " + message)
+  def verbose(message: String) = if (level >= Verbose) println("SodaTest: " + message)
 
 }
