@@ -13,8 +13,8 @@ SodaFileRunner should have a main() method
 It should be possible to use the file runner to execute a single test by name.
 
 
-Support for automatic formatting of report output to strings
-------------------------------------------------------------
+Extend formatting support for report output
+-------------------------------------------
 Helper methods in SodaReport and JavaReportConverter now aid fixture authors in getting from
 Objects to two-dimensional String collections, though these are pretty rudimentary.
 Some things that could be done to extend the usefulness would be:
@@ -39,12 +39,12 @@ The test case is probably to create two coercions for two different concrete typ
 generic type.
 
 
-Java Example
-------------
-The Java example is 95% done, however the InterestFormulaJavaCoercion is written in Scala.
+Coercions in Java
+-----------------
+The Java API and example is 95% done, however the InterestFormulaJavaCoercion is written in Scala.
 Need to figure out how to create a Manifest from Java in order to be able to implement the
 Coercion in Java instead.
-It would probalby be wise to solve the Coercion limitation before fixing this.
+It would probalby be wise to solve the Coercion limitation above before fixing this.
 
 
 Shortcut for single-parameter blocks
