@@ -71,12 +71,6 @@ This essentially requires knowledge of when the last execution in an Event block
 it may be to allow Listeners on the Fixture that are notified of the beginning and end of Event blocks.
 
 
-JUnit integration & example
----------------------------
-As there has been a lot of investment in JUnit integration elsewhere, e.g. in build tools and CI servers, it might
-be good to leverage these capabilities by allowing SodaTests to be executed by JUnit somewhow.
-
-
 Spring integration & example
 ----------------------------
 This may be as simple as providing an example of best practice for writing Fixtures against Spring apps, but it
