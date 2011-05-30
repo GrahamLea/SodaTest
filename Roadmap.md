@@ -1,9 +1,12 @@
 SodaTest Roadmap
 ================
 
-The SodaTest project is definitely in its infantile stages at present.
+The SodaTest project is ready for Production (testing) use, but should probably be considered to
+be in a Beta state at present.
 
-These are the things that make the most sense to achieve in the near future, listed in rough priority order.
+Below are some things that would make sense to add in the medium term, listed in rough priority order.
+If you have a particular need for one of these, or some other idea of something important that's
+missing, please let us know.
 
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 

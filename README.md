@@ -93,7 +93,8 @@ The SodaTest project is made up of the following modules:
 Tasks on the Roadmap
 --------------------
 
-A roadmap for features that need to be implemented to make the framework more complete is listed in [Roadmap.md](https://github.com/GrahamLea/SodaTest/blob/master/Roadmap.md).
+A roadmpa of features that it might make sense to add in the medium termis listed
+in [Roadmap.md](https://github.com/GrahamLea/SodaTest/blob/master/Roadmap.md).
 
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
