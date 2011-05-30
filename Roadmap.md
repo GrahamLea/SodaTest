@@ -8,11 +8,6 @@ These are the things that make the most sense to achieve in the near future, lis
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
-SodaFileRunner should have a main() method
-------------------------------------------
-It should be possible to use the file runner to execute a single test by name.
-
-
 Extend formatting support for report output
 -------------------------------------------
 Helper methods in SodaReport and JavaReportConverter now aid fixture authors in getting from

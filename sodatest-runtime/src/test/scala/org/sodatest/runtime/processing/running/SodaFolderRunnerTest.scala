@@ -32,17 +32,17 @@ class SodaFolderRunnerTest extends XMLLoader[Elem] {
 
   @Test(expected = classOf[InvalidDirectoryException])
   def nonExistentInputDirectory() {
-    new SodaFolderRunner(null, null).run(new File(systemTempDir, "DOESNOTEXIST.sodatest"), systemTempDir, (b) => {})
+    new SodaFolderRunner(null, null).runTestsAndWriteResults(new File(systemTempDir, "DOESNOTEXIST.sodatest"), systemTempDir, (b) => {})
   }
 
   @Test(expected = classOf[InvalidDirectoryException])
   def nonDirectoryInputDirectory() {
-    new SodaFolderRunner(null, null).run(tempFile, systemTempDir, (b) => {})
+    new SodaFolderRunner(null, null).runTestsAndWriteResults(tempFile, systemTempDir, (b) => {})
   }
 
   @Test(expected = classOf[InvalidDirectoryException])
   def nonDirectoryOutputFolder() {
-    new SodaFolderRunner(null, null).run(systemTempDir, tempFile, (b) => {})
+    new SodaFolderRunner(null, null).runTestsAndWriteResults(systemTempDir, tempFile, (b) => {})
   }
 
   private def changeTempFileToDirectory(): Unit = {

@@ -29,14 +29,14 @@ class InvalidDirectoryException(message: String) extends IllegalArgumentExceptio
 class SodaFolderRunner(val resultWriter: SodaTestResultWriter, val resultSummaryWriters: Seq[SodaTestResultSummaryWriter]) {
 
   @throws(classOf[InvalidDirectoryException])
-  def run(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit context: SodaTestContext): Unit = {
+  def runTestsAndWriteResults(inputRoot: File, outputRoot: File, successCallback: (Boolean) => Unit)(implicit context: SodaTestContext): Unit = {
     checkDirectories(inputRoot, outputRoot)
 
     val files = PathUtils.collectFilesRecursive(inputRoot, _.getName.toLowerCase.endsWith(".csv"))
 
     resultWriter.createOutputDirectories(inputRoot, files, outputRoot)
 
-    val filesAndResults = files.map(f => (f, SodaFileRunner.run(f)))
+    val filesAndResults = files.map(f => (f, SodaFileRunner.runTest(f)))
 
     resultWriter.writeResultsFiles(filesAndResults, inputRoot, outputRoot)
 
@@ -85,7 +85,7 @@ object SodaFolderRunner {
 
       try {
         new SodaFolderRunner(XhtmlSodaTestResultWriter, List(ConsoleResultSummaryWriter,  XhtmlIndexFileSummaryWriter))
-          .run(inputDirectory, outputDirectory, successCallback)
+          .runTestsAndWriteResults(inputDirectory, outputDirectory, successCallback)
       }
       catch {
         case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage)); successCallback(false)

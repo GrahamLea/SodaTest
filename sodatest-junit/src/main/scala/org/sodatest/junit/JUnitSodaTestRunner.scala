@@ -120,7 +120,7 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
   }
 
   private def runTest(testFile: File): SodaTestResult = {
-    SodaFileRunner.run(testFile)
+    SodaFileRunner.runTest(testFile)
   }
 
   private def reportBlockErrors(rbr: ReportBlockResult): List[Throwable] = {

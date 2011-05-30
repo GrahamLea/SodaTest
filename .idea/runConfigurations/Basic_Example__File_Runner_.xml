@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Basic Example" type="Application" factoryName="Application">
+  <configuration default="false" name="Basic Example (File Runner)" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" />
-    <option name="MAIN_CLASS_NAME" value="org.sodatest.runtime.processing.running.SodaFolderRunner" />
+    <option name="MAIN_CLASS_NAME" value="org.sodatest.runtime.processing.running.SodaFileRunner" />
     <option name="VM_PARAMETERS" value="" />
-    <option name="PROGRAM_PARAMETERS" value="org.sodatest.examples.basic.fixtures src/main/resources/sodatests ." />
+    <option name="PROGRAM_PARAMETERS" value="org.sodatest.examples.basic.fixtures src/main/resources/sodatests/basicExample.csv ./basicExample.csv.html" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/sodatest-examples/basic" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
