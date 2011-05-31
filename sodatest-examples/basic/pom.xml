@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sodatest</groupId>
     <artifactId>sodatest-examples-basic</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
 
     <name>SodaTest Basic Example</name>
     <inceptionYear>2011</inceptionYear>
@@ -13,7 +11,7 @@
     <parent>
         <groupId>org.sodatest</groupId>
         <artifactId>sodatest-examples-parent</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.1</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -50,7 +48,7 @@
                             <executable>java</executable>
                             <arguments>
                                 <argument>-classpath</argument>
-                                <classpath/>
+                                <classpath />
                                 <argument>org.sodatest.runtime.processing.running.SodaFolderRunner</argument>
                                 <argument>org.sodatest.examples.basic.fixtures</argument>
                                 <argument>src/main/resources/sodatests</argument>
