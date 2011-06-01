@@ -11,6 +11,19 @@ missing, please let us know.
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
 
 
+Build Against Scala 2.8.1 and 2.9.0
+-----------------------------------
+As with all Scala libraries, SodaTest will need to be built against 2.8.1 and 2.9.0, with releases for each of those
+Scala builds being made available if users of those builds want to use SodaTest.
+I believe it's possible to set Maven up to do both releases at once, but maybe it's easier just to cut a 2.9.0 branch?
+
+
+Release SodaTest on Sonatype's MVN Repository
+---------------------------------------------
+It's not ideal having the repository on GitHub and a lot of people may not like it, so it should be deployed
+somewhere respectable in time.
+
+
 Extend formatting support for report output
 -------------------------------------------
 Helper methods in SodaReport and JavaReportConverter now aid fixture authors in getting from
