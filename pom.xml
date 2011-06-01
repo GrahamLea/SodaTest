@@ -65,7 +65,11 @@
 
     <properties>
         <scala.version>2.8.1</scala.version>
-        <specs.version>specs_${scala.version}</specs.version>
+        <specs.artifactId>specs_2.8.1</specs.artifactId>
+        <specs.version>1.6.8</specs.version>
+        <!--<scala.version>2.9.0-1</scala.version>-->
+        <!--<specs.artifactId>specs_2.9.0-1</specs.artifactId>-->
+        <!--<specs.version>1.6.8</specs.version>-->
     </properties>
 
     <repositories>
@@ -124,8 +128,8 @@
             </dependency>
             <dependency>
                 <groupId>org.scala-tools.testing</groupId>
-                <artifactId>specs_2.8.1</artifactId>
-                <version>1.6.6</version>
+                <artifactId>${specs.artifactId}</artifactId>
+                <version>${specs.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
