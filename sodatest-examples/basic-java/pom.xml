@@ -40,7 +40,6 @@
         <dependency>
             <groupId>org.sodatest</groupId>
             <artifactId>sodatest-runtime</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
