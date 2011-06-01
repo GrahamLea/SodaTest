@@ -5,3 +5,8 @@ OLD-CODEBASE
 .idea/copyright
 .idea/inspectionProfiles
 .idea/libraries
+sodatest-examples/basic-java/basicJavaExample.csv.html
+sodatest-examples/basic-java/index.html
+sodatest-examples/basic/basicExample.csv.html
+sodatest-examples/basic/index.html
+sodatest-runtime/target-soda-integration-test
