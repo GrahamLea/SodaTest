@@ -22,4 +22,13 @@
         <module>junit</module>
     </modules>
 
+    <!-- You can use the following <repository> to access release versions of SodaTest artefacts -->
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>sodatest-github-repo</id>-->
+            <!--<name>SodaTest repository on GitHub</name>-->
+            <!--<url>http://grahamlea.github.com/SodaTest/m2repository/</url>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+
 </project>
