@@ -127,7 +127,7 @@ Project Sections
 
 The SodaTest project is made up of the following modules:
 
-* [SodaTest API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples)
+* [SodaTest API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-api)
   is the only module on which your test code should depend at compile-time.
   The `org.sodatest.api` package contains the traits to be implemented in order to implement Fixtures,
   though the `Reflective*` traits in the `org.sodatest.api.reflection` package are what you will
@@ -141,8 +141,18 @@ The SodaTest project is made up of the following modules:
   The SodaFolderRunner class in the org.sodatest.runtime.processing.running is currently the main
   entry point for running tests.
 
+* [SodaTest JUnit Integration](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-junit)
+  contains the [JUnitSodaTestLauncherTestBase](https://github.com/GrahamLea/SodaTest/blob/master/sodatest-junit/src/main/scala/org/sodatest/junit/JUnitSodaTestLauncherTestBase.scala)
+  which you can create subclasses of in your own test tree to easily get JUnit running your SodaTests.
+
 * [SodaTest Examples](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples)
   contains examples of how to use different features of SodaTest.
+
+* [SodaTest Java API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-api-java)
+  is a collection of [Adapter classes](http://en.wikipedia.org/wiki/Adapter_pattern) that make it easy to implement
+  SodaTest Fixtures, Events and Reports in Java.
+  The classes extend and mirror those in the SodaTest API except that they live under `org.sodatest.api.java` and each
+  have `ForJava` appended to their name (e.g. `org.sodatest.api.java.reflection.ReflectiveSodaFixtureForJava`).
 
 
 Tasks on the Roadmap
