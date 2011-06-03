@@ -77,6 +77,7 @@ Here is a [screenshot of SodaTest's output HTML for the above input](https://git
 [![Screenshot of SodaTest's output HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot%20Thumbnail.png)](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png)
 
 Here is a sample of the type of Fixture code used to execute the above test:
+
 (You can browse the [full SodaTest Basic Example here](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples/basic)
 and you can read the [full source of BankAccountFixture.scala here](https://github.com/GrahamLea/SodaTest/blob/master/sodatest-examples/basic/src/main/scala/org/sodatest/examples/basic/fixtures/BankAccountFixture.scala).)
 
