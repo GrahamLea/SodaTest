@@ -8,7 +8,7 @@ readable by non-programmers, with the goal of being easily understood, edited or
 non-technical Customers of the software under test.
 
 The input format is CSV files, the output format is pretty HTML, and the programming model in between for
-creating [fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software) is kept as simple as possible.
+creating [Fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software) is kept as simple as possible.
 
 SodaTest is written primarily in [Scala](http://www.scala-lang.org/).
 While it will likely be most easy (and fun!) to write Fixtures using Scala, in theory SodaTest can
@@ -52,7 +52,7 @@ in the form of CSV files, for these reasons:
 Some great ideas from FIT which are maintained in SodaTest are:
 
 * Tables for giving format and structure to large amounts of information
-* Reflection for automating a lot of string-conversion boilerplate for the fixture author
+* Reflection for automating a lot of string-conversion boilerplate for the Fixture author
 * HTML as an excellent format for test output
 
 Other things that SodaTest tries to achieve are:
@@ -77,15 +77,13 @@ Here is a [screenshot of SodaTest's output HTML for the above input](https://git
 [![Screenshot of SodaTest's output HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot%20Thumbnail.png)](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png)
 
 Here is a sample of the type of Fixture code used to execute the above test:
+(You can browse the [full SodaTest Basic Example here](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples/basic)
+and you can read the [full source of BankAccountFixture.scala here](https://github.com/GrahamLea/SodaTest/blob/master/sodatest-examples/basic/src/main/scala/org/sodatest/examples/basic/fixtures/BankAccountFixture.scala).)
 
     class BankAccountFixture extends ReflectiveSodaFixture {
       val service = new BankAccountService()
       def openAccount = new OpenAccountEvent(service)
       def balance = new BalanceReport(service)
-    }
-
-    object InterestFormulaCoercion extends Coercion[InterestFormula] {
-      def apply(s: String) = InterestFormula.fromString(s)
     }
 
     class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
@@ -118,9 +116,9 @@ Here is a sample of the type of Fixture code used to execute the above test:
       }
     }
 
-
-You can browse the [full SodaTest Basic Example here](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples/basic)
-and you can read the [full source of BankAccountFixture.scala here](https://github.com/GrahamLea/SodaTest/blob/master/sodatest-examples/basic/src/main/scala/org/sodatest/examples/basic/fixtures/BankAccountFixture.scala).
+    object InterestFormulaCoercion extends Coercion[InterestFormula] {
+      def apply(s: String) = InterestFormula.fromString(s)
+    }
 
 
 Project Sections
@@ -130,7 +128,7 @@ The SodaTest project is made up of the following modules:
 
 * [SodaTest API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples)
   is the only module on which your test code should depend at compile-time.
-  The `org.sodatest.api` package contains the traits to be implemented in order to implement fixtures,
+  The `org.sodatest.api` package contains the traits to be implemented in order to implement Fixtures,
   though the `Reflective*` traits in the `org.sodatest.api.reflection` package are what you will
   probably want to use 99% of the time.
 
@@ -149,7 +147,7 @@ The SodaTest project is made up of the following modules:
 Tasks on the Roadmap
 --------------------
 
-A roadmpa of features that it might make sense to add in the medium termis listed
+A roadmap of features that it might make sense to add in the medium termis listed
 in [Roadmap.md](https://github.com/GrahamLea/SodaTest/blob/master/Roadmap.md).
 
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
