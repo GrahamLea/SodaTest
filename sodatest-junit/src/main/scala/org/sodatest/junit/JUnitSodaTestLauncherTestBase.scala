@@ -48,6 +48,9 @@ import org.junit.runner.RunWith
  *
  * You can override any of the three annotations applied to this class in order to change parameters affecting the
  * execution of your tests.
+ *
+ * The sodatest-examples/junit module contains an example of using JUnitSodaTestLauncherTestBase to run SodaTests
+ * in multiple suites.
  */
 @RunWith(classOf[JUnitSodaTestRunner])
 @JUnitSodaTestLauncherBaseDir
