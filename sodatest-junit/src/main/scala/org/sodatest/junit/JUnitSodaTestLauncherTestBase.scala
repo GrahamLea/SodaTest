@@ -34,6 +34,9 @@ import org.junit.runner.RunWith
  * containing the tests. By convention, the Runner will look for fixtures using the package of this
  * JUnitSodaTestLauncherTestBase subclass as the fixture root.
  *
+ * The advantage of running your tests as multiple suites is that it is easy to run a subset of your SodaTests.
+ * If you go the single-suite route, then to run any one of your SodaTests you will have to run them all.
+ *
  * You can override any of the three annotations applied to this class, and also apply the
  * @link JUnitSodaTestLauncherFixtureRoot} annotation, in order to change parameters affecting the
  * execution of your tests.
