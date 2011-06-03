@@ -1,16 +1,14 @@
 SodaTest: Spreadsheet-Driven Integration Testing
 ================================================
 
-SodaTest is an open-source framework for Executable Requirements for Integration and Acceptance testing.
+SodaTest is an open-source framework for creating Executable Requirements for Integration, Functional and Acceptance testing.
 
 SodaTest allows the creation of executable test cases as spreadsheets in a format that is easily
 readable by non-programmers, with the goal of being easily understood, edited or even authored by the
 non-technical Customers of the software under test.
 
-The [input format is CSV files](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png "Screenshot of SodaTest input spreadsheet"),
-the [output format is pretty HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png "Screenshot of SodaTest output HTML"),
-and the programming model in between for creating [fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software)
-is kept as simple as possible.
+The input format is CSV files, the output format is pretty HTML, and the programming model in between for
+creating [fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software) is kept as simple as possible.
 
 SodaTest is written primarily in [Scala](http://www.scala-lang.org/).
 While it will likely be most easy (and fun!) to write Fixtures using Scala, in theory SodaTest can
@@ -65,6 +63,64 @@ Other things that SodaTest tries to achieve are:
 * Powerful and flexible (yet simple!) coercion of strings to strong types
 * Simple and localised control of Report formatting from strong types to strings (**Not done yet**)
 * Less strictness when binding input strings to programmattic symbols, e.g. case-agnosticism
+
+
+Screenshots and Code Samples
+----------------------------
+
+Here is a [screenshot of a SodaTest input spreadsheet](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png "Screenshot of SodaTest input spreadsheet"):
+
+[![Screenshot of a SodaTest input spreadsheet](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot%20Thumbnail.png)](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png)
+
+Here is a [screenshot of SodaTest's output HTML for the above input](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png "Screenshot of SodaTest's output HTML"):
+
+[![Screenshot of SodaTest's output HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot%20Thumbnail.png)](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png)
+
+Here is a sample of the type of Fixture code used to execute the above test:
+
+    class BankAccountFixture extends ReflectiveSodaFixture {
+      val service = new BankAccountService()
+      def openAccount = new OpenAccountEvent(service)
+      def balance = new BalanceReport(service)
+    }
+
+    object InterestFormulaCoercion extends Coercion[InterestFormula] {
+      def apply(s: String) = InterestFormula.fromString(s)
+    }
+
+    class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
+
+      val coercionRegister = new CoercionRegister(InterestFormulaCoercion)
+
+      var accountName: AccountName = null;
+      var initialDeposit: Option[Money] = None;
+      var tags: List[String] = Nil;
+      var interestFormula: InterestFormula = null;
+
+      def apply() {
+        val newAccount: BankAccount = new BankAccount(accountName, tags, interestFormula)
+        service.accountsByName += accountName -> newAccount
+        initialDeposit match {
+          case Some(amount) => newAccount.deposit(amount)
+          case None =>
+        }
+      }
+    }
+
+    class BalanceReport(val service: BankAccountService) extends ReflectiveSodaReport {
+      var accountName: AccountName = null;
+
+      def apply(): Seq[Seq[String]] = {
+        service.accountsByName.get(accountName) match {
+          case Some(account: BankAccount) => account.balance.toSingleCellReport
+          case None => "Unknown Account".toSingleCellReport
+        }
+      }
+    }
+
+
+You can browse the [full SodaTest Basic Example here](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples/basic)
+and you can read the [full source of BankAccountFixture.scala here](https://github.com/GrahamLea/SodaTest/blob/master/sodatest-examples/basic/src/main/scala/org/sodatest/examples/basic/fixtures/BankAccountFixture.scala).
 
 
 Project Sections
