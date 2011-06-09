@@ -16,47 +16,11 @@
 
 package org.sodatest.examples.basic
 
-import _root_.java.beans.{PropertyEditorSupport}
-import _root_.java.lang.String
-import _root_.java.math.BigDecimal
+import java.beans.{PropertyEditorSupport}
+import java.lang.String
+import java.math.BigDecimal
 import collection.immutable.List._
-
-class Money(a: BigDecimal) {
-  val amount = a.setScale(2);
-
-  def this() = this(BigDecimal.ZERO)
-  def this(s: String) = this(new BigDecimal(s))
-
-  def +(newAmount: Money) = new Money(amount.add(newAmount.amount))
-  def -(newAmount: Money) = new Money(amount.subtract(newAmount.amount))
-  def *(multiplicand: String): Money = *(new BigDecimal(multiplicand))
-  def *(multiplicand: BigDecimal): Money = new Money(amount.multiply(multiplicand))
-  def >(value: String): Boolean = amount.compareTo(new BigDecimal(value)) > 0
-  def negate = new Money(amount.negate)
-
-  override def toString = "$" + amount.toString
-}
-
-object Money {
-  val ZERO = new Money(new BigDecimal(0))
-}
-
-class MoneyEditor extends PropertyEditorSupport {
-  val dollarPrefix = "^\\$.*".r
-
-  override def setAsText(text: String): Unit = {
-    setValue(new Money(new BigDecimal(text match {
-      case dollarPrefix() => text.substring(1)
-      case _ => text
-    })))
-  }
-
-  override def getAsText = "$" + getValue.asInstanceOf[Money].amount.toPlainString
-}
-
-case class AccountName(name: String) {
-  override def toString = name
-}
+import java.text.DecimalFormat
 
 class BankAccount(val name: AccountName, val tags: List[String], val interestFormula: InterestFormula) {
   private var _transactions: List[Transaction] = Nil
@@ -78,11 +42,46 @@ class BankAccount(val name: AccountName, val tags: List[String], val interestFor
   }
 }
 
+class Money(a: BigDecimal) {
+  val amount = a.setScale(2);
+
+  def this() = this(BigDecimal.ZERO)
+
+  def +(newAmount: Money) = new Money(amount.add(newAmount.amount))
+  def -(newAmount: Money) = new Money(amount.subtract(newAmount.amount))
+  def *(multiplicand: String): Money = *(new BigDecimal(multiplicand))
+  def *(multiplicand: BigDecimal): Money = new Money(amount.multiply(multiplicand))
+  def >(value: String): Boolean = amount.compareTo(new BigDecimal(value)) > 0
+  def negate = new Money(amount.negate)
+
+  override def toString = Money.format.format(amount)
+}
+
+object Money {
+  val ZERO = new Money(new BigDecimal(0))
+  val format = new DecimalFormat("$#,##0.00")
+}
+
+class MoneyEditor extends PropertyEditorSupport {
+  val dollarPrefix = "^\\$.*".r
+
+  override def setAsText(text: String): Unit = {
+    setValue(new Money(new BigDecimal(text match {
+      case dollarPrefix() => text.substring(1).replaceAll(",", "")
+      case _ => text.replaceAll(",", "")
+    })))
+  }
+
+  override def getAsText = getValue.asInstanceOf[Money].amount.toString
+}
+
+case class AccountName(name: String) {
+  override def toString = name
+}
+
 case class Transaction(val ref: Int, val description: String, val amount: Money, val balance: Money)
 
-class BankAccountService {
-  var accountsByName: Map[AccountName, BankAccount] = Map()
-}
+
 
 trait InterestFormula {
   def interestOn(currentBalance: Money): Money
@@ -95,7 +94,7 @@ object InterestFormula {
   def fromString(formulaString: String): InterestFormula = {
     formulaString match {
       case adValoremRegex(rate, decimals) => new AdValoremInterest(rate)
-      case fixedRegex(amount, decimals) => new FixedInterest(new Money(amount))
+      case fixedRegex(amount, decimals) => new FixedInterest(new Money(new BigDecimal(amount)))
       case _ => error("Unparseable interest formula: " + formulaString)
     }
   }

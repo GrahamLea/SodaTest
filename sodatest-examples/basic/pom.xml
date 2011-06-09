@@ -51,7 +51,7 @@
                                 <classpath />
                                 <argument>org.sodatest.runtime.processing.running.SodaFolderRunner</argument>
                                 <argument>org.sodatest.examples.basic.fixtures</argument>
-                                <argument>src/main/resources/sodatests</argument>
+                                <argument>src/test/sodatest</argument>
                                 <argument>.</argument>
                             </arguments>
                         </configuration>

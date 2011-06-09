@@ -1,0 +1,27 @@
+"Fixture","BankAccountFixture",
+,,
+"Note","Withdrawals can be applied to an account which reduce the balance",
+,,
+"Event","Open Account",
+,"Account Name","Initial Deposit"
+,"Graham Lea",$7.00
+,"The Doctor",
+,,
+"Report","Balance",
+,"Account Name",
+"!!","Graham Lea",
+,$7.00,
+"!!","The Doctor",
+,$0.00,
+,,
+"Event","Withdraw",
+,"Account Name","Amount"
+,"Graham Lea",$3.00
+,"The Doctor","$17,000.00"
+,,
+"Report","Balance",
+,"Account Name",
+"!!","Graham Lea",
+,$4.00,
+"!!","The Doctor",
+,"-$17,000.00",

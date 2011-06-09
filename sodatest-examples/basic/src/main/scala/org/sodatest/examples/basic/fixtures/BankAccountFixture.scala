@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package org.sodatest
-package examples.basic.fixtures
+package org.sodatest.examples.basic.fixtures
 
-import api.reflection._
-import api.SodaReport
-import api.SodaReport._
-import examples.basic._
-import coercion.{Coercion, CoercionRegister}
+import org.sodatest.api.reflection.{ReflectiveSodaEvent, ReflectiveSodaReport, ReflectiveSodaFixture}
+import org.sodatest.coercion.{CoercionRegister, Coercion}
+import org.sodatest.api.SodaReport
 
-import _root_.java.lang.String
-import collection.immutable.Map
+import SodaReport._
 import collection.immutable.List._
+import org.sodatest.examples.basic._
 
 class BankAccountFixture extends ReflectiveSodaFixture {
-  val service = new BankAccountService()
+
+  val service = new BankAccountService
 
   def openAccount = new OpenAccountEvent(service)
   def deposit = new DepositEvent(service)
   def withdraw = new WithdrawEvent(service)
-  def interestAccruedAtTheEndOfTheMonth = new AddInterestEvent(service)
+  def endOfMonth = new EndOfMonthEvent(service)
 
   def balance = new BalanceReport(service)
   def customers = new CustomersReport(service)
   def statement = new StatementReport(service)
-  def customerTags = new TagsReport(service)
+  def customerTags = new CustomerTagsReport(service)
+
 }
 
 abstract class AbstractCustomerReport(val service: BankAccountService) extends ReflectiveSodaReport {
@@ -47,7 +46,7 @@ abstract class AbstractCustomerReport(val service: BankAccountService) extends R
   def apply(account: BankAccount): Seq[Seq[String]]
 
   def apply(): Seq[Seq[String]] = {
-    service.accountsByName.get(accountName) match {
+    service.accountFor(accountName) match {
       case Some(a: BankAccount) => apply(a)
       case None => "Unknown Account".toSingleCellReport
     }
@@ -58,22 +57,21 @@ class BalanceReport(service: BankAccountService) extends AbstractCustomerReport(
   def apply(account: BankAccount) = account.balance.toSingleCellReport
 }
 
-class TagsReport(service: BankAccountService) extends AbstractCustomerReport(service) {
+class CustomerTagsReport(service: BankAccountService) extends AbstractCustomerReport(service) {
   def apply(account: BankAccount) = account.tags.toSingleColumnReport
 }
 
 class CustomersReport(val service: BankAccountService) extends SodaReport {
-  def apply(parameters: Map[String, String]): Seq[Seq[String]] = {
-    service.accountsByName.keys.toSingleColumnReport
-  }
+  def apply(parameters: Map[String, String]): Seq[Seq[String]] = service.accountNames.toSingleColumnReport
 }
 
-class StatementReport(service: BankAccountService) extends AbstractCustomerReport(service) {
-  def apply(account: BankAccount) =
+class StatementReport(val service: BankAccountService) extends ReflectiveSodaReport {
+  var accountName: AccountName = null
+
+  def apply(): List[List[String]] =
     (List("Ref", "Description", "Credit", "Debit", "Balance") ::
-    account.transactions.map(t => t match {
-      case t if t.amount > "0" => List(t.ref.toString, t.description, t.amount.toString, "", t.balance.toString)
-      case t                   => List(t.ref.toString, t.description, "", t.amount.negate.toString, t.balance.toString)
+    service.statementFor(accountName).map(line => {
+      List(line.ref, line.description, line.credit.getOrElse(""), line.debit.getOrElse(""), line.balance)
     })).toReport
 }
 
@@ -81,49 +79,37 @@ class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEv
 
   val coercionRegister = new CoercionRegister(InterestFormulaCoercion)
 
-  var accountName: AccountName = null;
-  var initialDeposit: Option[Money] = None;
-  var tags: List[String] = Nil;
-  var interestFormula: InterestFormula = null;
+  var accountName: AccountName = null
+  var tags: List[String] = Nil
+  var initialDeposit: Option[Money] = None
+  var interestFormula: InterestFormula = new FixedInterest(Money.ZERO)
 
   def apply() {
-    val newAccount: BankAccount = new BankAccount(accountName, tags, interestFormula)
-    service.accountsByName += accountName -> newAccount
+    val account: BankAccount = new BankAccount(accountName, tags, interestFormula)
+    service.openAccount(account)
     initialDeposit match {
-      case Some(amount) => newAccount.deposit(amount)
+      case Some(amount) => account.deposit(amount)
       case None =>
     }
   }
 }
 
 class DepositEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
-  var accountName: AccountName = null;
-  var amount: Money = null;
+  var accountName: AccountName = null
+  var amount: Money = null
 
-  def apply() {
-    service.accountsByName.get(accountName) match {
-      case Some(account) => account.deposit(amount)
-      case None => throw new RuntimeException("Unknown account")
-    }
-  }
+  def apply() { service.deposit(accountName, amount) }
 }
 
 class WithdrawEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
-  var accountName: AccountName = null;
-  var amount: Money = null;
+  var accountName: AccountName = null
+  var amount: Money = null
 
-  def apply() {
-    service.accountsByName.get(accountName) match {
-      case Some(account) => account.withdraw(amount)
-      case None => throw new RuntimeException("Unknown account")
-    }
-  }
+  def apply() { service.withdraw(accountName, amount) }
 }
 
-class AddInterestEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
-  def apply() {
-    service.accountsByName.values.foreach(account => {account.addInterest()})
-  }
+class EndOfMonthEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
+  def apply() { service.endOfMonth() }
 }
 
 object InterestFormulaCoercion extends Coercion[InterestFormula] {

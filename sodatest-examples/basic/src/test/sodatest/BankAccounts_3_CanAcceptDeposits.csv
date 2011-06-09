@@ -1,0 +1,27 @@
+"Fixture","BankAccountFixture",
+,,
+"Note","Deposits can be applied to an account which increase the balance",
+,,
+"Event","Open Account",
+,"Account Name","Initial Deposit"
+,"Graham Lea",$1.00
+,"The Doctor",
+,,
+"Report","Balance",
+,"Account Name",
+"!!","Graham Lea",
+,$1.00,
+"!!","The Doctor",
+,$0.00,
+,,
+"Event","Deposit",
+,"Account Name","Amount"
+,"Graham Lea",$5.00
+,"The Doctor",$2.00
+,,
+"Report","Balance",
+,"Account Name",
+"!!","Graham Lea",
+,$6.00,
+"!!","The Doctor",
+,$2.00,
