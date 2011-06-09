@@ -133,7 +133,7 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
               case Some(line) => line.lineNumber;
               case _ => rbr.block.source.lines(0).lineNumber
             }))
-        case _ => throw new RuntimeException("Should never get here")
+        case _ => throw new RuntimeException("Should never get here: ReportBlockResult = " + rer)
       }
     })
   }
