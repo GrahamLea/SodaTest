@@ -64,6 +64,12 @@ class CoercionSpec extends SpecificationWithJUnit {
       }
     }
 
+    "provide an implicit Function to Coercion converter function for use with CoercionRegister" in {
+      Coercion.coerce("789", classOf[ClassWithIntConstructor], new CoercionRegister((s: String) => {new ClassWithIntConstructor(s.toInt)})) must beLike {
+        case o: ClassWithIntConstructor => o.value == 789
+      }
+    }
+
     "coerce a String to a Some(String)" in {
       Coercion.coerce("A String", typeOf("optionString")) must_== Some("A String")
     }

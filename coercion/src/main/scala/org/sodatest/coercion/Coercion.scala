@@ -21,6 +21,7 @@ import java.lang.reflect.{ParameterizedType, Type, Constructor}
 import java.beans.PropertyEditor
 import collection._
 import mutable.ArrayBuffer
+import coercion.Coercion
 
 /**
  * Superclass for types that can coerce a string into a 'strong type'/value object.
@@ -69,6 +70,9 @@ class CoercionRegister(c: Coercion[_]*) {
  * the type parameter of the List. 
  */
 object Coercion {
+
+  implicit def function2Coercion[A](f: (String) => A)(implicit manifest: Manifest[A]): Coercion[A] =
+    new Coercion[A] { def apply(s: String) = f(s) }
 
   private val wrapperTypes: Map[Class[_], Class[_]] = Map(
     java.lang.Boolean.TYPE ->   classOf[java.lang.Boolean],
