@@ -17,7 +17,6 @@
 package org.sodatest.junit
 
 import org.junit.runners.ParentRunner
-import java.io.{FileNotFoundException, File}
 import collection.JavaConversions
 import org.junit.runner.Description
 import org.junit.runner.notification.RunNotifier
@@ -31,6 +30,7 @@ import org.junit.runners.model.{Statement, InitializationError}
 import org.sodatest.runtime.processing.formatting.xhtml.XhtmlSodaTestResultWriter
 import org.sodatest.runtime.processing.running.{SodaFileRunner, PathUtils}
 import org.sodatest.runtime.ConsoleLog
+import java.io.{IOException, FileNotFoundException, File}
 
 /**
  * A JUnit runner for executing SodaTests. You should not use this Runner directly, but should
@@ -66,10 +66,13 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
 
   private var results: List[(File, SodaTestResult)] = Nil
 
-  // TODO: Annotation for the fixture root
   private implicit val context = new SodaTestContext(fixtureRoot, log)
 
   def getChildren: java.util.List[File] = {
+    if (!testSearchDir.exists)
+      throw new FileNotFoundException("SodaTest search path does not exist: " + testSearchDir.getAbsolutePath)
+    if (!testSearchDir.isDirectory)
+      throw new IOException("SodaTest search path is not a directory: " + testSearchDir.getAbsolutePath)
     val files = PathUtils.collectFilesRecursive(testSearchDir, file => {filePatternRegex.unapplySeq(file.getName) != None})
     XhtmlSodaTestResultWriter.createOutputDirectories(baseDir, files, outputDir)
     JavaConversions.asJavaList(files)
