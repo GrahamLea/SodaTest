@@ -1,16 +1,14 @@
 SodaTest: Spreadsheet-Driven Integration Testing
 ================================================
 
-SodaTest is an open-source framework for Executable Requirements for Integration and Acceptance testing.
+SodaTest is an open-source framework for creating Executable Requirements for Integration, Functional and Acceptance testing.
 
 SodaTest allows the creation of executable test cases as spreadsheets in a format that is easily
 readable by non-programmers, with the goal of being easily understood, edited or even authored by the
 non-technical Customers of the software under test.
 
-The [input format is CSV files](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png "Screenshot of SodaTest input spreadsheet"),
-the [output format is pretty HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png "Screenshot of SodaTest output HTML"),
-and the programming model in between for creating [fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software)
-is kept as simple as possible.
+The input format is CSV files, the output format is pretty HTML, and the programming model in between for
+creating [Fixtures](http://en.wikipedia.org/wiki/Test_fixture#Software) is kept as simple as possible.
 
 SodaTest is written primarily in [Scala](http://www.scala-lang.org/).
 While it will likely be most easy (and fun!) to write Fixtures using Scala, in theory SodaTest can
@@ -54,7 +52,7 @@ in the form of CSV files, for these reasons:
 Some great ideas from FIT which are maintained in SodaTest are:
 
 * Tables for giving format and structure to large amounts of information
-* Reflection for automating a lot of string-conversion boilerplate for the fixture author
+* Reflection for automating a lot of string-conversion boilerplate for the Fixture author
 * HTML as an excellent format for test output
 
 Other things that SodaTest tries to achieve are:
@@ -67,14 +65,71 @@ Other things that SodaTest tries to achieve are:
 * Less strictness when binding input strings to programmattic symbols, e.g. case-agnosticism
 
 
+Screenshots and Code Samples
+----------------------------
+
+Here is a [screenshot of a SodaTest input spreadsheet](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png "Screenshot of SodaTest input spreadsheet"):
+
+[![Screenshot of a SodaTest input spreadsheet](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot%20Thumbnail.png)](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Source%20Screenshot.png)
+
+Here is a [screenshot of SodaTest's output HTML for the above input](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png "Screenshot of SodaTest's output HTML"):
+
+[![Screenshot of SodaTest's output HTML](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot%20Thumbnail.png)](https://github.com/GrahamLea/SodaTest/raw/master/images/Basic%20Example%20Output%20Screenshot.png)
+
+Here is a sample of the type of Fixture code used to execute the above test:
+
+(You can browse the [full SodaTest Basic Example here](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples/basic)
+and you can read the [full source of BankAccountFixture.scala here](https://github.com/GrahamLea/SodaTest/blob/master/sodatest-examples/basic/src/main/scala/org/sodatest/examples/basic/fixtures/BankAccountFixture.scala).)
+
+    class BankAccountFixture extends ReflectiveSodaFixture {
+      val service = new BankAccountService()
+      def openAccount = new OpenAccountEvent(service)
+      def balance = new BalanceReport(service)
+    }
+
+    class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
+
+      val coercionRegister = new CoercionRegister(InterestFormulaCoercion)
+
+      var accountName: AccountName = null;
+      var initialDeposit: Option[Money] = None;
+      var tags: List[String] = Nil;
+      var interestFormula: InterestFormula = null;
+
+      def apply() {
+        val newAccount: BankAccount = new BankAccount(accountName, tags, interestFormula)
+        service.accountsByName += accountName -> newAccount
+        initialDeposit match {
+          case Some(amount) => newAccount.deposit(amount)
+          case None =>
+        }
+      }
+    }
+
+    class BalanceReport(val service: BankAccountService) extends ReflectiveSodaReport {
+      var accountName: AccountName = null;
+
+      def apply(): Seq[Seq[String]] = {
+        service.accountsByName.get(accountName) match {
+          case Some(account: BankAccount) => account.balance.toSingleCellReport
+          case None => "Unknown Account".toSingleCellReport
+        }
+      }
+    }
+
+    object InterestFormulaCoercion extends Coercion[InterestFormula] {
+      def apply(s: String) = InterestFormula.fromString(s)
+    }
+
+
 Project Sections
 ----------------
 
 The SodaTest project is made up of the following modules:
 
-* [SodaTest API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples)
+* [SodaTest API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-api)
   is the only module on which your test code should depend at compile-time.
-  The `org.sodatest.api` package contains the traits to be implemented in order to implement fixtures,
+  The `org.sodatest.api` package contains the traits to be implemented in order to implement Fixtures,
   though the `Reflective*` traits in the `org.sodatest.api.reflection` package are what you will
   probably want to use 99% of the time.
 
@@ -86,14 +141,24 @@ The SodaTest project is made up of the following modules:
   The SodaFolderRunner class in the org.sodatest.runtime.processing.running is currently the main
   entry point for running tests.
 
+* [SodaTest JUnit Integration](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-junit)
+  contains the [JUnitSodaTestLauncherTestBase](https://github.com/GrahamLea/SodaTest/blob/master/sodatest-junit/src/main/scala/org/sodatest/junit/JUnitSodaTestLauncherTestBase.scala)
+  which you can create subclasses of in your own test tree to easily get JUnit running your SodaTests.
+
 * [SodaTest Examples](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-examples)
   contains examples of how to use different features of SodaTest.
+
+* [SodaTest Java API](https://github.com/GrahamLea/SodaTest/tree/master/sodatest-api-java)
+  is a collection of [Adapter classes](http://en.wikipedia.org/wiki/Adapter_pattern) that make it easy to implement
+  SodaTest Fixtures, Events and Reports in Java.
+  The classes extend and mirror those in the SodaTest API except that they live under `org.sodatest.api.java` and each
+  have `ForJava` appended to their name (e.g. `org.sodatest.api.java.reflection.ReflectiveSodaFixtureForJava`).
 
 
 Tasks on the Roadmap
 --------------------
 
-A roadmpa of features that it might make sense to add in the medium termis listed
+A roadmap of features that it might make sense to add in the medium termis listed
 in [Roadmap.md](https://github.com/GrahamLea/SodaTest/blob/master/Roadmap.md).
 
 If you think you'd like to try your hand at helping out with some of this stuff, get in touch!
