@@ -46,9 +46,27 @@ class CoercionSpec extends SpecificationWithJUnit {
       Coercion.coerce("123", classOf[Int]) must_== 123
     }
 
-    "coerce to a String to an instance of a class with an <init>(String) constructor" in {
+    "coerce a String to an instance of a class with an <init>(String) constructor" in {
       Coercion.coerce("345", classOf[ClassWithStringConstructor]) must beLike {
         case o: ClassWithStringConstructor => o.value == 345
+      }
+    }
+
+    "coerce a String to an instance of a Java enum" in {
+      Coercion.coerce("FirstValue", classOf[TestJavaEnum]) must beLike {
+        case e: TestJavaEnum => e == TestJavaEnum.FirstValue
+      }
+    }
+
+    "coerce a String with extra space and different case to an instance of a Java enum" in {
+      Coercion.coerce("first value", classOf[TestJavaEnum]) must beLike {
+        case e: TestJavaEnum => e == TestJavaEnum.FirstValue
+      }
+    }
+
+    "coerce a String without underscores to an instance of a Java enum whose name has underscores" in {
+      Coercion.coerce("SecondValue", classOf[TestJavaEnum]) must beLike {
+        case e: TestJavaEnum => e == TestJavaEnum.SECOND_VALUE
       }
     }
 
@@ -60,6 +78,12 @@ class CoercionSpec extends SpecificationWithJUnit {
 
     "coerce using a Coercion implementation in a provided CoercionRegister" in {
       Coercion.coerce("789", classOf[ClassWithIntConstructor], new CoercionRegister(ClassWithIntConstructorCoercion)) must beLike {
+        case o: ClassWithIntConstructor => o.value == 789
+      }
+    }
+
+    "provide an implicit Function to Coercion converter function for use with CoercionRegister" in {
+      Coercion.coerce("789", classOf[ClassWithIntConstructor], new CoercionRegister((s: String) => {new ClassWithIntConstructor(s.toInt)})) must beLike {
         case o: ClassWithIntConstructor => o.value == 789
       }
     }
