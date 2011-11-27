@@ -17,6 +17,7 @@
 package org.sodatest {
 package coercion {
 
+import java.lang.reflect.Modifier
 import java.lang.reflect.{ParameterizedType, Type, Constructor}
 import java.beans.PropertyEditor
 import collection._
@@ -118,6 +119,7 @@ object Coercion {
   private object OptionType extends GenericTypeMatcher(classOf[Option[_]])
   private object ScalaListType extends GenericTypeMatcher(classOf[List[_]])
   private object JavaListType extends GenericTypeMatcher(classOf[java.util.List[_]])
+  private object JavaEnumType extends GenericTypeMatcher(classOf[java.lang.Enum[_]])
 
   /**
    * Coerce the given String value to the specified Class, using any Coercions in the given
@@ -131,9 +133,10 @@ object Coercion {
    */
   @throws(classOf[UnableToCoerceException])
   def coerceToClass[A](value: String, targetType: Class[A])(implicit register: Option[CoercionRegister] = None): A = (targetType match {
-    case StringClass(c) => value.asInstanceOf[A]
     case ClassWithCoercion(coercion) => coercion(value)
+    case StringClass(c) => value.asInstanceOf[A]
     case PrimitiveClass(wrapperClass) => coerce(value, wrapperClass).asInstanceOf[A]
+    case JavaEnumClass(enumClass) => coerceToJavaEnum(value, enumClass).asInstanceOf[A]
     case ClassWithNoArgConstructorAndPropertyEditor(constructor, propertyEditorClass) =>
       coerceUsingPropertyEditor(value, constructor, propertyEditorClass, targetType)
     case ClassWithStringConstructor(constructor) =>
@@ -148,6 +151,34 @@ object Coercion {
       case e: Throwable =>
         throw new UnableToCoerceException("error invoking constructor " + constructor, value, targetType, Some(e))
     }
+  }
+
+  private def coerceToJavaEnum[A](value: String, enumClass: Class[A]): A = {
+    val enumValues = enumClass.getDeclaredFields.toList
+            .filter(f  => {
+              (Modifier isPublic f.getModifiers) && (Modifier isStatic f.getModifiers) && (f.getType == enumClass)
+            })
+
+    enumValues.filter(_.getName == value) match {
+      case matchingValue :: Nil => matchingValue.get(null).asInstanceOf[A]
+      case _ => {
+        val canonisedValue = canonisedEnumName(value)
+        enumValues.filter(f => {canonisedEnumName(f.getName) == canonisedValue}) match {
+          case matchingValue :: Nil => matchingValue.get(null).asInstanceOf[A]
+          case matchingValue :: moreMatchingValues =>
+            throw new UnableToCoerceException(
+              "Multiple enum values match the input when canonised: " + (matchingValue :: moreMatchingValues),
+              value, enumClass)
+          case Nil =>
+            throw new UnableToCoerceException("No matching enum values", value, enumClass)
+
+        }
+      }
+    }
+  }
+
+  private def canonisedEnumName(s: String): String = {
+    s.toLowerCase.replaceAll("_", "").replaceAll(" ", "")
   }
 
   private def coerceUsingPropertyEditor[A](value: String, constructor: Constructor[A], propertyEditorClass: Class[_ <: PropertyEditor], targetType: Class[A]): A = {
@@ -180,6 +211,11 @@ object Coercion {
   private object PrimitiveClass {
     def unapply[A](c: Class[A]): Option[Class[A]] =
       if (c.isPrimitive) wrapperTypes.get(c).asInstanceOf[Option[Class[A]]] else None
+  }
+
+  private object JavaEnumClass {
+    def unapply[A](c: Class[A]): Option[Class[A]] =
+      if (classOf[Enum[_]].isAssignableFrom(c)) Some(c) else None
   }
 
   private object ClassWithCoercion {
