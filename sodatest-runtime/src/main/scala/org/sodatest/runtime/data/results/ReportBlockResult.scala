@@ -33,10 +33,14 @@ trait ExecutionResultContainer[P <: ParameterValuesContainer, R <: ExecutionResu
 class ReportExecutionResult(execution: ReportExecution, val matchResult: ReportMatchResult, error: Option[ExecutionError] = None)
 extends ExecutionResult[ReportExecution](execution, error) {
   def this(execution: ReportExecution, error: ExecutionError) = this(execution, new ReportMatchResult(Nil), Some(error))
+
+  override def toString = String.format("ReportExecutionResult(execution: %s, matchResult: %s, error: %s)", execution, matchResult, error)
 }
 
 class ReportMatchResult(val lineResults: List[ReportMatchLineResult]) {
   val passed: Boolean = lineResults.foldLeft(true)((allMatch, line) => {allMatch && line.isInstanceOf[ReportLineMatch]})
+
+  override def toString = if (passed) "Passed" else lineResults.toString
 }
 
 object ReportMatchResult {
