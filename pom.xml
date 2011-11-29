@@ -72,7 +72,7 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/GrahamLea/SodaTest.git</connection>
+        <connection>scm:git:git@github.com:GrahamLea/SodaTest.git</connection>
         <developerConnection>scm:git:git@github.com:GrahamLea/SodaTest.git</developerConnection>
         <url>https://github.com/GrahamLea/SodaTest</url>
     </scm>
