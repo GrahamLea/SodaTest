@@ -77,12 +77,12 @@
         <url>https://github.com/GrahamLea/SodaTest</url>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>gh-pages</id>
-            <url>file:///${basedir}/../SodaTest-Pages/m2repository/</url>
-        </repository>
-    </distributionManagement>
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>gh-pages</id>-->
+            <!--<url>file:///${basedir}/../SodaTest-Pages/m2repository/</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
 
     <properties>
         <scala.version>2.8.1</scala.version>
