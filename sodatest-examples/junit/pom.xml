@@ -23,6 +23,7 @@
 
     <name>SodaTest JUnit Integration Example</name>
     <inceptionYear>2011</inceptionYear>
+    <description>An example of how the sodatest-junit artefact can be used to create a hierarchical structure of test sub-trees.</description>
 
     <parent>
         <groupId>org.sodatest</groupId>

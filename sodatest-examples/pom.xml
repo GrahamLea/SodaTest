@@ -8,6 +8,7 @@
 
     <name>SodaTest Examples</name>
     <inceptionYear>2011</inceptionYear>
+    <description>A collection of examples showing how to use SodaTest</description>
 
     <parent>
         <groupId>org.sodatest</groupId>

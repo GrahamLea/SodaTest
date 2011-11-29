@@ -7,6 +7,7 @@
 
     <name>SodaTest JUnit Integration</name>
     <inceptionYear>2011</inceptionYear>
+    <description>contains the JUnitSodaTestLauncherTestBase which you can create subclasses of in your own test tree to easily get JUnit running your SodaTests.</description>
 
     <parent>
         <groupId>org.sodatest</groupId>

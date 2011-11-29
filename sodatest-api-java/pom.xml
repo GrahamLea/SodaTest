@@ -23,6 +23,7 @@
 
     <name>SodaTest API Extension for Java</name>
     <inceptionYear>2010</inceptionYear>
+    <description>A collection of Adapter classes that make it easy to implement SodaTest Fixtures, Events and Reports in Java</description>
 
     <parent>
         <groupId>org.sodatest</groupId>

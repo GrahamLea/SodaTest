@@ -7,6 +7,7 @@
 
     <name>SodaTest API</name>
     <inceptionYear>2010</inceptionYear>
+    <description>Contains the traits to be implemented in order to implement SodaTest Fixtures, Events and Reports in Scala.</description>
 
     <parent>
         <groupId>org.sodatest</groupId>

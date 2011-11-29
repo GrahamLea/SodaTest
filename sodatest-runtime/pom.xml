@@ -7,6 +7,8 @@
 
     <name>SodaTest Runtime</name>
     <inceptionYear>2010</inceptionYear>
+    <description>The SodaTest runtime classes responsible for parsing, executing and reporting on SodaTests.</description>
+    <url>http://www.sodatest.org/</url>
 
     <parent>
         <groupId>org.sodatest</groupId>

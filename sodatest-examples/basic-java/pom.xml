@@ -23,6 +23,7 @@
 
     <name>SodaTest Basic Java Example</name>
     <inceptionYear>2011</inceptionYear>
+    <description>A basic example of how to write a SodaTest and implement its Fixture using Java.</description>
 
     <parent>
         <groupId>org.sodatest</groupId>

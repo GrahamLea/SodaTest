@@ -7,6 +7,7 @@
 
     <name>SodaTest Basic Example</name>
     <inceptionYear>2011</inceptionYear>
+    <description>A basic example of how to write a SodaTest and implement its Fixture using Scala.</description>
 
     <parent>
         <groupId>org.sodatest</groupId>
