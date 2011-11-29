@@ -20,5 +20,5 @@ package results
 import blocks.FixtureBlock
 
 class FixtureBlockResult(error: Option[ExecutionError] = None)(implicit block: FixtureBlock)
-  extends BlockResult[FixtureBlock](block, executionErrorOccurred = error != None, error = error)
+  extends BlockResult[FixtureBlock](block, executionErrorOccurred = error != None, blockError = error)
 

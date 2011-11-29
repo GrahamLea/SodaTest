@@ -24,13 +24,12 @@ import org.junit.internal.AssumptionViolatedException
 import org.sodatest.runtime.processing.SodaTestContext
 import java.util.Collections._
 import org.junit.internal.runners.model.{MultipleFailureException, EachTestNotifier}
-import java.lang.RuntimeException
-import org.sodatest.runtime.data.results.{EventBlockResult, ReportBlockResult, SodaTestResult}
 import org.junit.runners.model.{Statement, InitializationError}
 import org.sodatest.runtime.processing.formatting.xhtml.XhtmlSodaTestResultWriter
 import org.sodatest.runtime.processing.running.{SodaFileRunner, PathUtils}
 import org.sodatest.runtime.ConsoleLog
 import java.io.{IOException, FileNotFoundException, File}
+import org.sodatest.runtime.data.results.{ParseErrorBlockResult, EventBlockResult, ReportBlockResult, SodaTestResult}
 
 /**
  * A JUnit runner for executing SodaTests. You should not use this Runner directly, but should
@@ -100,20 +99,8 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
     try {
       val result: SodaTestResult = runTest(testFile)
       results = results :+ (testFile, result)
-      if (!result.passed) {
-        val errors: List[Option[List[Throwable]]] = result.blockResults.map(r => {
-          if (r.succeeded) None.asInstanceOf[Option[List[Throwable]]]
-          else Some(r.blockError match {
-            case Some(blockError) => List(new ExecutionErrorException(blockError.toString))
-            case None => r match {
-              case rbr: ReportBlockResult => reportBlockErrors(rbr)
-              case ebr: EventBlockResult => eventBlockErrors(ebr)
-              case _ => Nil
-            }
-          })
-        })
-        eachNotifier.addFailure(new MultipleFailureException(JavaConversions.asJavaList(errors.flatten.flatten)))
-      }
+      if (!result.passed)
+        eachNotifier.addFailure(new MultipleFailureException(JavaConversions.asJavaList(getJUnitExceptions(result))))
     }
     catch {
       case e: AssumptionViolatedException => eachNotifier.addFailedAssumption(e)
@@ -122,23 +109,48 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
     finally { eachNotifier.fireTestFinished() }
   }
 
+  private def getJUnitExceptions(result: SodaTestResult): scala.List[scala.Throwable] = {
+    val errors: List[Option[List[Throwable]]] = result.blockResults.map(blockResult => {
+      if (blockResult.succeeded)
+        None.asInstanceOf[Option[List[Throwable]]]
+      else
+        Some(
+          blockResult.blockError match {
+            case Some(blockError) => List(new ExecutionErrorException(blockError.toString))
+            case None => blockResult match {
+              case rbr: ReportBlockResult => reportBlockErrors(rbr)
+              case ebr: EventBlockResult => eventBlockErrors(ebr)
+              case pebr: ParseErrorBlockResult => List(new TestInputParsingException(pebr.block.error))
+              case _ => throw new IllegalStateException(
+                "BUG: Only Event blocks, Report blocks and Parse Error blocks are expected to have non-block errors! " +
+                  "(blockResult = " + blockResult + ")")
+            }
+          }
+        )
+    })
+    val junitExceptions: List[Throwable] = errors.flatten.flatten
+    junitExceptions
+  }
+
   private def runTest(testFile: File): SodaTestResult = {
     SodaFileRunner.runTest(testFile)
   }
 
   private def reportBlockErrors(rbr: ReportBlockResult): List[Throwable] = {
-    rbr.executionResults.map(rer => {
-      rer.error match {
-        case Some(error) => new ExecutionErrorException(error.toString)
-        case None if !rer.matchResult.passed =>
-          new ReportMatchFailureException("Report match failure in '" + rbr.block.name + "' at line " +
-            (rer.execution.parameterValues match {
-              case Some(line) => line.lineNumber;
-              case _ => rbr.block.source.lines(0).lineNumber
-            }))
-        case _ => throw new RuntimeException("Should never get here: ReportBlockResult = " + rer)
+    rbr.executionResults.map(executionResult => {
+      executionResult.error match {
+        case Some(error) => Some(new ExecutionErrorException(error.toString))
+        case None if !executionResult.matchResult.passed =>
+          Some(
+            new ReportMatchFailureException("Report match failure in '" + rbr.block.name + "' at line " +
+              (executionResult.execution.parameterValues match {
+                case Some(line) => line.lineNumber;
+                case _ => rbr.block.source.lines(0).lineNumber
+              }))
+          )
+        case _ => None // A passing execution in a block where others failed
       }
-    })
+    }).flatten
   }
 
   private def eventBlockErrors(ebr: EventBlockResult): List[Throwable] =
@@ -149,3 +161,4 @@ class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) 
 class TestClassMissingAnnotationException(message: String) extends InitializationError(message)
 class ReportMatchFailureException(message: String) extends java.lang.AssertionError(message)
 class ExecutionErrorException(message: String) extends java.lang.AssertionError(message)
+class TestInputParsingException(message: String) extends java.lang.AssertionError(message)

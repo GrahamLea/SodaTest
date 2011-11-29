@@ -22,7 +22,6 @@ import java.lang.reflect.{ParameterizedType, Type, Constructor}
 import java.beans.PropertyEditor
 import collection._
 import mutable.ArrayBuffer
-import coercion.Coercion
 
 /**
  * Superclass for types that can coerce a string into a 'strong type'/value object.

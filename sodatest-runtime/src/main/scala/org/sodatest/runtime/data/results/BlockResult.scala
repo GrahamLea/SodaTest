@@ -26,11 +26,11 @@ abstract class BlockResult[T <: Block](
   val succeeded: Boolean,
   val blockError: Option[ExecutionError]) {
 
-  def this(block: T, executionErrorOccurred: Boolean, succeeded: Boolean, error: Option[ExecutionError]) =
-    this(block, executionErrorOccurred || error != None, executionErrorOccurred, succeeded, error)
+  def this(block: T, executionErrorOccurred: Boolean, succeeded: Boolean, blockError: Option[ExecutionError]) =
+    this(block, executionErrorOccurred || blockError != None, executionErrorOccurred, succeeded, blockError)
 
-  def this(block: T, executionErrorOccurred: Boolean, error: Option[ExecutionError]) =
-    this(block, executionErrorOccurred, !executionErrorOccurred, error)
+  def this(block: T, executionErrorOccurred: Boolean, blockError: Option[ExecutionError]) =
+    this(block, executionErrorOccurred, !executionErrorOccurred, blockError)
 
   override def toString =
     "Result for " + block.toString +

@@ -27,5 +27,5 @@ class EventBlockResult(
   (implicit block: EventBlock)
 extends BlockResult[EventBlock](block,
                                 executionErrorOccurred = error != None || !executionResults.filter(_.error != None).isEmpty,
-                                error = error)
+                                blockError = error)
 with ExecutionResultContainer[EventExecution, EventExecutionResult]
