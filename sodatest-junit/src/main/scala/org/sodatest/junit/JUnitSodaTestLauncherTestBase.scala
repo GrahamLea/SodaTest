@@ -23,14 +23,12 @@ import org.junit.runner.RunWith
  * in and under the package that contains the subclass.
  *
  * The subclasses to be placed in the test tree do not need to define any test methods.
- * They are simply required to provide the {org.sodatest.junit.JUnitSodaTestLauncherFixtureRoot} annotation.
  * Here is an example of a typical subclass:
  * {{{
- * @JUnitSodaTestLauncherFixtureRoot("com.example.myapplication.fixtures")
- * class MyApplication extends JUnitSodaTestLauncherTestBase
+ * class MyApplicationSodaTestLauncherTest extends JUnitSodaTestLauncherTestBase
  * }}}
  *
- * To make use this class, first place your SodaTests under src/test/sodatest. There are then two
+ * To make use of this class, first place your SodaTests under src/test/sodatest. There are then two
  * ways to organise the execution of your tests...
  *
  * If you want to run all your tests in one suite, you can just place one subclass of
@@ -45,7 +43,12 @@ import org.junit.runner.RunWith
  * The advantage of running your tests as multiple suites is that it is easy to run a subset of your SodaTests.
  * If you go the single-suite route, then to run any one of your SodaTests you will have to run them all.
  *
- * You can override any of the three annotations applied to this class in order to change parameters affecting the
+ * Test subclasses can be annotated with {org.sodatest.junit.JUnitSodaTestLauncherFixtureRoot}
+ * to specify the root search package for fixtures.
+ * By convention, the Runner will look for fixtures using the package of the JUnitSodaTestLauncherTestBase
+ * subclass as the fixture root.
+ *
+ * You can also override any of the three annotations applied to this class in order to change parameters affecting the
  * execution of your tests.
  *
  * Lastly, if you'd like to increase or decrease the amount of information that SodaTest outputs when running through JUnit,
