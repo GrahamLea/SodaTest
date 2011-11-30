@@ -21,10 +21,32 @@ import org.junit.Test
 import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
 import org.sodatest.runtime.data.blocks._
-import org.sodatest.runtime.data.results.ReportBlockResult
 import org.sodatest.api.reflection._
+import java.lang.UnsupportedOperationException
+import org.sodatest.api.{SodaReport, SodaFixture}
+import org.sodatest.runtime.data.results.{ReportLineMatch, ReportBlockResult}
 
 class ReportBlockExecutorTest {
+  @Test
+    def shouldTrimEmptyLinesFromTheEndOfOutputLines {
+    val sodaTestExecutionContext = new SodaTestExecutionContext(new SodaTestContext)
+    sodaTestExecutionContext.currentFixture = Some(new SodaFixture {
+      def createReport(name: String) = Some(new SodaReport {
+        def apply(parameters: Map[String, String]) = List(List("Text", " ", "More text", " ", " "))
+      })
+      def createEvent(name: String) = throw new UnsupportedOperationException()
+    })
+
+    val source = new BlockSource(List(Line(1, List("Report", "My Report", "!!"))))
+    val reportBlock = new ReportBlock(source, "My Report", true, Nil, List(new ReportExecution(None, List(Line(0, List("", "Text", " ", "More text"))))))
+    val result: ReportBlockResult = ReportBlockExecutor.execute(reportBlock, sodaTestExecutionContext)
+    assertThat(result.block, is(sameInstance(reportBlock)))
+    println("result.executionResults = " + result.executionResults)
+    assertThat(result.succeeded, is(true))
+    assertThat(result.executionResults.head.matchResult.passed, is(true))
+    assertThat(result.executionResults.head.matchResult.lineResults.head.asInstanceOf[ReportLineMatch].cells, is(List("", "Text", " ", "More text")))
+  }
+
   @Test
   def shouldReturnAnExecutionErrorForNoFixture {
     val source = new BlockSource(List(Line(1, List("Report", "My Report", "!!"))))

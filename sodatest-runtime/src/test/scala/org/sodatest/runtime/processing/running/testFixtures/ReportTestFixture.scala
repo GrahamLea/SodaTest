@@ -66,7 +66,10 @@ class ReportTestFixture extends SodaFixture {
           lastExecutedEventName match {
 
             case Some(eventName) => (parameters.get("First Line"), parameters.get("Last Line")) match {
-              case Integers(first, last) => executedParameters.drop(first - 1).take(last - first + 1)
+              case Integers(first, last) => {
+                val selectedLines = executedParameters.drop(first - 1).take(last - first + 1)
+                selectedLines.map(_ ::: List(" ", " ")) // Adding empty cells at the end of each line to test output trimming
+              }
               case _ => throw new RuntimeException("Invalid parameters")
             }
             case _ => List(List("NO EVENT EXECUTION"))

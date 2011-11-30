@@ -55,6 +55,8 @@ object ReportBlockExecutor {
           case Some(report) => {
             try {
               val reportOutput = report(block.parameterMap(execution))
+                                  .map(_.reverse.dropWhile(_.trim.isEmpty).reverse) // Drop trailing cells containing only whitespace
+              println("reportOutput = " + reportOutput)
               val expectedResult = execution.expectedResult
               if (reportOutput == expectedResult.map(_.cells.tail))
                 new ReportExecutionResult(execution, ReportMatchResult.allGood(expectedResult))
