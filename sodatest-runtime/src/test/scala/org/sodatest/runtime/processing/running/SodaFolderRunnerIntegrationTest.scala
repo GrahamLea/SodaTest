@@ -47,13 +47,12 @@ class SodaFolderRunnerIntegrationTest extends XMLLoader[Elem] {
     val extension: String = if (test endsWith ".html") "" else ".csv.html"
     val testOutput = loadFile(new File(results + "/" + test + extension))
     val expectedOutput = loadFile(new File(expectedResults + "/" + test + extension))
-//    assertThat(test, toStringWithExecutionDependentPartsRemoved(testOutput), is(toStringWithExecutionDependentPartsRemoved(expectedOutput)))
     assertEquals(test, toStringWithExecutionDependentPartsRemoved(expectedOutput), toStringWithExecutionDependentPartsRemoved(testOutput))
   }
 
   @Test
   def runFolderRunner() {
-//    cleanOnShutdown()
+    cleanOnShutdown()
 
     var success: Option[Boolean] = None
     SodaFolderRunner.main(Array(fixtureRoot, source, results), (b) => {success = Some(b)})
