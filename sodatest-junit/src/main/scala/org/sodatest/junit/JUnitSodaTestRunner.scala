@@ -37,7 +37,18 @@ import org.sodatest.runtime.data.results.{ParseErrorBlockResult, EventBlockResul
  */
 class JUnitSodaTestRunner(testClass: Class[_ <: JUnitSodaTestLauncherTestBase]) extends ParentRunner[File](testClass) {
 
-  private val log = new ConsoleLog(ConsoleLog.Level.Debug)
+  private val logLevel: ConsoleLog.Level.Value = System.getProperty("JUnitSodaTestRunner.log.level", "Info").toLowerCase match {
+    case "error" => ConsoleLog.Level.Error
+    case "info" => ConsoleLog.Level.Info
+    case "debug" => ConsoleLog.Level.Debug
+    case "verbose" => ConsoleLog.Level.Verbose
+    case value => {
+      System.err.println("WARNING: SodaTest: Unrecognised value '" + value + "' for system property JUnitSodaTestRunner.log.level. Using 'Info' instead.")
+      ConsoleLog.Level.Info
+    }
+  }
+
+  private val log = new ConsoleLog(logLevel)
   private val baseDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherBaseDir]).value
   private val filePattern = testClass.getAnnotation(classOf[JUnitSodaTestLauncherFilePattern]).value
   private val outputDirName = testClass.getAnnotation(classOf[JUnitSodaTestLauncherOutputDirectory]).value

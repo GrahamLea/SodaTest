@@ -40,8 +40,7 @@ import org.junit.runner.RunWith
  *
  * To run your tests as multiple suites, you should place subclasses of JUnitSodaTestLauncherTestBase in
  * packages under src/test/scala that correspond to parts of the tree under src/test/sodatest
- * containing the tests. By convention, the Runner will look for fixtures using the package of this
- * JUnitSodaTestLauncherTestBase subclass as the fixture root.
+ * containing the tests.
  *
  * The advantage of running your tests as multiple suites is that it is easy to run a subset of your SodaTests.
  * If you go the single-suite route, then to run any one of your SodaTests you will have to run them all.
@@ -49,7 +48,10 @@ import org.junit.runner.RunWith
  * You can override any of the three annotations applied to this class in order to change parameters affecting the
  * execution of your tests.
  *
- * The sodatest-examples/junit module contains an example of using JUnitSodaTestLauncherTestBase to run SodaTests
+ * Lastly, if you'd like to increase or decrease the amount of information that SodaTest outputs when running through JUnit,
+ * you can set the "JUnitSodaTestRunner.log.level" system property to one of Error, Info (the default), Debug or Verbose.
+ *
+ * The sodatest-examples/sodatest-examples-junit module contains an example of using JUnitSodaTestLauncherTestBase to run SodaTests
  * in multiple suites.
  */
 @RunWith(classOf[JUnitSodaTestRunner])
