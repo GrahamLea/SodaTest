@@ -88,7 +88,7 @@ object SodaFileRunner {
       }
       catch {
         case e: InvalidDirectoryException => usage(Some("Error: " + e.getMessage)); successCallback(false)
-        case e: IOException => usage(Some("Error: " + e.getMessage)); successCallback(false)
+        case e: IOException => usage(Some("Error: " + e.getClass.getSimpleName + ": " + e.getMessage)); successCallback(false)
       }
     }
   }
