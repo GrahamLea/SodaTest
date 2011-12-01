@@ -97,6 +97,6 @@ object SodaFileRunner {
 
   private def usage(message: Option[String]): Unit = {
     message map {System.err.println(_)}
-    System.err.println("usage: SodaDirectoryRunner <fixture_root_package> <input_file> <output_file>")
+    System.err.println("usage: SodaFileRunner <fixture_root_package> <input_file> <output_file>")
   }
 }
