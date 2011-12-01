@@ -23,23 +23,72 @@ import jm.{BigDecimal => JBigDecimal}
 import reflect.Manifest
 
 object CurrencyAmountCoercion {
-  def patternsForSymbol(currencySymbol: Char) = {
-    List("#,##0.00;-#,##0.00",
-         "#,##0.00;(#,##0.00)",
-         currencySymbol + "#,##0.00;-" + currencySymbol + "#,##0.00",
-         currencySymbol + "#,##0.00;" + currencySymbol + "-#,##0.00",
-         currencySymbol + "#,##0.00;(" + currencySymbol + "#,##0.00)",
-         currencySymbol + "#,##0.00;" + currencySymbol + "(#,##0.00)"
+  /*
+   * Provides a list of DecimalFormat pattern strings for matching the most typical formats of
+   * currency amount strings.
+   *
+   * Using the default parameters, the following patterns are produced:
+   * #,##0.00
+   * -#,##0.00
+   * (#,##0.00)
+   * $#,##0.00
+   * -$#,##0.00
+   * $-#,##0.00
+   * ($#,##0.00)
+   * $(#,##0.00)
+   *
+   * Specifying parameters to the function will replace the dollar sign (currencySymbol),
+   * the comma (thousandSeparator), the period (decimalSeparator) and the number of decimal places
+   * (numberOfDecimalPlaces), respectively. If numberOfDecimalPlaces is 0, the decimalSeparator
+    * will not be used.
+   */
+  def currencyPatterns(currencySymbol: Char = '$', thousandSeparator: Char = ',', decimalSeparator: Char = '.', numberOfDecimalPlaces: Int = 2) = {
+    val minorCurrencyFormat = if (numberOfDecimalPlaces == 0) "" else (decimalSeparator + ("0" * numberOfDecimalPlaces))
+    List(String.format("#%1$s##0%2$s;(#%1$s##0%2$s)", thousandSeparator.asInstanceOf[AnyRef], minorCurrencyFormat),
+         String.format("#%1$s##0%2$s;-#%1$s##0%2$s", thousandSeparator.asInstanceOf[AnyRef], minorCurrencyFormat),
+         String.format("%1$s#%2$s##0%3$s;-%1$s#%2$s##0%3$s", currencySymbol.asInstanceOf[AnyRef], thousandSeparator.asInstanceOf[AnyRef], minorCurrencyFormat),
+         String.format("%1$s#%2$s##0%3$s;%1$s-#%2$s##0%3$s", currencySymbol.asInstanceOf[AnyRef], thousandSeparator.asInstanceOf[AnyRef], minorCurrencyFormat),
+         String.format("%1$s#%2$s##0%3$s;(%1$s#%2$s##0%3$s)", currencySymbol.asInstanceOf[AnyRef], thousandSeparator.asInstanceOf[AnyRef], minorCurrencyFormat),
+         String.format("%1$s#%2$s##0%3$s;%1$s(#%2$s##0%3$s)", currencySymbol.asInstanceOf[AnyRef], thousandSeparator.asInstanceOf[AnyRef], minorCurrencyFormat)
     )
   }
 }
 
 /**
- * TODO: Document
+ * Coerces strings that are currency amounts (e.g. "($25,000.00)") to a specified strong type for
+ * storing such amounts.
+ *
+ * <b>Example</b>
+ * {{{
+ * class MySodaEvent extends ReflectiveSodaEvent {
+ *    var coercionRegister = new CoercionRegister(new CurrencyAmountCoercion(classOf[MyMoneyClass]))
+ *
+ *    ...
+ * }}}
+ *
+ * The target class for the Coercion must provide a public, one-parameter constructor that accepts
+ * either a {scala.math.BigDecimal}, a {java.math.BigDecimal} or a String.
+ *
+ * By default, the patterns accepted by the coercion are:
+ * #,##0.00
+ * -#,##0.00
+ * (#,##0.00)
+ * $#,##0.00
+ * -$#,##0.00
+ * $-#,##0.00
+ * ($#,##0.00)
+ * $(#,##0.00)
+ *
+ * You can, if necessary, specify the patterns to be used by passing into the constructor the
+ * decimalFormatPatterns parameter, which must be a list of patterns acceptable to
+ * {java.text.DecimalFormat}. The {org.sodatest.coercion.CurrencyAmountCoercion.currencyPatterns}
+ * function is provided to aid in the construction of such pattern lists.
+ *
+ * See also {org.sodatest.coercion.java.CurrencyAmountCoercionForJava}
  */
 class CurrencyAmountCoercion[A](
     val targetClass: Class[A],
-    decimalFormatPatterns: Iterable[String] = CurrencyAmountCoercion.patternsForSymbol('$'))
+    decimalFormatPatterns: Iterable[String] = CurrencyAmountCoercion.currencyPatterns())
   extends Coercion[A]()(Manifest.classType(targetClass)) {
 
   private val scalaBigDecimalClass = classOf[BigDecimal]
