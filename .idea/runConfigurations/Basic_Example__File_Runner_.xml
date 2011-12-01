@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Basic Example (File Runner)" type="Application" factoryName="Application">
-    <extension name="coverage" enabled="false" merge="false" />
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="org.sodatest.runtime.processing.running.SodaFileRunner" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="org.sodatest.examples.basic.fixtures src/main/resources/sodatests/basicExample.csv ./basicExample.csv.html" />

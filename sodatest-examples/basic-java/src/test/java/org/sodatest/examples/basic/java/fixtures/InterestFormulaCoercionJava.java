@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package org.sodatest.examples.basic.java.fixtures
+package org.sodatest.examples.basic.java.fixtures;
 
-import org.sodatest.coercion.Coercion
-import org.sodatest.examples.basic.java.{InterestFormulaJavaFactory, InterestFormulaJava}
+import org.sodatest.coercion.java.CoercionForJava;
+import org.sodatest.examples.basic.java.InterestFormulaJava;
+import org.sodatest.examples.basic.java.InterestFormulaJavaFactory;
 
-class InterestFormulaJavaCoercion extends Coercion[InterestFormulaJava] {
-  def apply(s: String): InterestFormulaJava = InterestFormulaJavaFactory.fromString(s)
+public class InterestFormulaCoercionJava extends CoercionForJava<InterestFormulaJava> {
+
+    public InterestFormulaCoercionJava() {
+        super(InterestFormulaJava.class);
+    }
+
+    @Override
+    public InterestFormulaJava apply(String s) {
+        return InterestFormulaJavaFactory.fromString(s);
+    }
 }

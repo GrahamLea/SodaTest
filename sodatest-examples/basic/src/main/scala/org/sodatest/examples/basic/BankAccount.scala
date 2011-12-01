@@ -62,19 +62,6 @@ object Money {
   val format = new DecimalFormat("$#,##0.00")
 }
 
-class MoneyEditor extends PropertyEditorSupport {
-  val dollarPrefix = "^\\$.*".r
-
-  override def setAsText(text: String): Unit = {
-    setValue(new Money(new BigDecimal(text match {
-      case dollarPrefix() => text.substring(1).replaceAll(",", "")
-      case _ => text.replaceAll(",", "")
-    })))
-  }
-
-  override def getAsText = getValue.asInstanceOf[Money].amount.toString
-}
-
 case class AccountName(name: String) {
   override def toString = name
 }

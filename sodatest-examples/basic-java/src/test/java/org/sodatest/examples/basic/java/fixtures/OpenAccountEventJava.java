@@ -19,6 +19,7 @@ package org.sodatest.examples.basic.java.fixtures;
 import org.sodatest.api.java.reflection.ReflectiveSodaEventForJava;
 import org.sodatest.coercion.CoercionRegister;
 import org.sodatest.coercion.java.CoercionRegisterForJava;
+import org.sodatest.coercion.java.CurrencyAmountCoercionForJava;
 import org.sodatest.examples.basic.java.*;
 import scala.Option;
 
@@ -27,8 +28,8 @@ import java.util.List;
 public class OpenAccountEventJava extends ReflectiveSodaEventForJava {
     private BankAccountServiceJava service;
 
-    // TODO: Figure out how to write Coerdions in Java
-    private final CoercionRegister coercionRegister = new CoercionRegisterForJava(new InterestFormulaJavaCoercion());
+    private final CoercionRegister coercionRegister =
+            new CoercionRegisterForJava(new InterestFormulaCoercionJava(), new CurrencyAmountCoercionForJava(MoneyJava.class));
 
     private static final Option<MoneyJava> NoneMoney = None();
 

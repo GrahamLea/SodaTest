@@ -17,12 +17,12 @@
 package org.sodatest.examples.basic.fixtures
 
 import org.sodatest.api.reflection.{ReflectiveSodaEvent, ReflectiveSodaReport, ReflectiveSodaFixture}
-import org.sodatest.coercion.{CoercionRegister, Coercion}
 import org.sodatest.api.SodaReport
 
 import SodaReport._
 import collection.immutable.List._
 import org.sodatest.examples.basic._
+import org.sodatest.coercion.{CurrencyAmountCoercion, CoercionRegister, Coercion}
 
 class BankAccountFixture extends ReflectiveSodaFixture {
 
@@ -77,7 +77,7 @@ class StatementReport(val service: BankAccountService) extends ReflectiveSodaRep
 
 class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
 
-  val coercionRegister = new CoercionRegister(InterestFormulaCoercion)
+  val coercionRegister = new CoercionRegister(InterestFormulaCoercion, new CurrencyAmountCoercion(classOf[Money]))
 
   var accountName: AccountName = null
   var tags: List[String] = Nil
@@ -95,6 +95,9 @@ class OpenAccountEvent(val service: BankAccountService) extends ReflectiveSodaEv
 }
 
 class DepositEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
+
+  val coercionRegister = new CoercionRegister(new CurrencyAmountCoercion(classOf[Money]))
+
   var accountName: AccountName = null
   var amount: Money = null
 
@@ -102,6 +105,9 @@ class DepositEvent(val service: BankAccountService) extends ReflectiveSodaEvent 
 }
 
 class WithdrawEvent(val service: BankAccountService) extends ReflectiveSodaEvent {
+
+  val coercionRegister = new CoercionRegister(new CurrencyAmountCoercion(classOf[Money]))
+
   var accountName: AccountName = null
   var amount: Money = null
 
