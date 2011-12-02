@@ -16,9 +16,10 @@
 
 package org.sodatest.coercion { package test {
 
-import java.lang.reflect.Type
-import java.util.Arrays
-import java.beans.PropertyEditorSupport
+import _root_.java.{lang => jl, util => ju, beans => jb}
+import jl.reflect.Type
+import ju.Arrays
+import jb.PropertyEditorSupport
 import org.specs.SpecificationWithJUnit
 
 class CoercionSpec extends SpecificationWithJUnit {
@@ -31,8 +32,8 @@ class CoercionSpec extends SpecificationWithJUnit {
   val optionWithIntConstructorAndCoercion: Option[ClassWithIntConstructor] = None
   val listString: List[String] = Nil
   val listInt: List[Int] = Nil
-  val javaListString: java.util.List[String] = null
-  val javaListInt: java.util.List[Int] = null
+  val javaListString: ju.List[String] = null
+  val javaListInt: ju.List[Int] = null
   val listOptionString: List[Option[String]] = Nil
   val optionListString: Option[List[String]] = None
 
@@ -78,6 +79,12 @@ class CoercionSpec extends SpecificationWithJUnit {
 
     "coerce using a Coercion implementation in a provided CoercionRegister" in {
       Coercion.coerce("789", classOf[ClassWithIntConstructor], new CoercionRegister(ClassWithIntConstructorCoercion)) must beLike {
+        case o: ClassWithIntConstructor => o.value == 789
+      }
+    }
+
+    "coerce using a Coercion implementation in a second provided CoercionRegister" in {
+      Coercion.coerce("789", classOf[ClassWithIntConstructor], List(new CoercionRegister(), new CoercionRegister(ClassWithIntConstructorCoercion))) must beLike {
         case o: ClassWithIntConstructor => o.value == 789
       }
     }
@@ -166,7 +173,7 @@ class CoercionSpec extends SpecificationWithJUnit {
     }
 
     "coerce an empty string to a java.util.List[Int] as an empty list" in {
-      Coercion.coerce("", typeOf("javaListInt")) must_== Arrays.asList[java.lang.Integer]()
+      Coercion.coerce("", typeOf("javaListInt")) must_== Arrays.asList[jl.Integer]()
     }
 
     "coerce a blank string to a scala.List[Int] as Nil" in {

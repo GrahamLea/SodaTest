@@ -19,7 +19,7 @@ package runtime.processing.formatting.xhtml
 
 import api.SodaTestLog
 import xml.Elem
-import runtime.data.results.{ContainsParameterBindingException, EventBlockResult}
+import runtime.data.results.{ContainsCoercionBindingException, EventBlockResult}
 
 object XhtmlEventFormatter {
 
@@ -43,7 +43,7 @@ object XhtmlEventFormatter {
               (executionResult.error match {
                 case None => NO_XML
 
-                case ContainsParameterBindingException(bindException) => {
+                case ContainsCoercionBindingException(bindException) => {
                   formatter.failureDetails(() => {
                     formatter.bindFailureDetails(bindException, result)
                   }) ++ NEWLINE

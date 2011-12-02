@@ -18,7 +18,7 @@ package org.sodatest
 package runtime.processing.execution
 
 import api.SodaFixture
-import api.reflection.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
+import coercion.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
 import java.lang.reflect.InvocationTargetException
 import runtime.data.blocks.{ReportBlock, EventBlock}
 import runtime.data.results.{ReportBlockResult, EventExecutionResult, ExecutionError, EventBlockResult}

@@ -23,7 +23,7 @@ import collection.immutable.Map
 import org.junit.Assert._
 import org.junit.Test
 import org.sodatest.api.{SodaEvent, SodaReport}
-;
+import org.sodatest.coercion.ReflectionTargetReturnsTheWrongTypeException
 
 class ReflectiveSodaFixtureTest {
 

@@ -21,10 +21,11 @@ import org.junit.Test
 import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
 import org.sodatest.runtime.data.blocks._
-import org.sodatest.api.reflection._
 import java.lang.UnsupportedOperationException
 import org.sodatest.api.{SodaReport, SodaFixture}
-import org.sodatest.runtime.data.results.{ReportLineMatch, ReportBlockResult}
+import org.sodatest.runtime.data.results.ReportLineMatch
+import org.sodatest.runtime.data.results.ReportBlockResult
+import org.sodatest.coercion.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
 
 class ReportBlockExecutorTest {
   @Test
@@ -75,7 +76,7 @@ class ReportBlockExecutorTest {
       case None => fail("Expecting Block Error")
       case Some(error) => {
         assertThat(error.message, is("The function that matches this name does not return a Report"))
-        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.ReflectionTargetReturnsTheWrongTypeException: Function 'reportNameReturningEvent' does not return a SodaReport").asInstanceOf[Option[String]]))
+        assertThat(error.causeString, is(Some("org.sodatest.coercion.ReflectionTargetReturnsTheWrongTypeException: Function 'reportNameReturningEvent' does not return a SodaReport").asInstanceOf[Option[String]]))
         assertThat(error.cause.get, is(instanceOf(classOf[ReflectionTargetReturnsTheWrongTypeException])))
       }
     }
@@ -93,7 +94,7 @@ class ReportBlockExecutorTest {
       case None => fail("Expecting Block Error")
       case Some(error) => {
         assertThat(error.message, is("The Report name is ambiguous in the current Fixture"))
-        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.NameMatchesMoreThanOneMethodException: SodaReport name 'Report Name Different By Case' (canonized to 'reportnamedifferentbycase') matches more than one method: List(FixtureThatCausesErrorsWhenCreatingStuff.reportNameDifferentByCase, FixtureThatCausesErrorsWhenCreatingStuff.reportNameDifferentByCASE)").asInstanceOf[Option[String]]))
+        assertThat(error.causeString, is(Some("org.sodatest.coercion.NameMatchesMoreThanOneMethodException: SodaReport name 'Report Name Different By Case' (canonized to 'reportnamedifferentbycase') matches more than one method: List(FixtureThatCausesErrorsWhenCreatingStuff.reportNameDifferentByCase, FixtureThatCausesErrorsWhenCreatingStuff.reportNameDifferentByCASE)").asInstanceOf[Option[String]]))
         assertThat(error.cause.get, is(instanceOf(classOf[NameMatchesMoreThanOneMethodException])))
       }
     }

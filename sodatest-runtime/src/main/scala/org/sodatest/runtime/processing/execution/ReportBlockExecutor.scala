@@ -20,7 +20,7 @@ package runtime.processing.execution
 import runtime.data.results._
 import runtime.data.blocks.{Line, ReportBlock}
 import api.SodaFixture
-import api.reflection.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
+import coercion.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
 import java.lang.reflect.InvocationTargetException
 
 object ReportBlockExecutor {

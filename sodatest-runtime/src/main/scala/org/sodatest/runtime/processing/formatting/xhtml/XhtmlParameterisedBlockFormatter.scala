@@ -21,7 +21,7 @@ import runtime.data.blocks._
 import xml.NodeSeq
 import collection.immutable.List._
 import runtime.data.results._
-import api.ParameterBindingException
+import coercion.CoercionBindingException
 
 private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](result: BlockResult[T])
   extends XhtmlBlockFormatter[T](result) {
@@ -36,7 +36,7 @@ private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](re
     }
   }
 
-  def bindFailureDetails(bindException: ParameterBindingException, result: BlockResult[_ <: ParamterisedBlock]) = {
+  def bindFailureDetails(bindException: CoercionBindingException, result: BlockResult[_ <: ParamterisedBlock]) = {
     for (val failure <- bindException.bindFailures) yield {
       val parameterIndex = result.block.parameterNames.indexOf(failure.parameterName) + 1
       val blockType = if (result.isInstanceOf[ReportBlockResult]) "Report" else "Event"
@@ -54,7 +54,7 @@ private[xhtml] class XhtmlParameterisedBlockFormatter[T <: ParamterisedBlock](re
         val (rowClass, invokerClass, bindException) = executionResult.error match {
           case None => (if (executionResult.isInstanceOf[EventExecutionResult]) " success" else "", " success", None)
           case Some(error) => error.cause match {
-            case Some(bindException: ParameterBindingException) => (" failure", "", Some(bindException))
+            case Some(bindException: CoercionBindingException) => (" failure", "", Some(bindException))
             case _ => (" failureSource", " failure", None)
           }
         }

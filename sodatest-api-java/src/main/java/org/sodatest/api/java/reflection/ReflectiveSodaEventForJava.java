@@ -16,10 +16,10 @@
 
 package org.sodatest.api.java.reflection;
 
-import org.sodatest.api.ParameterBindingException;
+import org.sodatest.api.reflection.ReflectiveSodaEvent$class;
 import org.sodatest.api.java.JavaParameterConverter;
 import org.sodatest.api.reflection.ReflectiveSodaEvent;
-import org.sodatest.api.reflection.ReflectiveSodaEvent$class;
+import org.sodatest.coercion.CoercionBindingException;
 import scala.collection.immutable.Map;
 
 /**
@@ -61,7 +61,7 @@ public abstract class ReflectiveSodaEventForJava extends JavaParameterConverter 
      * Coerces and binds the parameters to this Event, then delegates to the {@link #apply()} function.
      */
     @Override
-    public final void apply(Map<String, String> parameters) throws ParameterBindingException {
+    public final void apply(Map<String, String> parameters) throws CoercionBindingException {
         ReflectiveSodaEvent$class.apply(this, parameters);
     }
 }

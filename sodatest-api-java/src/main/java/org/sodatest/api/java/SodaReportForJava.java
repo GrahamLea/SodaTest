@@ -16,12 +16,10 @@
 
 package org.sodatest.api.java;
 
-import org.sodatest.api.ParameterBindingException;
+import org.sodatest.coercion.CoercionBindingException;
 import org.sodatest.api.SodaReport;
-import scala.collection.JavaConversions;
 import scala.collection.Seq;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,12 +39,12 @@ public abstract class SodaReportForJava extends JavaReportConverter implements S
      * @param parameters A map of parameter names and values that should be used in executing the
      * Report.
      *
-     * @throws ParameterBindingException if an error occurs while attempting to translate one of the
+     * @throws CoercionBindingException if an error occurs while attempting to translate one of the
      * string values in the parameter map into a value that can be used by the Report.
      *
      * @throws java.lang.Throwable if anything else goes wrong while executing the Report.
      */
-    public abstract List<List<String>> getReport(Map<String, String> parameters) throws ParameterBindingException;
+    public abstract List<List<String>> getReport(Map<String, String> parameters) throws CoercionBindingException;
 
     /**
      * Converts the parameters to a Java Map and passes them to {@link #getReport(java.util.Map)}
@@ -56,7 +54,7 @@ public abstract class SodaReportForJava extends JavaReportConverter implements S
      * {@link #convertReport(java.util.List)} if you want to use different methods of conversion.
      */
     @Override
-    public final Seq<Seq<String>> apply(scala.collection.immutable.Map<String, String> parameters) throws ParameterBindingException {
+    public final Seq<Seq<String>> apply(scala.collection.immutable.Map<String, String> parameters) throws CoercionBindingException {
         return convertReport(getReport(convertParameters(parameters)));
     }
 }

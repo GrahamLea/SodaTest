@@ -17,6 +17,8 @@
 package org.sodatest.api { package reflection {
 
 import collection.immutable.Map
+import org.sodatest.coercion.{CoercionBindingException, CoercionReflectionUtil}
+
 /**
  * [[org.sodatest.api.SodaReport]] base class that supports the automatic binding of parameters to
  * public and strongly-typed vars, fields or setter methods.
@@ -74,9 +76,9 @@ trait ReflectiveSodaReport extends SodaReport {
    * or after the execution of the Report, calling super.apply(parameters) at the appropriate point.
    *
    */
-  @throws(classOf[ParameterBindingException])
+  @throws(classOf[CoercionBindingException])
   def apply(parameters: Map[String, String]) = {
-    ReflectionUtil.setByReflection(parameters, this)
+    CoercionReflectionUtil.setByReflection(parameters, this)
     apply()
   }
 }

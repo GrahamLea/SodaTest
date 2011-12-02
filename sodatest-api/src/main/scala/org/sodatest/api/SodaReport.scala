@@ -16,6 +16,8 @@
 
 package org.sodatest.api
 
+import org.sodatest.coercion.CoercionBindingException
+
 /**
  * A Report that queries the status of the System under test and returns the result of that query
  * as a table.
@@ -39,12 +41,12 @@ trait SodaReport {
    * @param parameters A map of parameter names and values that should be used in executing the
    * Report.
    *
-   * @throws ParameterBindingException if an error occurs while attempting to translate one of the
+   * @throws CoercionBindingException if an error occurs while attempting to translate one of the
    * string values in the parameter map into a value that can be used by the Report.
    *
    * @throws java.lang.Throwable if anything else goes wrong while executing the Report.
    */
-  @throws(classOf[ParameterBindingException])
+  @throws(classOf[CoercionBindingException])
   def apply(parameters: Map[String, String]): Seq[Seq[String]]
 }
 

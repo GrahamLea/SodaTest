@@ -16,6 +16,8 @@
 
 package org.sodatest.api { package reflection {
 
+import org.sodatest.coercion.CoercionReflectionUtil
+
 /**
  * [[org.sodatest.api.SodaFixture]] base class that supports the discovery of [[org.sodatest.api.SodaEvent]]s
  * and [[org.sodatest.api.SodaReport]]s by reflecting on the subclass' functions.
@@ -38,7 +40,7 @@ package org.sodatest.api { package reflection {
  * }}}
  */
 trait ReflectiveSodaFixture extends SodaFixture {
-  import ReflectionUtil._
+  import CoercionReflectionUtil._
 
   /**
    * Creates a SodaEvent by reflecting on this SodaFixture to find a function whose canonized

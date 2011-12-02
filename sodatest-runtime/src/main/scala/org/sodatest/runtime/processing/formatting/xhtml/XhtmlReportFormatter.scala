@@ -44,7 +44,7 @@ object XhtmlReportFormatter {
                 case None =>
                   executionResultRows(executionResult)
 
-                case ContainsParameterBindingException(bindException) => {
+                case ContainsCoercionBindingException(bindException) => {
                   formatter.failureDetails(() => {
                     formatter.bindFailureDetails(bindException, result)
                   }) ++ NEWLINE

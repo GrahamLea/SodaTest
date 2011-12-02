@@ -16,12 +16,12 @@
 
 package org.sodatest.runtime.data.results
 
-import org.sodatest.api.ParameterBindingException
+import org.sodatest.coercion.CoercionBindingException
 
-object ContainsParameterBindingException {
+object ContainsCoercionBindingException {
   def unapply(error: Option[ExecutionError]) = {
     error.flatMap(_.cause) match {
-      case Some(e: ParameterBindingException) => Some(e)
+      case Some(e: CoercionBindingException) => Some(e)
       case _ => None
     }
   }

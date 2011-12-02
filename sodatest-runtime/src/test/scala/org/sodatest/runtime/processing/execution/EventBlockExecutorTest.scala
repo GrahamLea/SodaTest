@@ -21,7 +21,7 @@ import org.junit.Test
 import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
 import org.sodatest.runtime.data.results.EventBlockResult
-import org.sodatest.api.reflection.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
+import org.sodatest.coercion.{NameMatchesMoreThanOneMethodException, ReflectionTargetReturnsTheWrongTypeException}
 import org.sodatest.runtime.data.blocks._
 
 class EventBlockExecutorTest {
@@ -53,7 +53,7 @@ class EventBlockExecutorTest {
       case None => fail("Expecting Block Error")
       case Some(error) => {
         assertThat(error.message, is("The function that matches this name does not return an Event"))
-        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.ReflectionTargetReturnsTheWrongTypeException: Function 'eventNameReturningReport' does not return a SodaEvent").asInstanceOf[Option[String]]))
+        assertThat(error.causeString, is(Some("org.sodatest.coercion.ReflectionTargetReturnsTheWrongTypeException: Function 'eventNameReturningReport' does not return a SodaEvent").asInstanceOf[Option[String]]))
         assertThat(error.cause.get, is(instanceOf(classOf[ReflectionTargetReturnsTheWrongTypeException])))
       }
     }
@@ -71,7 +71,7 @@ class EventBlockExecutorTest {
       case None => fail("Expecting Block Error")
       case Some(error) => {
         assertThat(error.message, is("The Event name is ambiguous in the current Fixture"))
-        assertThat(error.causeString, is(Some("org.sodatest.api.reflection.NameMatchesMoreThanOneMethodException: SodaEvent name 'Event Name Different By Case' (canonized to 'eventnamedifferentbycase') matches more than one method: List(FixtureThatCausesErrorsWhenCreatingStuff.eventNameDifferentByCase, FixtureThatCausesErrorsWhenCreatingStuff.eventNameDifferentByCASE)").asInstanceOf[Option[String]]))
+        assertThat(error.causeString, is(Some("org.sodatest.coercion.NameMatchesMoreThanOneMethodException: SodaEvent name 'Event Name Different By Case' (canonized to 'eventnamedifferentbycase') matches more than one method: List(FixtureThatCausesErrorsWhenCreatingStuff.eventNameDifferentByCase, FixtureThatCausesErrorsWhenCreatingStuff.eventNameDifferentByCASE)").asInstanceOf[Option[String]]))
         assertThat(error.cause.get, is(instanceOf(classOf[NameMatchesMoreThanOneMethodException])))
       }
     }

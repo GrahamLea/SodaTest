@@ -16,6 +16,8 @@
 
 package org.sodatest.api
 
+import org.sodatest.coercion.CoercionBindingException
+
 /**
  * An Event that, when applied, causes some input to be applied to the system under test.
  *
@@ -38,11 +40,11 @@ trait SodaEvent {
    * @param parameters A map of parameter names and values that should be used in applying the
    * Event.
    *
-   * @throws ParameterBindingException if an error occurs while attempting to translate one of the
+   * @throws CoercionBindingException if an error occurs while attempting to translate one of the
    * string values in the parameter map into a value that can be used by the Event.
    *
    * @throws java.lang.Throwable if anything else goes wrong while executing the Event.
    */
-  @throws(classOf[ParameterBindingException])
+  @throws(classOf[CoercionBindingException])
   def apply(parameters: Map[String, String]): Unit
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.sodatest.api
+package org.sodatest.coercion
 
 /**
  * Details about the failure to bind a single parameter.
  */
-class ParameterBindFailure(
+class CoercionBindFailure(
   val parameterName: String,
   val parameterValue: String,
   val errorMessage: String,
@@ -27,14 +27,14 @@ class ParameterBindFailure(
 ) {}
 
 /**
- * An exception indicating that one or more failures occured while attempting to bind paramter
- * values to the parameters of a [[org.sodatest.api.SodaEvent]] or [org.sodatest.api.SodaReport]].
+ * An exception indicating that one or more failures occurred while attempting to bind parameter
+ * values to the parameters of a target object using [[CoercionReflectionUtil]].
  *
  * Rather than failing on the first occurrence of a bind failure, Events and Reports will typically
- * attempt to bind all parameters and then report all failures at once in a single ParameterBindingException.
+ * attempt to bind all parameters and then report all failures at once in a single CoercionBindingException.
  */
-class ParameterBindingException(val bindFailures: List[ParameterBindFailure]) extends RuntimeException {
-  override def toString = "ParameterBindingException: " + bindFailures.map(
+class CoercionBindingException(val bindFailures: List[CoercionBindFailure]) extends RuntimeException {
+  override def toString = "CoercionBindingException: " + bindFailures.map(
     f => f.parameterName + ": " + f.parameterValue + "(" + f.errorMessage + ")").mkString(", ")
 }
 

@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.sodatest.api { package reflection {
+package org.sodatest.coercion
 
 import _root_.java.lang.reflect._
 import collection.immutable.Map
-import org.sodatest.coercion.{CoercionRegister, Coercion}
 
 class ReflectionTargetReturnsTheWrongTypeException(message: String) extends RuntimeException(message)
 class NameMatchesMoreThanOneMethodException(message: String) extends RuntimeException(message)
 
-private[reflection] object ReflectionUtil {
+object CoercionReflectionUtil {
 
   def invokeNoParamFunctionReturning[A](requiredClass: Class[A], name: String, target: Object) = {
     val searchName = canonizedName(name)
@@ -46,19 +45,19 @@ private[reflection] object ReflectionUtil {
     }
   }
 
-  @throws(classOf[ParameterBindingException])
+  @throws(classOf[CoercionBindingException])
   def setByReflection(parameters: Map[String, String], target: Object): Unit = {
 
-    val coercionRegister = coercionRegisterIn(target)
+    val coercionRegister = coercionRegisterIn(target).map(coercionOption => List(coercionOption)) // TODO Try to get one from the fixture too
 
     val assignmentMethodsMap: Map[String, Method] = target.getClass.getMethods.flatMap(m => m match {
           case AssignmentMethod(fieldName) => Some((canonizedName(fieldName), m))
           case _ => None
-    }) toMap
+    }).toMap
 
     val fieldsMap: Map[String, Field] = target.getClass.getFields.toList.map(f => (canonizedName(f.getName), f)).toMap
 
-    val bindFailures: Iterable[Option[ParameterBindFailure]] = for (val (parameterName, parameterValue) <- parameters) yield {
+    val bindFailures: Iterable[Option[CoercionBindFailure]] = for (val (parameterName, parameterValue) <- parameters) yield {
       val canonizedParameterName: String = canonizedName(parameterName)
       assignmentMethodsMap.get(canonizedParameterName) match {
         case Some(method) => {
@@ -68,7 +67,7 @@ private[reflection] object ReflectionUtil {
             None
           }
           catch {
-            case e => Some(new ParameterBindFailure(parameterName, parameterValue, e.toString, Some(e)))
+            case e => Some(new CoercionBindFailure(parameterName, parameterValue, e.toString, Some(e)))
           }
         }
         case None => {
@@ -80,10 +79,10 @@ private[reflection] object ReflectionUtil {
                 None
               }
               catch {
-                case e => Some(new ParameterBindFailure(parameterName, parameterValue, e.toString, Some(e)))
+                case e => Some(new CoercionBindFailure(parameterName, parameterValue, e.toString, Some(e)))
               }
             }
-            case None => Some(new ParameterBindFailure(parameterName, parameterValue,
+            case None => Some(new CoercionBindFailure(parameterName, parameterValue,
                             String.format("Parameter '%s' could not be found on %s (%s)", parameterName, target.getClass.getSimpleName, target.getClass.getPackage.getName)))
           }
         }
@@ -92,7 +91,7 @@ private[reflection] object ReflectionUtil {
 
     bindFailures flatten match {
       case Nil => {}
-      case failureList => throw new ParameterBindingException(failureList toList)
+      case failureList => throw new CoercionBindingException(failureList toList)
     }
   }
 
@@ -130,4 +129,3 @@ private[reflection] object ReflectionUtil {
   }
 }
 
-}}

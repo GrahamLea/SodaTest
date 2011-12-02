@@ -20,6 +20,7 @@ package runtime.processing.running.testFixtures
 import api.SodaFixture._
 import collection.immutable.TreeMap
 import api._
+import coercion.{CoercionBindingException, CoercionBindFailure}
 
 class EventTestFixture extends SodaFixture {
 
@@ -35,15 +36,15 @@ class EventTestFixture extends SodaFixture {
           if (name endsWith "bind exception") {
             val bindFailures = parameters.flatMap((kv) => {
               if (kv._2 startsWith "Error")
-                Some(new ParameterBindFailure(kv._1, kv._2, "This fixture is programmed to do this"))
+                Some(new CoercionBindFailure(kv._1, kv._2, "This fixture is programmed to do this"))
               else
                 None
             })
 
             bindFailures match {
               case head :: tail =>
-                throw new ParameterBindingException(
-                  new ParameterBindFailure(head.parameterName, head.parameterValue, head.errorMessage, Some(new RuntimeException("An exception causing a bind failure"))) :: tail)
+                throw new CoercionBindingException(
+                  new CoercionBindFailure(head.parameterName, head.parameterValue, head.errorMessage, Some(new RuntimeException("An exception causing a bind failure"))) :: tail)
               case _ => ;
             }
           }

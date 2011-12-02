@@ -22,8 +22,7 @@ import org.hamcrest.CoreMatchers._
 import collection.immutable.Map
 import org.junit.Assert._
 import org.junit.Test
-import org.sodatest.api.ParameterBindingException
-import org.sodatest.coercion.{UnableToCoerceException, Coercion, CoercionRegister}
+import org.sodatest.coercion.{CoercionBindingException, UnableToCoerceException, Coercion, CoercionRegister}
 ;
 
 class ReflectiveSodaEventTest {
@@ -227,10 +226,10 @@ class ReflectiveSodaEventTest {
 
     try {
       event.apply(Map("value1" -> "First value", "value2" -> "Second value"))
-      fail("Expecting ParameterBindingException")
+      fail("Expecting CoercionBindingException")
     }
     catch {
-      case e: ParameterBindingException => {
+      case e: CoercionBindingException => {
         e.bindFailures match {
           case List(failure) => {
             assertThat(failure.parameterName, is("value2"))
@@ -258,10 +257,10 @@ class ReflectiveSodaEventTest {
 
     try {
       event.apply(Map("First Value" -> "aa", "value2" -> "bb"))
-      fail("Expecting ParameterBindingException")
+      fail("Expecting CoercionBindingException")
     }
     catch {
-      case pbe: ParameterBindingException => {
+      case pbe: CoercionBindingException => {
         pbe.bindFailures match {
           case List(failure1, failure2) => {
             assertThat(failure1.parameterName, is("First Value"))

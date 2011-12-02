@@ -17,9 +17,10 @@
 package org.sodatest {
 package coercion {
 
-import java.lang.reflect.Modifier
-import java.lang.reflect.{ParameterizedType, Type, Constructor}
-import java.beans.PropertyEditor
+import _root_.java.{lang => jl, beans => jb, util => ju}
+import jl.reflect.Modifier
+import jl.reflect.{ParameterizedType, Type, Constructor}
+import jb.PropertyEditor
 import collection._
 import mutable.ArrayBuffer
 
@@ -36,15 +37,29 @@ abstract class Coercion[A](implicit manifest: Manifest[A]) {
 /**
  * Contains a map of Coercions that are applicable within some context.
  */
-class CoercionRegister(c: Coercion[_]*) {
+class CoercionRegister(coercions: Iterable[Coercion[_]]) {
 
-  private var coercions: Map[Class[_], Coercion[_]] = Map()
+  def this(coercions: Coercion[_]*) = this(coercions.toList)
 
-  c.foreach(add(_))
+  private val coercionMap: Map[Class[_], Coercion[_]] = Map(coercions.map(c => {(c.resultClass, c)}).toList:_*)
 
-  def add(c: Coercion[_]): Unit = { coercions += ((c.resultClass, c)) }
+  /**
+   * Returns a {Some[Coercion]} from this register capable of producing an instance of the specified class,
+   * or {None} if no matching Coercion is registered. 
+   */
+  def get[A](targetClass: Class[A]): Option[Coercion[A]] = { coercionMap.get(targetClass).asInstanceOf[Option[Coercion[A]]] }
 
-  def get[A](targetClass: Class[A]): Option[Coercion[A]] = { coercions.get(targetClass).asInstanceOf[Option[Coercion[A]]] }
+  /**
+   * Creates and returns a new CoercionRegister containing all the Coercions of this instance as
+   * well as the one provided as an argument.
+   */
+  def + (c: Coercion[_]): CoercionRegister = new CoercionRegister(c :: coercionMap.values.toList)
+
+  /**
+   * Creates and returns a new CoercionRegister containing all the Coercions of this instance as
+   * well as all the coercions in the register passed in as an argument.
+   */
+  def ++ (cr: CoercionRegister): CoercionRegister = new CoercionRegister(cr.coercionMap.values.toList ::: coercionMap.values.toList)
 }
 
 /**
@@ -75,14 +90,14 @@ object Coercion {
     new Coercion[A] { def apply(s: String) = f(s) }
 
   private val wrapperTypes: Map[Class[_], Class[_]] = Map(
-    java.lang.Boolean.TYPE ->   classOf[java.lang.Boolean],
-    java.lang.Character.TYPE -> classOf[java.lang.Character],
-    java.lang.Byte.TYPE ->      classOf[java.lang.Byte],
-    java.lang.Short.TYPE ->     classOf[java.lang.Short],
-    java.lang.Integer.TYPE ->   classOf[java.lang.Integer],
-    java.lang.Long.TYPE ->      classOf[java.lang.Long],
-    java.lang.Float.TYPE ->     classOf[java.lang.Float],
-    java.lang.Double.TYPE ->    classOf[java.lang.Double]
+    jl.Boolean.TYPE ->   classOf[jl.Boolean],
+    jl.Character.TYPE -> classOf[jl.Character],
+    jl.Byte.TYPE ->      classOf[jl.Byte],
+    jl.Short.TYPE ->     classOf[jl.Short],
+    jl.Integer.TYPE ->   classOf[jl.Integer],
+    jl.Long.TYPE ->      classOf[jl.Long],
+    jl.Float.TYPE ->     classOf[jl.Float],
+    jl.Double.TYPE ->    classOf[jl.Double]
   )
 
   /**
@@ -90,23 +105,30 @@ object Coercion {
    * CoercionRegister, if applicable.
    */
   @throws(classOf[UnableToCoerceException])
-  def coerce(value: String, targetType: Type, register: CoercionRegister): Any = coerce(value, targetType, Some(register))
+  def coerce(value: String, targetType: Type, register: CoercionRegister): Any = coerce(value, targetType, List(register))
+
+  /**
+   * Coerce the given String value to the specified target Type, using any Coercions in the given
+   * CoercionRegisters, if applicable.
+   */
+  @throws(classOf[UnableToCoerceException])
+  def coerce(value: String, targetType: Type, registers: List[CoercionRegister]): Any = coerce(value, targetType, Some(registers))
 
   /**
    * Coerce the given String value to the specified target Type, using any Coercions in the given
    * CoercionRegister, if applicable.
    */
   @throws(classOf[UnableToCoerceException])
-  def coerce(value: String, targetType: Type, register: Option[CoercionRegister] = None): Any = (targetType match {
-    case c: Class[_] => coerceToClass(value, c)(register);
+  def coerce(value: String, targetType: Type, registers: Option[List[CoercionRegister]] = None): Any = (targetType match {
+    case c: Class[_] => coerceToClass(value, c)(registers);
     case OptionType(wrappedType) =>
-      if (value == null || value.trim.isEmpty) None else Some(coerce(value, wrappedType, register));
-    case ScalaListType(wrappedType) => coerceCSV(value, wrappedType, register).toList;
-    case JavaListType(wrappedType) => JavaConversions.asJavaList(ArrayBuffer(coerceCSV(value, wrappedType, register): _*));
+      if (value == null || value.trim.isEmpty) None else Some(coerce(value, wrappedType, registers));
+    case ScalaListType(wrappedType) => coerceCSV(value, wrappedType, registers).toList;
+    case JavaListType(wrappedType) => JavaConversions.asJavaList(ArrayBuffer(coerceCSV(value, wrappedType, registers): _*));
   })
 
-  private def coerceCSV(value: String, targetType: Type, register: Option[CoercionRegister] = None): Array[_] =
-    if (value.trim == "") Array() else value.split(',').map(coerce(_, targetType, register))
+  private def coerceCSV(value: String, targetType: Type, registers: Option[List[CoercionRegister]] = None): Array[_] =
+    if (value.trim == "") Array() else value.split(',').map(coerce(_, targetType, registers))
 
   private abstract class GenericTypeMatcher(val rawType: Class[_]) {
     def unapply(t: Type): Option[Type] = t match {
@@ -117,8 +139,7 @@ object Coercion {
 
   private object OptionType extends GenericTypeMatcher(classOf[Option[_]])
   private object ScalaListType extends GenericTypeMatcher(classOf[List[_]])
-  private object JavaListType extends GenericTypeMatcher(classOf[java.util.List[_]])
-  private object JavaEnumType extends GenericTypeMatcher(classOf[java.lang.Enum[_]])
+  private object JavaListType extends GenericTypeMatcher(classOf[ju.List[_]])
 
   /**
    * Coerce the given String value to the specified Class, using any Coercions in the given
@@ -131,7 +152,7 @@ object Coercion {
    * or if the first selected coercion method results in an error
    */
   @throws(classOf[UnableToCoerceException])
-  def coerceToClass[A](value: String, targetType: Class[A])(implicit register: Option[CoercionRegister] = None): A = (targetType match {
+  def coerceToClass[A](value: String, targetType: Class[A])(implicit registers: Option[List[CoercionRegister]] = None): A = (targetType match {
     case ClassWithCoercion(coercion) => coercion(value)
     case StringClass(c) => value.asInstanceOf[A]
     case PrimitiveClass(wrapperClass) => coerce(value, wrapperClass).asInstanceOf[A]
@@ -204,7 +225,7 @@ object Coercion {
 
   private object StringClass {
     def unapply[A](c: Class[A]): Option[Class[A]] =
-      if (c == classOf[java.lang.String]) Some(c) else None
+      if (c == classOf[jl.String]) Some(c) else None
   }
 
   private object PrimitiveClass {
@@ -218,15 +239,15 @@ object Coercion {
   }
 
   private object ClassWithCoercion {
-    def unapply[A](c: Class[A])(implicit register: Option[CoercionRegister]): Option[Coercion[A]] = register match {
-      case Some(r) => r.get(c)
+    def unapply[A](c: Class[A])(implicit register: Option[List[CoercionRegister]]): Option[Coercion[A]] = register match {
+      case Some(registerList) => registerList.flatMap({_ get c}).headOption
       case None => None
     }
   }
 
   private object ClassWithStringConstructor {
     def unapply[A](c: Class[A]): Option[Constructor[A]] =
-      try { Some(c.getConstructor(classOf[java.lang.String])) } catch { case _ => None }
+      try { Some(c.getConstructor(classOf[jl.String])) } catch { case _ => None }
   }
 
   private object ClassWithNoArgConstructorAndPropertyEditor {

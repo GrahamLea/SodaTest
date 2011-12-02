@@ -21,10 +21,8 @@ import org.hamcrest.CoreMatchers._
 import collection.immutable.Map
 import org.junit.Assert._
 import org.junit.Test
-import org.sodatest.api.ParameterBindingException
-import org.sodatest.coercion.UnableToCoerceException
 import java.math.BigDecimal
-;
+import org.sodatest.coercion.{CoercionBindingException, UnableToCoerceException}
 
 class ReflectiveSodaEventForJavaTest {
 
@@ -56,7 +54,7 @@ class ReflectiveSodaEventForJavaTest {
       event.apply(Map("Not There" -> "Five"))
     }
     catch {
-      case e: ParameterBindingException => {
+      case e: CoercionBindingException => {
         e.bindFailures match {
           case List(failure) => {
             assertThat(failure.parameterName, is("Not There"))
@@ -79,10 +77,10 @@ class ReflectiveSodaEventForJavaTest {
         "AmounT" -> "xyz",
         "Big Decimal" -> "abc"
       ))
-      fail("Expecting ParameterBindingException")
+      fail("Expecting CoercionBindingException")
     }
     catch {
-      case pbe: ParameterBindingException => {
+      case pbe: CoercionBindingException => {
         pbe.bindFailures match {
           case List(failure1, failure2) => {
             assertThat(failure1.parameterName, is("AmounT"))
@@ -128,7 +126,7 @@ class ReflectiveSodaEventForJavaTest {
       event.apply(Map("Not There" -> "Five"))
     }
     catch {
-      case e: ParameterBindingException => {
+      case e: CoercionBindingException => {
         e.bindFailures match {
           case List(failure) => {
             assertThat(failure.parameterName, is("Not There"))
@@ -151,10 +149,10 @@ class ReflectiveSodaEventForJavaTest {
         "AmounT" -> "xyz",
         "Big Decimal" -> "abc"
       ))
-      fail("Expecting ParameterBindingException")
+      fail("Expecting CoercionBindingException")
     }
     catch {
-      case pbe: ParameterBindingException => {
+      case pbe: CoercionBindingException => {
         pbe.bindFailures match {
           case List(failure1, failure2) => {
             assertThat(failure1.parameterName, is("AmounT"))

@@ -19,6 +19,7 @@ package org.sodatest.api.java.reflection;
 import org.sodatest.api.java.JavaReportConverter;
 import org.sodatest.api.reflection.ReflectiveSodaReport;
 import org.sodatest.api.reflection.ReflectiveSodaReport$class;
+import org.sodatest.coercion.CoercionBindingException;
 import scala.collection.Seq;
 import scala.collection.immutable.Map;
 
@@ -66,7 +67,7 @@ public abstract class ReflectiveSodaReportForJava extends JavaReportConverter im
      * Coerces and binds the parameters to this Report, then delegates to the (@link #apply()} function.
      */
     @Override
-    public final Seq<Seq<String>> apply(Map<String, String> parameters) {
+    public final Seq<Seq<String>> apply(Map<String, String> parameters) throws CoercionBindingException {
         return ReflectiveSodaReport$class.apply(this, parameters);
     }
 }
