@@ -157,6 +157,7 @@ object Coercion {
     case StringClass(c) => value.asInstanceOf[A]
     case PrimitiveClass(wrapperClass) => coerce(value, wrapperClass).asInstanceOf[A]
     case JavaEnumClass(enumClass) => coerceToJavaEnum(value, enumClass).asInstanceOf[A]
+//    case ScalaEnumClass(enumClass) => coerceToScalaEnum(value, enumClass).asInstanceOf[A]
     case ClassWithNoArgConstructorAndPropertyEditor(constructor, propertyEditorClass) =>
       coerceUsingPropertyEditor(value, constructor, propertyEditorClass, targetType)
     case ClassWithStringConstructor(constructor) =>
@@ -174,6 +175,32 @@ object Coercion {
   }
 
   private def coerceToJavaEnum[A](value: String, enumClass: Class[A]): A = {
+    val enumValues = enumClass.getDeclaredFields.toList
+            .filter(f  => {
+              (Modifier isPublic f.getModifiers) && (Modifier isStatic f.getModifiers) && (f.getType == enumClass)
+            })
+
+    enumValues.filter(_.getName == value) match {
+      case matchingValue :: Nil => matchingValue.get(null).asInstanceOf[A]
+      case _ => {
+        val canonisedValue = canonisedEnumName(value)
+        enumValues.filter(f => {canonisedEnumName(f.getName) == canonisedValue}) match {
+          case matchingValue :: Nil => matchingValue.get(null).asInstanceOf[A]
+          case matchingValue :: moreMatchingValues =>
+            throw new UnableToCoerceException(
+              "Multiple enum values match the input when canonised: " + (matchingValue :: moreMatchingValues),
+              value, enumClass)
+          case Nil =>
+            throw new UnableToCoerceException("No matching enum values", value, enumClass)
+
+        }
+      }
+    }
+  }
+
+  private def coerceToScalaEnum[A](value: String, enumClass: Class[A]): A = {
+    println("enumClass = " + enumClass)
+
     val enumValues = enumClass.getDeclaredFields.toList
             .filter(f  => {
               (Modifier isPublic f.getModifiers) && (Modifier isStatic f.getModifiers) && (f.getType == enumClass)
@@ -236,6 +263,11 @@ object Coercion {
   private object JavaEnumClass {
     def unapply[A](c: Class[A]): Option[Class[A]] =
       if (classOf[Enum[_]].isAssignableFrom(c)) Some(c) else None
+  }
+
+  private object ScalaEnumClass {
+    def unapply[A](c: Class[A]): Option[Class[A]] =
+      if (classOf[Enumeration#Value].isAssignableFrom(c)) Some(c) else None
   }
 
   private object ClassWithCoercion {

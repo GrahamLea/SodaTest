@@ -71,6 +71,28 @@ class CoercionSpec extends SpecificationWithJUnit {
       }
     }
 
+//    "coerce a String to an instance of a Scala enum" in {
+//      import TestScalaEnum._
+//      println("TestScalaEnum.FirstValue = " + FirstValue)
+//      println("TestScalaEnum.FirstValue.getClass = " + FirstValue.getClass)
+//      println("TestScalaEnum.FirstValue.getClass = " + classOf[TestScalaEnum])
+//      Coercion.coerce("FirstValue", classOf[TestScalaEnum]) must beLike {
+//        case e: TestScalaEnum.Value => e == TestScalaEnum.FirstValue
+//      }
+//    }
+//
+//    "coerce a String with extra space and different case to an instance of a Scala enum" in {
+//      Coercion.coerce("first value", classOf[TestScalaEnum.Value]) must beLike {
+//        case e: TestScalaEnum.Value => e == TestScalaEnum.FirstValue
+//      }
+//    }
+//
+//    "coerce a String without underscores to an instance of a Scala enum whose name has underscores" in {
+//      Coercion.coerce("SecondValue", classOf[TestScalaEnum.Value]) must beLike {
+//        case e: TestScalaEnum.Value => e == TestScalaEnum.SECOND_VALUE
+//      }
+//    }
+
     "coerce a String to a JavaBean using a PropertyEditor class discovered by appending 'Editor' to the target class name" in {
       Coercion.coerce("567", classOf[Amount]) must beLike {
         case a: Amount => a.value == 567
@@ -213,4 +235,10 @@ object ClassWithIntConstructorCoercion extends Coercion[ClassWithIntConstructor]
   def apply(s: String) = new ClassWithIntConstructor(Integer.parseInt(s))
 }
 
+object TestScalaEnum extends Enumeration {
+  type TestScalaEnum = Value
+  val FirstValue, SECOND_VALUE = Value
+}
+
 }}
+
