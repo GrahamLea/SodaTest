@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sodatest</groupId>
     <artifactId>sodatest-examples-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
 
     <name>SodaTest Examples</name>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.sodatest</groupId>
         <artifactId>sodatest-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.2</version>
         <relativePath>..</relativePath>
     </parent>
 

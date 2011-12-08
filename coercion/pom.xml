@@ -3,16 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sodatest</groupId>
     <artifactId>coercion</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
 
     <name>SodaTest Coercion</name>
     <inceptionYear>2010</inceptionYear>
-    <description>A collection of String => Strong Type coercion utilities used by the reflective components in SodaTest</description>
+    <description>A collection of String =&gt; Strong Type coercion utilities used by the reflective components in SodaTest</description>
 
     <parent>
         <groupId>org.sodatest</groupId>
         <artifactId>sodatest-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.2</version>
         <relativePath>..</relativePath>
     </parent>
 
