@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sodatest</groupId>
     <artifactId>sodatest-api-java</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
 
     <name>SodaTest API Extension for Java</name>
     <inceptionYear>2010</inceptionYear>
@@ -28,7 +28,7 @@
     <parent>
         <groupId>org.sodatest</groupId>
         <artifactId>sodatest-parent</artifactId>
-        <version>0.2</version>
+        <version>0.3-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
