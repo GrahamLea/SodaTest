@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.sodatest</groupId>
     <artifactId>sodatest-examples-basic-java</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.2.1</version>
 
     <name>SodaTest Basic Java Example</name>
     <inceptionYear>2011</inceptionYear>
@@ -28,7 +28,7 @@
     <parent>
         <groupId>org.sodatest</groupId>
         <artifactId>sodatest-examples-parent</artifactId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.2.1</version>
         <relativePath>..</relativePath>
     </parent>
 
